@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+
+log/
+
+*.db
+*.sqlite3
+*.log
+
+.env
+.idea/
+fff_venv/
