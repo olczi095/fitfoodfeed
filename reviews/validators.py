@@ -1,5 +1,6 @@
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+import magic
 
 def validate_avatar(image):
     min_width, max_width = 100, 500
@@ -30,5 +31,7 @@ def validate_avatar(image):
     if image.size > max_size:
         raise ValidationError(f"Image size is too big.")
         
-
-avatar_extension_validator = FileExtensionValidator(['jpg', 'jpeg', 'png'])
+    allowed_image_types = ['image/png', 'image/jpeg']
+    file_mime_type = magic.from_buffer(image.read(2048), mime=True)
+    if file_mime_type not in allowed_image_types:
+        raise ValidationError(f"Invalid image type.")
