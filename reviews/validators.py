@@ -1,13 +1,13 @@
 from django.core.exceptions import ValidationError
 import magic
 
-def validate_file_type(image):
+def validate_avatar_type(image):
     allowed_image_types = ['image/png', 'image/jpeg']
     file_mime_type = magic.from_buffer(image.read(2048), mime=True)
     if file_mime_type not in allowed_image_types:
         raise ValidationError(f"Invalid image type.")
     
-def validate_image_dimensions(image):
+def validate_avatar_dimensions(image):
     min_width, max_width = 100, 500
     min_height, max_height = 100, 500
 
@@ -33,7 +33,7 @@ def validate_image_dimensions(image):
         raise ValidationError(f"Image height is too large.")
     
                                     
-def validate_image_size(image):
+def validate_avatar_size(image):
     max_size = 2 * 1024 * 1024
     if image.size > max_size:
         raise ValidationError(f"Image size is too big.")
