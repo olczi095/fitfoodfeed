@@ -10,8 +10,9 @@ class Author(AbstractUser):
                                blank=True,
                                validators=[validate_avatar_type, 
                                            validate_avatar_dimensions, 
-                                           validate_avatar_size
-                                           ])
+                                           validate_avatar_size],
+                               default='avatars/default-avatar.png'
+                               )
 
     def __str__(self):
         return self.username
