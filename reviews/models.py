@@ -15,7 +15,10 @@ class Author(AbstractUser):
                                )
 
     def __str__(self):
-        return self.username
+        if self.username:
+            return self.username
+        else:
+            return 'Anonymous'
     
 
 class Post(models.Model):
@@ -31,8 +34,10 @@ class Post(models.Model):
     author = models.ForeignKey(
         Author, 
         on_delete=models.SET_DEFAULT, 
-        default='Anonymous',
-        related_name='review_posts'
+        default=None,
+        related_name='review_posts',
+        null=True,
+        blank=True
     )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
