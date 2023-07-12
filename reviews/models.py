@@ -28,10 +28,15 @@ class Post(models.Model):
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
     pub_date = models.DateField(default=timezone.now)
-    author = models.ForeignKey(Author, on_delete=models.SET_DEFAULT, default='Anonymous', related_name='review_posts')
+    author = models.ForeignKey(
+        Author, 
+        on_delete=models.SET_DEFAULT, 
+        default='Anonymous',
+        related_name='review_posts'
+    )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
-    status = models.IntegerField(choices=Status.choices, default=0)
+    status = models.CharField(choices=Status.choices, max_length=50, default='DRAFT')
 
 
     class Meta:
