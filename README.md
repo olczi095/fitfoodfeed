@@ -1,7 +1,7 @@
-Project Name: "FitFoodFeed"
+**Project Name:** "FitFoodFeed"
 
-Project Type: blog with food reviews and e-commerce platform
+**Project Type:** blog with food reviews and e-commerce platform
 
-Purpose: focused on promoting healthy food choices and connecting people interested in healthy lifestyle (especially food)
+**Purpose:** focused on promoting healthy food choices and connecting people interested in healthy lifestyle (especially food)
 
-Technologies: Django, HTML, CSS, JavaScript
+**Technologies:** Django, HTML, CSS, JavaScript
