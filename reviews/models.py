@@ -18,11 +18,11 @@ class Author(AbstractUser):
     
 
 class Post(models.Model):
-    STATUS_CHOICES = [
-        (0, 'Draft'),
-        (1, 'Prepared to publish'),
-        (2, 'Published')
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'DRAFT', 'Draft'
+        PREPARED_TO_PUBLISH = 'TO_PUB', 'Prepared to publish'
+        PUBLISHED = 'PUB', 'Published'
+
 
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
@@ -30,7 +30,7 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.SET_DEFAULT, default='Anonymous', related_name='review_posts')
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
-    status = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    status = models.IntegerField(choices=Status.choices, default=0)
 
 
     class Meta:
