@@ -11,3 +11,5 @@ log/
 .env
 .idea/
 fff_venv/
+
+.coverage
