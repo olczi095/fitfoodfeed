@@ -1,15 +1,17 @@
+from datetime import datetime
 from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-
 from reviews.models import Author, Post
 
 
 class AuthorModelTestCase(TestCase):
     def setUp(self):
-        self.author = Author.objects.create(username='test_user', 
-                                            password='test_password',
-                                            bio='test_bio')
+        self.author = Author.objects.create(
+            username='test_user', 
+            password='test_password',
+            bio='test_bio'
+        )
 
     def test_bio_with_expected_value(self):
         self.assertEqual(self.author.bio, 'test_bio')
@@ -28,7 +30,10 @@ class AuthorModelTestCase(TestCase):
 
 class PostModelTestCase(TestCase):
     def setUp(self):
-        self.author = Author.objects.create(username='test_user', password='test_password')
+        self.author = Author.objects.create(
+            username='test_user',
+            password='test_password'
+        )
         self.post = Post.objects.create(
             title='test_title',
             slug='test_slug',
@@ -39,7 +44,7 @@ class PostModelTestCase(TestCase):
         self.second_post = Post.objects.create(
             title='second_test_title',
             slug='second_test_slug',
-            pub_date='2022-07-14',
+            pub_date=datetime(2022, 7, 14).date(),
             author=self.author,
             body='second_test_body'
         )
