@@ -66,7 +66,7 @@ class PostModelTestCase(TestCase):
         self.post.status = 'PUB'
         self.assertEqual(self.post.status, 'PUB')
         
-    def test_invalid_status_return_error(self):
+    def test_invalid_status_returns_error(self):
         with self.assertRaises(ValidationError):
             self.post.status = 'INVALID_STATUS'
             self.post.full_clean()
