@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-from .validators import validate_avatar_type, validate_avatar_dimensions, validate_avatar_size
+from .validators import validate_avatar_type, validate_avatar_dimensions
 
 
 class Author(AbstractUser):
@@ -9,8 +9,8 @@ class Author(AbstractUser):
     avatar = models.ImageField(upload_to='avatars/', 
                                blank=True,
                                validators=[validate_avatar_type, 
-                                           validate_avatar_dimensions, 
-                                           validate_avatar_size],
+                                           validate_avatar_dimensions
+                                           ],
                                default='avatars/default-avatar.png'
                                )
 
