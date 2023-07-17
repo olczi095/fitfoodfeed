@@ -40,38 +40,34 @@ class AvatarTypeValidatorTestCase(TestCase):
 
 
 class AvatarDimensionsValidatorTestCase(TestCase):
+    def setUp(self):
+        self.image = Image.new("RGB", (350, 350), (255, 255, 255))
+        self.image_buffer = io.BytesIO()
+        self.image.save(self.image_buffer, "JPEG")
+
+    def test_image_with_valid_dimensions(self):
+        self.assertEqual(validate_avatar_dimensions(self.image), None)
+
     def test_image_with_min_valid_dimensions(self):
-        image = Image.new("RGB", (100, 100), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertEqual(validate_avatar_dimensions(image), None)
+        self.image = self.image.resize((100, 100))
+        self.assertEqual(validate_avatar_dimensions(self.image), None)
 
     def test_image_with_max_valid_dimensions(self):
-        image = Image.new("RGB", (500, 500), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertEqual(validate_avatar_dimensions(image), None)
+        self.image = self.image.resize((500, 500))
+        self.assertEqual(validate_avatar_dimensions(self.image), None)
 
     def test_image_too_small_width_returns_error(self):
-        image = Image.new("RGB", (50, 350), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertRaises(ValidationError, validate_avatar_dimensions, image)
+        self.image = self.image.resize((50, 350))
+        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
 
     def test_image_with_too_large_width_returns_error(self):
-        image = Image.new("RGB", (600, 350), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertRaises(ValidationError, validate_avatar_dimensions, image)
+        self.image = self.image.resize((600, 350))
+        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
 
     def test_image_with_too_small_height_returns_error(self):
-        image = Image.new("RGB", (350, 50), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertRaises(ValidationError, validate_avatar_dimensions, image)
+        self.image = self.image.resize((350, 50))
+        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
 
     def test_image_with_too_large_height_returns_error(self):
-        image = Image.new("RGB", (350, 600), (255, 255, 255))
-        image_buffer = io.BytesIO()
-        image.save(image_buffer, "JPEG")
-        self.assertRaises(ValidationError, validate_avatar_dimensions, image)
+        self.image = self.image.resize((350, 600))
+        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
