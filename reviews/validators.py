@@ -21,9 +21,9 @@ def validate_avatar_dimensions(image):
         else:
             raise ValidationError(f"Image width is too small.")
     elif width > max_width:
-        if height > min_height:
+        if height > max_height:
             raise ValidationError(f"Image height and width are too large.")
-        elif height < max_height:
+        elif height < min_height:
             raise ValidationError(f"Image width is too large and image height is too small.")
         else:
             raise ValidationError(f"Image width is too large.")
