@@ -56,18 +56,42 @@ class AvatarDimensionsValidatorTestCase(TestCase):
         self.image = self.image.resize((500, 500))
         self.assertEqual(validate_avatar_dimensions(self.image), None)
 
-    def test_image_too_small_width_returns_error(self):
+    def test_image_with_too_small_width_and_height_returns_error(self):
+        self.image = self.image.resize((50, 50))
+        with self.assertRaisesMessage(ValidationError, "Image height and width are too small."):
+            validate_avatar_dimensions(self.image)
+
+    def test_image_with_too_small_width_and_too_large_height(self):
+        self.image = self.image.resize((50, 600))
+        with self.assertRaisesMessage(ValidationError, "Image width is too small and image height is too large."):
+            validate_avatar_dimensions(self.image)
+
+    def test_image_with_too_small_width_returns_error(self):
         self.image = self.image.resize((50, 350))
-        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
+        with self.assertRaisesMessage(ValidationError, "Image width is too small."):
+            validate_avatar_dimensions(self.image)
+
+    def test_image_with_too_large_width_and_height_returns_error(self):
+        self.image = self.image.resize((600, 600))
+        with self.assertRaisesMessage(ValidationError, "Image height and width are too large."):
+            validate_avatar_dimensions(self.image)
+
+    def test_image_with_too_large_width_and_too_small_height(self):
+        self.image = self.image.resize((600, 50))
+        with self.assertRaisesMessage(ValidationError, "Image width is too large and image height is too small."):
+            validate_avatar_dimensions(self.image)
 
     def test_image_with_too_large_width_returns_error(self):
         self.image = self.image.resize((600, 350))
-        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
+        with self.assertRaisesMessage(ValidationError, "Image width is too large."):
+            validate_avatar_dimensions(self.image)
 
     def test_image_with_too_small_height_returns_error(self):
         self.image = self.image.resize((350, 50))
-        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
+        with self.assertRaisesMessage(ValidationError, "Image height is too small."):
+            validate_avatar_dimensions(self.image)
 
     def test_image_with_too_large_height_returns_error(self):
         self.image = self.image.resize((350, 600))
-        self.assertRaises(ValidationError, validate_avatar_dimensions, self.image)
+        with self.assertRaisesMessage(ValidationError, "Image height is too large."):
+            validate_avatar_dimensions(self.image)
