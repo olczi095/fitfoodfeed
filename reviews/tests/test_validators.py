@@ -1,9 +1,11 @@
+import io
+from PIL import Image
+
 from django.forms import ValidationError
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
+
 from reviews.validators import (validate_avatar_type)
-from PIL import Image
-import io
 
 
 class AvatarTypeValidatorTestCase(TestCase):
