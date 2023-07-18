@@ -18,9 +18,3 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ['status', 'author']
     search_fields = ['title', 'meta_description', 'body']
     prepopulated_fields = {'slug': ('title',)}
-
-    def display_author(self, obj):
-        return obj.username
-
-    display_author.short_description = 'Author'
-
