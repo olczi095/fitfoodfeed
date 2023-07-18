@@ -1,7 +1,9 @@
 from datetime import datetime
+from django.contrib.admin.sites import AdminSite
 from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
+from reviews.admin import AuthorAdmin
 from reviews.models import Author, Post
 
 
@@ -26,6 +28,19 @@ class AuthorModelTestCase(TestCase):
     def test_image_field_with_default_image(self):
         self.assertIsNotNone(self.author.avatar)
         self.assertEqual(self.author.avatar.name, 'avatars/default-avatar.png')
+
+
+class AuthorAdminModelTestCase(TestCase):
+    def setUp(self):
+        self.author = Author.objects.create(
+            username='test_user', 
+            password='test_password',
+            bio='test_bio'
+        )
+
+    def test_display_author_on_admin_page(self):
+        authorAdminModel = AuthorAdmin(model=self.author, admin_site=AdminSite())
+        self.assertEqual(authorAdminModel.display_author(self.author), 'test_user')
 
 
 class PostModelTestCase(TestCase):
