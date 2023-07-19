@@ -45,8 +45,9 @@ class AuthorAdminModelTestCase(TestCase):
         )
 
     def test_display_author_on_admin_page(self):
-        authorAdminModel = AuthorAdmin(model=self.author, admin_site=AdminSite())
-        self.assertEqual(authorAdminModel.display_author(self.author), 'test_user')
+        author_admin = AuthorAdmin(model=self.author, admin_site=AdminSite())
+        displayed_author = author_admin.display_author(self.author)
+        self.assertEqual(displayed_author, 'test_user')
 
 
 class PostModelExistenceTestCase(TestCase):
