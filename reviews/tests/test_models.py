@@ -7,6 +7,12 @@ from reviews.admin import AuthorAdmin
 from reviews.models import Author, Post
 
 
+class AuthorModelExistenceTestCase(TestCase):
+    def test_author_model_exists(self):
+        authors = Author.objects.all()
+        self.assertEqual(authors.count(), 0)
+
+        
 class AuthorModelTestCase(TestCase):
     def setUp(self):
         self.author = Author.objects.create(
@@ -41,6 +47,12 @@ class AuthorAdminModelTestCase(TestCase):
     def test_display_author_on_admin_page(self):
         authorAdminModel = AuthorAdmin(model=self.author, admin_site=AdminSite())
         self.assertEqual(authorAdminModel.display_author(self.author), 'test_user')
+
+
+class PostModelExistenceTestCase(TestCase):
+    def test_post_model_exists(self):
+        posts = Post.objects.all()
+        self.assertEqual(posts.count(), 0)
 
 
 class PostModelTestCase(TestCase):
