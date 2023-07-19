@@ -5,3 +5,6 @@
 **Purpose:** focused on promoting healthy food choices and connecting people interested in healthy lifestyle (especially food)
 
 **Technologies:** Django, HTML, CSS, JavaScript
+
+
+<br/>**The code has been written according to TDD principles since commit 5acc9d4 from 19-07-23**
