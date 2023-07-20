@@ -1,10 +1,7 @@
-from django.test import Client, TestCase
-from django.urls import reverse
+from django.test import TestCase
 
 
-class HomeTestCase(TestCase):
-    def test_test(self):
-        self.client = Client()
-
-        response = self.client.get(reverse('app_reviews:test'))
+class HomePageTestCase(TestCase):
+    def test_home_page_returns_correct_response(self):
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
