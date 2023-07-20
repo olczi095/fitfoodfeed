@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import PostListView
+from . import views
 
 app_name = 'app_reviews'
 
 urlpatterns = [
-    path('', PostListView.as_view(), name='home'),
+    path('', views.test, name='test')
 ]
 
