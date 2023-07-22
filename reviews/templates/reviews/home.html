@@ -1,12 +1,22 @@
 {% extends 'reviews/base.html' %}
+{% load static %}
 
 {% block title %}
     Mocne Żarcie - recenzje zdrowych (lub mniej) produktów
 {% endblock title%}
 
+{% block header %}
+    <div class="home-header">
+        <div class="header-text-main">MOCNE ŻARCIE<br /></div>
+        <div class="header-text">recenzje | e-sklep | społeczność</div>
+    </div>  
+{% endblock header %}
+
 {% block body%}
-    {% for post in posts %}
-        {{ post.title }}<br /><br />
-        {{ post.body }}<br /><br />
-    {% endfor %}
+    <div class="posts">
+        {% for post in posts %}
+            {{ post.title }}<br /><br />
+            {{ post.body }}<br /><br />
+        {% endfor %}
+    </div>
 {% endblock body %}
