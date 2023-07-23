@@ -1,11 +1,11 @@
 /* Variables */
 :root {
     /* Fonts */
-    --font-plustjakartasans: 'Plus Jakarta Sans', sans-serif;
+    --font-plustjakartasans: 'Plus Jakarta Sans', sanss-serif;
     /* Colors */
-    --color-lightgrey: rgba(248, 249, 250, 0.7);
-    --color-whitesmoke: #f5f5f5;
-    --color-dirtyblue: #b1d1f2;
+    --color-lightgrey: rgba(242, 145, 19, 0.7);
+    --color-whitesmoke: rgb(242, 145, 19);
+    --color-dirtyblue: #efc38a;
     --color-lightblue:
 }
 
@@ -97,6 +97,6 @@
 
 .short-description {
     text-align: justify;
-    background-color: lightblue;
-    padding: 1rem;
+    background-color: var(--color-whitesmoke);
+    padding: 1.5rem;
 }
