@@ -52,3 +52,7 @@ class HomePageTestCase(TestCase):
         self.assertContains(response, self.post2.title)
         self.assertContains(response, self.post2.body)
 
+    def test_pagination_displays(self):
+        response = self.client.get('/')
+        self.assertEqual(response.context['is_paginated'], True)
+        self.assertIn('paginator', response.context)
