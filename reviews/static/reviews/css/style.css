@@ -75,13 +75,19 @@
 }
 
 .home-content {
-    padding: 5rem 10rem;
+    padding: 2rem 10rem;
     display: flex;
 }
 
 .home-content .posts {
     width: 80%;
     padding-right: 5rem;
+}
+
+.home-content .posts .post {
+    margin: 3rem auto;
+    border-bottom: 0.2rem solid #ccc;
+    padding-bottom: 1rem;
 }
 
 .home-content .sidebar {
