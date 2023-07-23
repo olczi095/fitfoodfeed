@@ -90,6 +90,23 @@
     padding-bottom: 1rem;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.pagination .current {
+    margin: 0 20rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.pagination .arrow {
+    width: 3rem;
+}
+
 .home-content .sidebar {
     max-width: 30%;
     padding-left: 2rem;

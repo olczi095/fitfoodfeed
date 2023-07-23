@@ -21,6 +21,23 @@
                     {{ post.body | truncatewords:150}}<br /><br />
                 </div>
             {% endfor %}
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <span class="previous">
+                        <a href="?page={{ page_obj.previous_page_number }}"><img src="static/reviews/images/left-arrow.png" alt="poprzedni" /></a>
+                    </span>
+                {% endif %}
+                    <span class="current">
+                        strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
+                    </span>
+                {% if page_obj.has_next %}
+                    <span class="next">
+                        <a href="?page={{ page_obj.next_page_number }}"><img src="static/reviews/images/right-arrow.png" alt="nastepny" /></a>
+                    </span>
+                {% endif %}
+            </div>
+
         </div>
 
         <div class="sidebar">
@@ -33,6 +50,5 @@
                     Ponadto "Mocne Żarcie" to cała fit społeczność - ludzie o podobnych pasjach, którzy wzajemnie sobie radzą, samodzielnie dokonują recenzji różnych produktów i nawzajem zachęcają się do aktywniejszego i zdrowszego życia.
                 </div>
         </div>
-
     </div>
 {% endblock body %}
