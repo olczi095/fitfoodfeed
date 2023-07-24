@@ -134,3 +134,7 @@ class PostModelTestCase(TestCase):
                 status='PUB'
             )
         self.assertEqual(self.review.slug, 'tytul-z-polskimi-znakami')
+
+    def test_get_absolute_url(self):
+        post_absolute_url = '/test_slug/'
+        self.assertEqual(self.post.get_absolute_url(), post_absolute_url)
