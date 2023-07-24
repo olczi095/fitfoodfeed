@@ -53,6 +53,23 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        polish_signs_conversion = {
+            'ą': 'a',
+            'ć': 'c',
+            'ę': 'e',
+            'ł': 'l',
+            'ń': 'n',
+            'ó': 'o',
+            'ś': 's',
+            'ź': 'z',
+            'ż': 'z'
+        }
         if not self.slug:
-            self.slug = slugify(self.title)
+            title_without_polish_signs = ''
+            for sign in self.title:
+                if sign in polish_signs_conversion.keys():
+                    title_without_polish_signs += polish_signs_conversion[sign]
+                else:
+                    title_without_polish_signs += sign
+            self.slug = slugify(title_without_polish_signs)
         super(Post, self).save(*args, **kwargs)
