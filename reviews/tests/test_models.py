@@ -116,3 +116,12 @@ class PostModelTestCase(TestCase):
 
     def test_string_representation(self):
         self.assertEqual(str(self.post), 'test_title')
+
+    def test_create_slug_automatically_if_not_passed(self):
+        self.review = Post.objects.create(
+                title='Tytuł z polskimi znakami',
+                author=self.author,
+                body='Sprawdzamy jak zadziała automatyczne ustawienie slug.',
+                status='PUB'
+            )
+        self.assertNotEqual(self.review.slug, '')
