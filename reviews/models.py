@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from .validators import validate_avatar_type, validate_avatar_dimensions
@@ -51,6 +52,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse("app_reviews:review", args=[str(self.slug)])
 
     def save(self, *args, **kwargs):
         polish_signs_conversion = {
