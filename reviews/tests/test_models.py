@@ -125,3 +125,12 @@ class PostModelTestCase(TestCase):
                 status='PUB'
             )
         self.assertNotEqual(self.review.slug, '')
+
+    def test_create_slug_automatically_recommended_approach(self):
+        self.review = Post.objects.create(
+                title='Tytuł z polskimi znakami!!!%',
+                author=self.author,
+                body='Sprawdzamy czy poprawnie przekonwertuje tytuł na slug.',
+                status='PUB'
+            )
+        self.assertEqual(self.review.slug, 'tytul-z-polskimi-znakami')
