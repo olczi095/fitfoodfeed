@@ -75,7 +75,11 @@ class PostDetailTestCase(TestCase):
                 body='Normally in this place I should have much longer text with the complete review for particular food product.',
                 status='PUB'
             )
-        
+
         def test_post_detail_returns_correct_response(self):
             response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
             self.assertEqual(response.status_code, 200)
+
+        def test_post_detail_template(self):
+            response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
+            self.assertContains(response, self.post1.body)
