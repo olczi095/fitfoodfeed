@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from django.shortcuts import render, HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from reviews.models import Post
 
@@ -14,3 +14,6 @@ class PostListView(ListView):
     def get_queryset(self):
         return super().get_queryset().order_by('-pub_date')
     
+
+class PostDetailView(DetailView):
+    model = Post
