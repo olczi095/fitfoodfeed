@@ -80,7 +80,7 @@ class PostDetailTestCase(TestCase):
             response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
             self.assertEqual(response.status_code, 200)
 
-        def test_post_detail_template(self):
+        def test_post_detail_template_contains_body_and_title(self):
             response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
             self.assertContains(response, self.post1.body)
             self.assertContains(response, self.post1.title)
