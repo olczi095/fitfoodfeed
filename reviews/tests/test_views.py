@@ -83,3 +83,4 @@ class PostDetailTestCase(TestCase):
         def test_post_detail_template(self):
             response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
             self.assertContains(response, self.post1.body)
+            self.assertContains(response, self.post1.title)
