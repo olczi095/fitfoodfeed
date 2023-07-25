@@ -1,3 +1,4 @@
+from django_resized import ResizedImageField
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -33,6 +34,12 @@ class Post(models.Model):
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
     pub_date = models.DateField(default=timezone.now)
+    image = ResizedImageField(
+        size=[800, None],
+        upload_to='review_images/',
+        validators=[validate_avatar_type],
+        blank=True
+        )
     author = models.ForeignKey(
         Author, 
         on_delete=models.SET_DEFAULT, 
