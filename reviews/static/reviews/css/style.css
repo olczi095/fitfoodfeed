@@ -3,10 +3,10 @@
     /* Fonts */
     --font-plustjakartasans: 'Plus Jakarta Sans', sanss-serif;
     /* Colors */
-    --color-lightgrey: rgba(242, 145, 19, 0.7);
-    --color-whitesmoke: rgb(242, 145, 19);
-    --color-dirtyblue: #efc38a;
-    --color-lightblue:
+    --color-middleorange: rgba(242, 145, 19, 0.7);
+    --color-orange: rgb(242, 145, 19);
+    --color-lightorange: #efc38a;
+    --color-lightgrey: #ccc;
 }
 
 /* Global Styles */
@@ -28,7 +28,7 @@
 
 /* Typography */
 .header-text-main {
-    background-color: var(--color-lightgrey);
+    background-color: var(--color-middleorange);
     padding: 1rem;
     font: 4rem var(--font-plustjakartasans);
     font-weight: 900;
@@ -36,7 +36,7 @@
 
 .header-text {
     font: 1.5rem var(--font-plustjakartasans);
-    background-color: var(--color-lightgrey);
+    background-color: var(--color-middleorange);
     padding: 1rem;
 }
 
@@ -47,11 +47,11 @@
 
 .nav-item-light {
     font-size: 0.9rem;
-    color: var(--color-dirtyblue) !important;
+    color: var(--color-lightorange) !important;
 }
 
 .nav-item-light:hover {
-    color: var(--color-whitesmoke) !important;
+    color: var(--color-orange) !important;
 }
 
 /* Components */
@@ -86,7 +86,7 @@
 
 .home-content .posts .post {
     margin: 3rem auto;
-    border-bottom: 0.2rem solid #ccc;
+    border-bottom: 0.2rem solid var(--color-lightgrey);
     padding-bottom: 1rem;
 }
 
@@ -120,6 +120,33 @@
 
 .short-description {
     text-align: justify;
-    background-color: var(--color-whitesmoke);
+    background-color: var(--color-orange);
     padding: 1.5rem;
+}
+
+.post-detail-content {
+    padding: 3rem 15rem;
+}
+
+.post-title {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.post-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    border-top: 0.2rem solid var(--color-lightgrey);
+    border-bottom: 0.2rem solid var(--color-lightgrey);
+    padding: 0.4rem;
+}
+
+.post-tags {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-weight: 800;
 }

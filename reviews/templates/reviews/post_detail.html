@@ -1,2 +1,26 @@
-{{ post.title }}
-{{ post.body }}
+{% extends 'reviews/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ post.title }} - recenzja
+{% endblock title %}
+
+{% block header %}
+    <div class="home-header">
+        <div class="header-text-main">MOCNE ŻARCIE<br /></div>
+        <div class="header-text">recenzje fit (lub nie) produktów</div>
+    </div>  
+{% endblock header %}
+
+{% block body %}
+    <div class="post-detail-content">
+        <h1 class="post-title">{{ post.title }}</h1>
+        {% if post.image %}
+            <span class="post-image">
+                <img src="{{ post.image.url }}">
+            </span>
+        {% endif%}
+        <h4><span class="post-tags">OPIS  |  CENA  |  DOSTĘPNOŚĆ  |  SKŁAD  |  TEST SMAKU</span></h4>
+        <span class="post-typo">{{ post.body }}</span>
+    </div>
+{% endblock body %}

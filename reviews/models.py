@@ -36,7 +36,7 @@ class Post(models.Model):
     pub_date = models.DateField(default=timezone.now)
     image = ResizedImageField(
         size=[800, None],
-        upload_to='review_images/',
+        upload_to='review_images',
         validators=[validate_avatar_type],
         blank=True
         )
