@@ -138,3 +138,6 @@ class PostModelTestCase(TestCase):
     def test_get_absolute_url(self):
         post_absolute_url = '/test_slug/'
         self.assertEqual(self.post.get_absolute_url(), post_absolute_url)
+
+    def test_post_model_has_image_field(self):
+        self.assertTrue(Post._meta.get_field('image'))
