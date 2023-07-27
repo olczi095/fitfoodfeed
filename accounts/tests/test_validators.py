@@ -5,7 +5,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from reviews.validators import (validate_avatar_type, validate_avatar_dimensions)
+from accounts.validators import (validate_avatar_type, validate_avatar_dimensions)
 
 
 class AvatarTypeValidatorTestCase(TestCase):

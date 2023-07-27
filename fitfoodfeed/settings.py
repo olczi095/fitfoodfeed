@@ -66,7 +66,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'reviews.Author'
+AUTH_USER_MODEL = 'accounts.Author'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
