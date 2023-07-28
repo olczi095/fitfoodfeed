@@ -1,7 +1,12 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
-from reviews.admin import AuthorAdmin
-from reviews.models import Author
+from accounts.models import User, Author
+
+
+class UserModelExistenceTestCase(TestCase):
+    def test_user_model_exists(self):
+        users = User.objects.all()
+        self.assertEqual(users.count(), 0)
 
 
 class AuthorModelExistenceTestCase(TestCase):
