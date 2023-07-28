@@ -1,5 +1,6 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
+from accounts.admin import UserAdmin
 from accounts.models import User, Author
 
 
@@ -17,7 +18,7 @@ class AuthorModelExistenceTestCase(TestCase):
         
 class AuthorModelTestCase(TestCase):
     def setUp(self):
-        self.author = Author.objects.create(
+        self.author = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='test_bio'
@@ -29,10 +30,6 @@ class AuthorModelTestCase(TestCase):
     def test_string_representation_with_username(self):
         self.assertEqual(str(self.author), 'test_user')
 
-    def test_string_representation_without_username(self):
-        anonymous = Author()
-        self.assertEqual(str(anonymous), 'Anonymous')
-
     def test_image_field_with_default_image(self):
         self.assertIsNotNone(self.author.avatar)
         self.assertEqual(self.author.avatar.name, 'avatars/default-avatar.png')
@@ -43,10 +40,10 @@ class AuthorAdminModelTestCase(TestCase):
         self.author = Author.objects.create(
             username='test_user', 
             password='test_password',
-            bio='test_bio'
+            bio='something about the user'
         )
 
-    def test_display_author_on_admin_page(self):
-        author_admin = AuthorAdmin(model=self.author, admin_site=AdminSite())
-        displayed_author = author_admin.display_author(self.author)
+    def test_display_user_on_admin_page(self):
+        author_admin = UserAdmin(model=self.author, admin_site=AdminSite())
+        displayed_author = author_admin.display_user(self.author)
         self.assertEqual(displayed_author, 'test_user')

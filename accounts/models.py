@@ -4,11 +4,6 @@ from .validators import validate_avatar_type, validate_avatar_dimensions
 
 
 class User(AbstractUser):
-    pass
-
-
-class Author(User):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_profile')
     bio = models.CharField(max_length=150, blank=True)
     avatar = models.ImageField(upload_to='avatars/', 
                                blank=True,
@@ -17,10 +12,10 @@ class Author(User):
                                            ],
                                default='avatars/default-avatar.png'
                                )
-
     def __str__(self):
-        if self.username:
-            return self.username
-        else:
-            return 'Anonymous'
+        return self.username
     
+
+class Author(User):
+    class Meta:
+        proxy = True
