@@ -5,6 +5,7 @@ from .validators import validate_avatar_type, validate_avatar_dimensions
 
 class User(AbstractUser):
     bio = models.CharField(max_length=150, blank=True)
+    role = models.CharField(max_length=25, default='user')
     avatar = models.ImageField(upload_to='avatars/', 
                                blank=True,
                                validators=[validate_avatar_type, 
@@ -12,6 +13,7 @@ class User(AbstractUser):
                                            ],
                                default='avatars/default-avatar.png'
                                )
+
     def __str__(self):
         return self.username
     
