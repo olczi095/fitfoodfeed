@@ -17,8 +17,16 @@ class UserModelTestCase(TestCase):
             password='test_password',
             bio='test_bio'
         )
+
     def test_role_field_default_returns_user(self):
         self.assertEqual(self.user.role, 'user')
+
+
+class RoleUserTestCase(TestCase):
+    def test_role_labels(self):
+        self.assertEqual(User.Role.ADMIN.label, 'admin')
+        self.assertEqual(User.Role.AUTHOR.label, 'author')
+        self.assertEqual(User.Role.USER.label, 'user')
 
 
 class AuthorModelExistenceTestCase(TestCase):
