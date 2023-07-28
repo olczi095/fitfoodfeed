@@ -10,6 +10,17 @@ class UserModelExistenceTestCase(TestCase):
         self.assertEqual(users.count(), 0)
 
 
+class UserModelTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            username='test_user', 
+            password='test_password',
+            bio='test_bio'
+        )
+    def test_role_field_default_returns_user(self):
+        self.assertEqual(self.user.role, 'user')
+
+
 class AuthorModelExistenceTestCase(TestCase):
     def test_author_model_exists(self):
         authors = Author.objects.all()
