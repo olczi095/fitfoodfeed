@@ -2,7 +2,7 @@ from datetime import datetime
 from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from accounts.models import Author
+from accounts.models import User
 from reviews.models import Post
 
 
@@ -14,7 +14,7 @@ class PostModelExistenceTestCase(TestCase):
 
 class PostModelTestCase(TestCase):
     def setUp(self):
-        self.author = Author.objects.create(
+        self.author = User.objects.create(
             username='test_user',
             password='test_password'
         )

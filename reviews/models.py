@@ -3,7 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-from accounts.models import Author
+from accounts.models import User
 from accounts.validators import validate_avatar_type
 
 
@@ -24,7 +24,7 @@ class Post(models.Model):
         blank=True
         )
     author = models.ForeignKey(
-        Author, 
+        User, 
         on_delete=models.SET_DEFAULT, 
         default=None,
         related_name='review_posts',

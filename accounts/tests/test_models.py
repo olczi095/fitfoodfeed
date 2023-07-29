@@ -1,7 +1,7 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 from accounts.admin import UserAdmin
-from accounts.models import User, Author
+from accounts.models import User
 
 
 class UserModelExistenceTestCase(TestCase):
@@ -9,33 +9,8 @@ class UserModelExistenceTestCase(TestCase):
         users = User.objects.all()
         self.assertEqual(users.count(), 0)
 
-
-class UserModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create(
-            username='test_user', 
-            password='test_password',
-            bio='test_bio'
-        )
-
-    def test_role_field_default_returns_user(self):
-        self.assertEqual(self.user.role, 'user')
-
-
-class RoleUserTestCase(TestCase):
-    def test_role_labels(self):
-        self.assertEqual(User.Role.ADMIN.label, 'admin')
-        self.assertEqual(User.Role.AUTHOR.label, 'author')
-        self.assertEqual(User.Role.USER.label, 'user')
-
-
-class AuthorModelExistenceTestCase(TestCase):
-    def test_author_model_exists(self):
-        authors = Author.objects.all()
-        self.assertEqual(authors.count(), 0)
-
         
-class AuthorModelTestCase(TestCase):
+class UserModelTestCase(TestCase):
     def setUp(self):
         self.author = User.objects.create(
             username='test_user', 
@@ -56,7 +31,7 @@ class AuthorModelTestCase(TestCase):
 
 class AuthorAdminModelTestCase(TestCase):
     def setUp(self):
-        self.author = Author.objects.create(
+        self.author = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='something about the user'

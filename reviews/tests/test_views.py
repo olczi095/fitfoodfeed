@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
-from reviews.models import Author, Post
+from reviews.models import User, Post
 
 
 class HomePageTestCase(TestCase):
     def setUp(self):
-        self.author1 = Author.objects.create(
+        self.author1 = User.objects.create(
             username='random',
             password='testpassword',
             bio='This is the random author for testing.'
@@ -61,7 +61,7 @@ class HomePageTestCase(TestCase):
     
 class PostDetailTestCase(TestCase):
         def setUp(self):
-            self.author1 = Author.objects.create(
+            self.author1 = User.objects.create(
                 username='random',
                 password='testpassword',
                 bio='This is the random author for testing.'
