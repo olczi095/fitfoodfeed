@@ -11,6 +11,7 @@ class UserAdmin(admin.ModelAdmin):
     
     def display_groups(self, obj):
         user_groups = [group.name for group in obj.groups.all()]
+        user_groups.sort()
         return ', '.join(user_groups)
 
     display_groups.short_description = 'Role'
