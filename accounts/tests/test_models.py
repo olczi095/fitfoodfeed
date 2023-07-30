@@ -12,32 +12,37 @@ class UserModelExistenceTestCase(TestCase):
         
 class UserModelTestCase(TestCase):
     def setUp(self):
-        self.author = User.objects.create(
+        self.user = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='test_bio'
         )
 
     def test_bio_with_expected_value(self):
-        self.assertEqual(self.author.bio, 'test_bio')
+        self.assertEqual(self.user.bio, 'test_bio')
 
     def test_string_representation_with_username(self):
-        self.assertEqual(str(self.author), 'test_user')
+        self.assertEqual(str(self.user), 'test_user')
 
     def test_image_field_with_default_image(self):
-        self.assertIsNotNone(self.author.avatar)
-        self.assertEqual(self.author.avatar.name, 'avatars/default-avatar.png')
+        self.assertIsNotNone(self.user.avatar)
+        self.assertEqual(self.user.avatar.name, 'avatars/default-avatar.png')
 
 
-class AuthorAdminModelTestCase(TestCase):
+class UserAdminModelTestCase(TestCase):
     def setUp(self):
-        self.author = User.objects.create(
+        self.user = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='something about the user'
         )
 
     def test_display_user_on_admin_page(self):
-        author_admin = UserAdmin(model=self.author, admin_site=AdminSite())
-        displayed_author = author_admin.display_user(self.author)
-        self.assertEqual(displayed_author, 'test_user')
+        user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
+        displayed_user = user_admin.display_user(self.user)
+        self.assertEqual(displayed_user, 'test_user')
+
+    def test_display_groups_on_admin_page(self):
+        user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
+        displayed_groups = user_admin.display_groups(self.user)
+        self.assertEqual(displayed_groups, '')
