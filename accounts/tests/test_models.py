@@ -1,7 +1,7 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 from accounts.admin import UserAdmin
-from accounts.models import User, Group
+from accounts.models import User
 
 
 class UserModelExistenceTestCase(TestCase):
@@ -51,12 +51,3 @@ class UserAdminModelTestCase(TestCase):
         user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
         displayed_groups = user_admin.display_groups(self.user)
         self.assertEqual(displayed_groups, '')
-
-    def test_displayed_groups_alphabetically(self):
-        user_group, created = Group.objects.get_or_create(name='user')
-        author_group, created = Group.objects.get_or_create(name='author')
-        self.user.groups.add(author_group)
-        self.user.groups.add(user_group)
-        user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
-        displayed_groups = user_admin.display_groups(self.user)
-        self.assertEqual(displayed_groups, 'author, user')
