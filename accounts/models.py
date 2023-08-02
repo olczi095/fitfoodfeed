@@ -12,6 +12,7 @@ class User(AbstractUser):
                                            ],
                                default='avatars/default-avatar.png'
                                )
+    is_author = models.BooleanField(default=False, verbose_name='author status')
 
     def __str__(self):
         return self.username

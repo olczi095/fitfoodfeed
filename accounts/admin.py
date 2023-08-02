@@ -4,7 +4,7 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['display_user', 'display_groups', 'email', 'bio']
+    list_display = ['display_user', 'display_groups', 'email', 'is_author', 'is_staff',]
 
     def display_user(self, obj):
         return obj.username
