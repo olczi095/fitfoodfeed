@@ -28,6 +28,11 @@ class UserModelTestCase(TestCase):
         self.assertIsNotNone(self.user.avatar)
         self.assertEqual(self.user.avatar.name, 'avatars/default-avatar.png')
 
+    def test_is_author_field_exists(self):
+        field_exists = 'is_author' in [field.name for field in self.user._meta.get_fields()]
+        self.assertTrue(field_exists)
+        self.assertEqual(self.user._meta.get_field('is_author').verbose_name, 'author status')
+
 
 class UserAdminModelTestCase(TestCase):
     def setUp(self):
