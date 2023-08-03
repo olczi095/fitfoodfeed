@@ -54,7 +54,14 @@
             </form>
         </div>
     </nav>
-    {% block container %}
-    {% endblock container %}
+
+    <div class="container">
+        <section class="form-container">    
+            <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image" />
+            {% block form %}
+            {% endblock form %}
+        </section>
+    </div>
+
 </body>
 </html>
