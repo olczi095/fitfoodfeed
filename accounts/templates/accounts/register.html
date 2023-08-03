@@ -1,5 +1,29 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="OK">
-</form>
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title%}
+    Register
+{% endblock %}
+
+{% block container %}
+<div class="container">
+    <section class="form-container">    
+        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image" />
+        <form class="form-register" method="post" action={% url 'app_accounts:register' %}>
+            <h2>Registration</h2>
+            <br />
+                {% for field in form %}
+                <div class="form-field">
+                    {% if field.label != 'First name' and field.label != 'Last name' %}
+                        <h6>{{ field.label | upper }}:</h6> {{ field }}
+                    {% else %}
+                        <p class="not-required">{{ field.label }}: {{ field }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            <br />
+            <button type="submit" class="btn btn-secondary btn-lg btn-block">Sign up!</button>
+        </form> 
+    </section>
+</div>
+{% endblock container%}

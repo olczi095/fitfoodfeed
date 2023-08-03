@@ -1,0 +1,75 @@
+/* Variables */
+:root {
+    --color-beige: #fee9cc;
+}
+
+/* Styles */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 4rem auto;
+    display: flex;
+    justify-content: center;
+}
+
+.form-container {
+    width: 50rem;
+    height: 70vh;
+    margin: auto auto;
+    background-color: var(--color-beige);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-style: ridge;
+}
+
+.form-register {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-image {
+    height: 30rem;
+    width: auto;
+}
+
+.form-field {
+    display: flex;
+    padding: 0.4rem;
+    width: 100%;
+    align-items: center;
+}
+
+.form-field label {
+    flex: 0 0 30%;
+    margin-right: 2rem;
+    text-align: left;
+}
+
+.form-field input,
+.form-field select {
+    flex: 1;
+    margin-left: 2rem;
+    width: 100%;
+}
+
+.not-required {
+    font-style: italic;
+}
+
+.home-image {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: larger;
+}
+
+.nav-link {
+    font-weight: 700 !important;
+    margin-right: 1rem;
+}
