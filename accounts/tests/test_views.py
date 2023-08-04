@@ -38,5 +38,10 @@ class LoginTestCase(TestCase):
         self.assertTemplateUsed(response, 'registration/login.html')
 
     def test_login_redirect_home(self):
-        response = self.client.post(reverse('app_accounts:login'), {'username': 'admin', 'password': 'asdf1234'}, follow=True)
+        response = self.client.post(reverse('app_accounts:login'), {'username':'admin', 'password':'asdf1234'}, follow=True)
         self.assertRedirects(response, reverse_lazy('app_reviews:home'))
+
+    def test_invalid_login_stay_on_page(self):
+        response = self.client.post(reverse('app_accounts:login'), {'username':'incorrect_username', 'password':'incorrect_password'}, follow=True)
+        self.assertTrue(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/login.html')
