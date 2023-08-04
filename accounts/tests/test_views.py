@@ -8,7 +8,7 @@ class RegisterTestCase(TestCase):
     def test_register_url(self):
         response = self.client.get(reverse('app_accounts:register'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/register.html')
+        self.assertTemplateUsed(response, 'registration/register.html')
 
     def test_redirect_home_form_valid(self):
         valid_data = {
