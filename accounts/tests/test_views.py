@@ -45,3 +45,13 @@ class LoginTestCase(TestCase):
         response = self.client.post(reverse('app_accounts:login'), {'username':'incorrect_username', 'password':'incorrect_password'}, follow=True)
         self.assertTrue(response.status_code, 200)
         self.assertTemplateUsed(response, 'registration/login.html')
+
+    def test_invalid_username_display_error_message(self):
+        response = self.client.post(reverse('app_accounts:login'), {'username':'incorrect_username', 'password':'asdf1234'}, follow=True)
+        error_message = 'Invalid username or password.'
+        self.assertContains(response, error_message)
+
+    def test_invalid_password_display_error_message(self):
+        response = self.client.post(reverse('app_accounts:login'), {'username':'admin', 'password':'incorrect_password'}, follow=True)
+        error_message = 'Invalid username or password.'
+        self.assertContains(response, error_message)
