@@ -13,4 +13,5 @@ class RegisterView(CreateView):
     
 
 class CustomLoginView(LoginView):
-    pass
+    def get_success_url(self):
+        return reverse_lazy('app_reviews:home')
