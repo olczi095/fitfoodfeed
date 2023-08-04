@@ -1,0 +1,21 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+
+{% block title %}
+    Log in to Mocne Żarcie
+{% endblock title %}
+
+{% block form %}
+    <form class="form-register" method="post" action={% url 'app_accounts:login' %}>
+        {% csrf_token %}
+        <h2>Log In</h2>
+        <br />
+            {% for field in form %}
+            <div class="form-field">
+                <h6>{{ field.label | upper }}:</h6>{{ field }}
+            </div>
+            {% endfor %}
+        <br />
+        <button type="submit" class="btn btn-secondary btn-lg btn-block">Log In!</button>
+    </form>
+{% endblock form %}
