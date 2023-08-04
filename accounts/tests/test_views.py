@@ -23,3 +23,10 @@ class RegisterTestCase(TestCase):
 
         response = self.client.post(reverse('app_accounts:register'), valid_data, follow=True)
         self.assertRedirects(response, reverse_lazy('app_reviews:home'))
+
+
+class LoginTestCase(TestCase):
+    def test_login_url(self):
+        response = self.client.get(reverse('app_accounts:login'))
+        self.assertTrue(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/login.html')
