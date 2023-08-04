@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from accounts.forms import CustomUserCreationForm
+from accounts.models import User
 
 
 class RegisterTestCase(TestCase):
@@ -26,7 +27,16 @@ class RegisterTestCase(TestCase):
 
 
 class LoginTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user_login = User.objects.create_user(username='admin', password='asdf1234', email='admin@test.pl')
+        cls.user_login = user_login
+
     def test_login_url(self):
         response = self.client.get(reverse('app_accounts:login'))
         self.assertTrue(response.status_code, 200)
         self.assertTemplateUsed(response, 'registration/login.html')
+
+    def test_login_redirect_home(self):
+        response = self.client.post(reverse('app_accounts:login'), {'username': 'admin', 'password': 'asdf1234'}, follow=True)
+        self.assertRedirects(response, reverse_lazy('app_reviews:home'))
