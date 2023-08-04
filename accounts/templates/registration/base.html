@@ -55,6 +55,14 @@
         </div>
     </nav>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="container">
         <section class="form-container">    
             <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image" />
