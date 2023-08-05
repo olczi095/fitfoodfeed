@@ -5,6 +5,16 @@ from accounts.models import User
 
 
 class RegisterTestCase(TestCase):
+    def setUp(self):
+        self.valid_data = {
+            'username': 'user1',
+            'password1': 'user1_password',
+            'password2': 'user1_password',
+            'email': 'user1@mail.com'
+        }
+        form = CustomUserCreationForm(self.valid_data)
+        is_form_valid = form.is_valid()
+        self.assertTrue(is_form_valid)
     
     def test_register_url(self):
         response = self.client.get(reverse('app_accounts:register'))
@@ -12,19 +22,14 @@ class RegisterTestCase(TestCase):
         self.assertTemplateUsed(response, 'registration/register.html')
 
     def test_redirect_home_form_valid(self):
-        valid_data = {
-            'username': 'user1',
-            'password1': 'user1_password',
-            'password2': 'user1_password',
-            'email': 'user1@mail.com'
-        }
-        form = CustomUserCreationForm(valid_data)
-        is_form_valid = form.is_valid()
-        self.assertTrue(is_form_valid)
-
-        response = self.client.post(reverse('app_accounts:register'), valid_data, follow=True)
+        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
         self.assertRedirects(response, reverse_lazy('app_reviews:home'))
 
+    def test_display_success_message_after_valid_register(self):
+        success_message = f"Registration Successful! Welcome user1, you are now logged in."
+        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
+        self.assertContains(response, success_message)
+        
 
 class LoginTestCase(TestCase):
     @classmethod
@@ -48,10 +53,10 @@ class LoginTestCase(TestCase):
 
     def test_invalid_username_display_error_message(self):
         response = self.client.post(reverse('app_accounts:login'), {'username':'incorrect_username', 'password':'asdf1234'}, follow=True)
-        error_message = 'Invalid username or password.'
+        error_message = "Invalid username or password."
         self.assertContains(response, error_message)
 
     def test_invalid_password_display_error_message(self):
         response = self.client.post(reverse('app_accounts:login'), {'username':'admin', 'password':'incorrect_password'}, follow=True)
-        error_message = 'Invalid username or password.'
+        error_message = "Invalid username or password."
         self.assertContains(response, error_message)
