@@ -17,5 +17,11 @@
             {% endfor %}
         <br />
         <button type="submit" class="btn btn-secondary btn-lg btn-block">Log In!</button>
+        <br /><br />
+    <p class="account-link">
+        Need an account? → 
+        <a href="{% url 'app_accounts:register' %}">Join us!</a>
+    </p>  
+
     </form>
 {% endblock form %}

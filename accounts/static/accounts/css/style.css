@@ -32,17 +32,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .form-image {
     height: 30rem;
     width: auto;
+    margin: auto auto auto 0;
 }
 
 .form-field {
     display: flex;
-    padding: 0.4rem;
+    padding: 0.2rem;
     width: 100%;
     align-items: center;
 }
@@ -75,8 +76,4 @@
 .nav-link {
     font-weight: 700 !important;
     margin-right: 1rem;
-}
-
-h6 {
-    color: var(--color-dark-grey) !important;
 }
