@@ -83,6 +83,12 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'app_accounts:logout' %}" class="btn btn-outline-dark" >Log Out</a>
+                {% else %}
+                    <a href="{% url 'app_accounts:register' %}" class="btn btn-outline-dark" >Sign Up</a>
+                    <a href="{% url 'app_accounts:login' %}" class="btn btn-info">🙋‍♂️ Log In</button></a>
+                {% endif %}
                 <input class="form-control mr-sm-2" type="search" placeholder="🔎" aria-label="Search" style="margin-right:2rem !important">
             </form>
         </div>
