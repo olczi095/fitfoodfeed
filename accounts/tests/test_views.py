@@ -29,6 +29,11 @@ class RegisterTestCase(TestCase):
         success_message = f"Registration Successful! Welcome user1, you are now logged in."
         response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
         self.assertContains(response, success_message)
+
+    def test_login_after_success_registration(self):
+        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
+        self.assertRedirects(response, reverse_lazy('app_reviews:home'))
+        self.assertTrue(response.context['user'].is_authenticated)
         
 
 class LoginTestCase(TestCase):
