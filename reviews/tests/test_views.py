@@ -60,27 +60,33 @@ class HomePageTestCase(TestCase):
 
     
 class PostDetailTestCase(TestCase):
-        def setUp(self):
-            self.author1 = User.objects.create(
-                username='random',
-                password='testpassword',
-                bio='This is the random author for testing.'
-            )
+    def setUp(self):
+        self.author1 = User.objects.create(
+            username='random',
+            password='testpassword',
+            bio='This is the random author for testing.'
+        )
 
-            self.post1 = Post.objects.create(
-                title='Sample Post Review',
-                slug='sample-post-review',
-                pub_date = '2020-01-01',
-                author=self.author1,
-                body='Normally in this place I should have much longer text with the complete review for particular food product.',
-                status='PUB'
-            )
+        self.post1 = Post.objects.create(
+            title='Sample Post Review',
+            slug='sample-post-review',
+            pub_date = '2020-01-01',
+            author=self.author1,
+            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            status='PUB'
+        )
 
-        def test_post_detail_returns_correct_response(self):
-            response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
-            self.assertEqual(response.status_code, 200)
+    def test_post_detail_returns_correct_response(self):
+        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
+        self.assertEqual(response.status_code, 200)
 
-        def test_post_detail_template_contains_body_and_title(self):
-            response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
-            self.assertContains(response, self.post1.body)
-            self.assertContains(response, self.post1.title)
+    def test_post_detail_template_contains_body_and_title(self):
+        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
+        self.assertContains(response, self.post1.body)
+        self.assertContains(response, self.post1.title)
+
+
+class PostCreateTestCase(TestCase):
+    def test_post_create_template(self):
+        response = self.client.get(reverse('app_reviews:add_review'))
+        self.assertEqual(response.status_code, 200)
