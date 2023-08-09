@@ -30,4 +30,12 @@ class PostFormTestCase(TestCase):
         is_valid_without_body = PostForm(invalid_data_without_body).is_valid()
         self.assertFalse(is_valid_without_title)
         self.assertFalse(is_valid_without_body)
+
+    def test_labels(self):
+        post_form = PostForm()
+        self.assertEqual(post_form.fields.get('title').label, 'Title')
+        self.assertEqual(post_form.fields.get('meta_description').label, 'Meta Description')
+        self.assertEqual(post_form.fields.get('body').label, 'Body')
+        self.assertEqual(post_form.fields.get('image').label, 'Image')
+        self.assertEqual(post_form.fields.get('slug').label, 'Slug')
         
