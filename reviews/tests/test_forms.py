@@ -5,3 +5,29 @@ from reviews.forms import PostForm
 class PostFormTestCase(TestCase):
     def test_post_form_exists(self):
         self.assertTrue(hasattr(PostForm, '__init__'))
+
+    def test_post_form_valid(self):
+        valid_data = {
+                'title': 'Lorem Ipsum',
+                'body': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                        'Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, '
+                        'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+            }
+        post_form = PostForm(valid_data)
+        is_valid_post_form = post_form.is_valid()
+        self.assertTrue(is_valid_post_form)
+
+    def test_post_form_invalid(self):
+        invalid_data_without_title = {
+                'body': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'
+                        'Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, '
+                        'when an unknown printer took a galley of type and scrambled it to make a type specimen book.'
+            }
+        invalid_data_without_body = {
+                'title': 'Lorem Ipsum'
+            }
+        is_valid_without_title = PostForm(invalid_data_without_title).is_valid()
+        is_valid_without_body = PostForm(invalid_data_without_body).is_valid()
+        self.assertFalse(is_valid_without_title)
+        self.assertFalse(is_valid_without_body)
+        
