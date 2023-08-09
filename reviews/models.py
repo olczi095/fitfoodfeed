@@ -15,13 +15,14 @@ class Post(models.Model):
 
 
     title = models.CharField(max_length=50, unique=True)
-    slug = models.SlugField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     pub_date = models.DateField(default=timezone.now)
     image = ResizedImageField(
         size=[800, None],
         upload_to='review_images',
         validators=[validate_avatar_type],
-        blank=True
+        blank=True,
+        null=True
         )
     author = models.ForeignKey(
         User, 
