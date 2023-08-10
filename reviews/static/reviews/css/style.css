@@ -7,6 +7,7 @@
     --color-orange: rgb(242, 145, 19);
     --color-lightorange: #efc38a;
     --color-lightgrey: #ccc;
+    --color-dark-grey: #3d3f41;
 }
 
 /* Global Styles */
@@ -149,4 +150,14 @@
     justify-content: center;
     margin-bottom: 1rem;
     font-weight: 800;
+}
+
+.form-add-container {
+    margin: 2rem 18rem;
+}
+
+.form-add-review {
+    border: 0.1rem solid var(--color-dark-grey);
+    margin: 2rem;
+    padding: 3rem;
 }
