@@ -1,6 +1,7 @@
 from typing import Any, Dict
 from django.shortcuts import render, HttpResponse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from .forms import PostForm
 
 from reviews.models import Post
 
@@ -17,3 +18,9 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'reviews/post_add.html'
