@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from reviews.models import User, Post
@@ -95,13 +95,19 @@ class PostCreateTestCase(TestCase):
             bio='This is the random author for testing.'
         )
 
-    def test_logged_user_success(self):
-        self.client.login(username='random', password='testpassword')
-        response = self.client.get(reverse_lazy('app_reviews:add_review'))
-        self.assertEqual(response.status_code, 200)
-
     def test_unlogged_user_redirect_to_login(self):
         response = self.client.get(reverse('app_reviews:add_review'))
         self.assertEqual(response.status_code, 302)  
         expected_url = reverse('app_accounts:login') + '?next=' + reverse('app_reviews:add_review')
         self.assertRedirects(response, expected_url)
+
+    
+    def test_logged_user_without_permission_redirect_home_with_message(self):
+        self.client.login(username='random', password='testpassword')
+        response = self.client.get(reverse_lazy('app_reviews:add_review'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(reverse('app_reviews:home'))
+
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "You don't have permission to access this page. Please log in using a valid account.")
