@@ -1,9 +1,11 @@
 from typing import Any, Dict
 from django.shortcuts import render, HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView
-from .forms import PostForm
 
 from reviews.models import Post
+
+from .forms import PostForm
 
 
 class PostListView(ListView):
@@ -20,7 +22,7 @@ class PostDetailView(DetailView):
     model = Post
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'reviews/post_add.html'
