@@ -1,5 +1,6 @@
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from reviews.models import User, Post
 
 
@@ -87,6 +88,20 @@ class PostDetailTestCase(TestCase):
 
 
 class PostCreateTestCase(TestCase):
-    def test_post_create_template(self):
-        response = self.client.get(reverse('app_reviews:add_review'))
+    def setUp(self):
+        self.test_user = User.objects.create_user(
+            username='random',
+            password='testpassword',
+            bio='This is the random author for testing.'
+        )
+
+    def test_logged_user_success(self):
+        self.client.login(username='random', password='testpassword')
+        response = self.client.get(reverse_lazy('app_reviews:add_review'))
         self.assertEqual(response.status_code, 200)
+
+    def test_unlogged_user_redirect_to_login(self):
+        response = self.client.get(reverse('app_reviews:add_review'))
+        self.assertEqual(response.status_code, 302)  
+        expected_url = reverse('app_accounts:login') + '?next=' + reverse('app_reviews:add_review')
+        self.assertRedirects(response, expected_url)
