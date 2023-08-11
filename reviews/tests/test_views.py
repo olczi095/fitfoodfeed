@@ -102,7 +102,7 @@ class PostCreateTestCase(TestCase):
         self.assertRedirects(response, expected_url)
 
     
-    def test_logged_user_without_permission_redirect_home_with_message(self):
+    def test_logged_user_without_permission_returns_403_page(self):
         self.client.login(username='random', password='testpassword')
         response = self.client.get(reverse_lazy('app_reviews:add_review'))
         self.assertEqual(response.status_code, 403)
