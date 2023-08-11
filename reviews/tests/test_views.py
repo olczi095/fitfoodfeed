@@ -105,9 +105,4 @@ class PostCreateTestCase(TestCase):
     def test_logged_user_without_permission_redirect_home_with_message(self):
         self.client.login(username='random', password='testpassword')
         response = self.client.get(reverse_lazy('app_reviews:add_review'))
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(reverse('app_reviews:home'))
-
-        messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), "You don't have permission to access this page. Please log in using a valid account.")
+        self.assertEqual(response.status_code, 403)

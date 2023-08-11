@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from django.shortcuts import render, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView
 
 from reviews.models import Post
@@ -22,7 +22,9 @@ class PostDetailView(DetailView):
     model = Post
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
+    permission_required = 'app_reviews.add_post'
+    permission_denied_message = "You don't have permission to access this page. Please log in using a valid account."
     template_name = 'reviews/post_add.html'
