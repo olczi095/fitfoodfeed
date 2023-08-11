@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, FileInput
+from django.forms import ModelForm
 from reviews.models import Post
 
 

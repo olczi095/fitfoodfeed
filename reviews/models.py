@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+
 from accounts.models import User
 from accounts.validators import validate_avatar_type
 
