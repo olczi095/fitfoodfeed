@@ -153,11 +153,19 @@
 }
 
 .form-add-container {
-    margin: 2rem 18rem;
+    margin: 2rem 18rem 3rem 18rem;
 }
 
 .form-add-review {
+    margin: 2rem 2rem 0 2rem;
+    padding: 2rem;
+}
+
+.form-add-border {
     border: 0.1rem solid var(--color-dark-grey);
-    margin: 2rem;
-    padding: 3rem;
+    padding: 2rem;
+}
+
+.text-right {
+    margin-right: 4rem;
 }

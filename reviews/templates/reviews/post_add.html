@@ -90,14 +90,15 @@
 
 
     <section class="form-add-container">
-        <h2>Create a new review</h2>
         <form method="post" class="form-add-review">
+            <h2>Create a new review</h2>
             <br />
             {% csrf_token %}
-            {% crispy form %}
-            <br />
+            <div class="form-add-border">
+                {% crispy form %}
+            </div>
             <div class="text-right">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-info btn-lg ">Submit</button>
             </div>
         </form>
     </section>
