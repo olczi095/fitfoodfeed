@@ -106,3 +106,42 @@ class PostCreateTestCase(TestCase):
         self.client.login(username='random', password='testpassword')
         response = self.client.get(reverse_lazy('app_reviews:add_review'))
         self.assertEqual(response.status_code, 403)
+
+
+class PostCreateWithPermissionTestCase(TestCase):
+    def setUp(self):
+        self.adminuser = User.objects.create_superuser(
+            username='admin',
+            password='admin-password'
+        )
+        self.client.login(username='admin', password='admin-password')
+
+    def test_display_add_review_success(self):
+        self.assertTrue(self.adminuser.has_perm('reviews.add_post'))
+        response = self.client.get(reverse_lazy('app_reviews:add_review'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/post_add.html')
+
+    def test_successful_post_creation_redirect(self):
+        new_review = {
+            'title': 'New Review',
+            'body': 'The body of the new review'
+        }
+        response = self.client.post(reverse_lazy('app_reviews:add_review'), data=new_review)
+        expected_url_after_post = '/new-review/'  #slug created automatically based on 'New Review'
+        self.assertRedirects(response, expected_url_after_post)
+
+    def test_successful_post_adding_to_database(self):
+        first_review = {
+            'title': 'New Review',
+            'body': 'The body of the new review'
+        }
+        second_review = {
+            'title': 'Second Review',
+            'body': 'The body of the new review'
+        }
+        self.client.post(reverse_lazy('app_reviews:add_review'), data=first_review)
+        self.client.post(reverse_lazy('app_reviews:add_review'), data=second_review)
+
+        posts_amount = len(Post.objects.all())
+        self.assertEqual(posts_amount, 2)
