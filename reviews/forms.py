@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import HiddenInput, ModelForm
 from reviews.models import Post
 
 
@@ -12,4 +12,7 @@ class PostForm(ModelForm):
             'body': 'Body',
             'image': 'Image',
             'slug': 'Slug'
+        }
+        widgets = {
+            'author': HiddenInput()
         }
