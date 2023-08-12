@@ -1,1 +1,22 @@
-{{ exception }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Denied | MocneŻarcie</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Forbidden</h4>
+        <p>{{ exception }}</p>
+        <a href="{% url 'app_accounts:login' %}">→ Log in</a>
+        <hr>
+        <p class="mb-0">Or you can also come back to the <a href="{% url 'app_reviews:home' %}"> homepage 🏠 </a>.</p>
+      </div>
+</body>
+
+</html>

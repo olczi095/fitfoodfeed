@@ -24,5 +24,5 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     permission_required = 'app_reviews.add_post'
-    permission_denied_message = "You don't have permission to access this page. Please log in using a valid account."
+    permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
     template_name = 'reviews/post_add.html'
