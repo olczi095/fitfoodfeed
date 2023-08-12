@@ -145,3 +145,8 @@ class PostCreateWithPermissionTestCase(TestCase):
 
         posts_amount = len(Post.objects.all())
         self.assertEqual(posts_amount, 2)
+
+        # Check if the author is assigned to the posts
+        first_post = Post.objects.get(title='New Review')
+        author_of_first_post = first_post.author
+        self.assertEqual(author_of_first_post, self.adminuser)
