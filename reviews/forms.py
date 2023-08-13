@@ -16,3 +16,6 @@ class PostForm(ModelForm):
         widgets = {
             'author': HiddenInput()
         }
+        help_texts = {
+            'slug': 'You can leave this field empty. The slug will be created based on the title automatically.',
+        }
