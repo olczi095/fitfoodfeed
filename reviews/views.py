@@ -13,7 +13,7 @@ class PostListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return super().get_queryset().order_by('-pub_date')
+        return super().get_queryset().filter(status='PUB').order_by('-pub_date')
     
 
 class PostDetailView(DetailView):

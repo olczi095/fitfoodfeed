@@ -25,12 +25,10 @@
     <div class="home-content">
         <div class="posts">
             {% for post in posts %}
-                {% if post.status == 'PUB' %}
                     <div class="post">
                         <h1><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h1><br />
                         {{ post.body | truncatewords:150}}<br /><br />
                     </div>
-                {% endif %}
             {% endfor %}
 
             <div class="pagination">
