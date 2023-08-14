@@ -166,8 +166,8 @@ class PostStatusTestCase(TestCase):
 
     def test_post_published_should_appear_on_homepage(self):
         self.post = Post.objects.create(
-            title='The draft review',
-            body='This is the body of a nev review.',
+            title='The new review',
+            body='This is the body of the new review.',
             status='PUB'
         )
         homepage = self.client.get(reverse('app_reviews:home'))
@@ -175,8 +175,8 @@ class PostStatusTestCase(TestCase):
 
     def test_post_to_publish_should_not_appear_on_homepage(self):
         self.post = Post.objects.create(
-            title='The draft review',
-            body='This is the body of a nev review.',
+            title='The first to-publish review',
+            body='This is the body of a two-publish review.',
             status='TO_PUB'
         )
         homepage = self.client.get(reverse('app_reviews:home'))
@@ -184,10 +184,10 @@ class PostStatusTestCase(TestCase):
 
     def test_post_to_publish_should_not_be_published(self):
         data = {
-            'title': 'The to-publish review',
-            'body': 'This is the body of a two-publish review.',
+            'title': 'The second to-publish review',
+            'body': 'This is the body of a second two-publish review.',
             'status': 'TO_PUB',
-            'slug': 'the-to-publish-review'
+            'slug': 'the-second-to-publish-review'
         }
         response = self.client.post(reverse('app_reviews:add_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
@@ -196,8 +196,8 @@ class PostStatusTestCase(TestCase):
 
     def test_post_draft_should_not_appear_on_homepage(self):
         self.post = Post.objects.create(
-            title='The draft review',
-            body='This is the body of a nev review.',
+            title='The first draft review',
+            body='This is the body of a draft review.',
             status='DRAFT'
         )
         homepage = self.client.get(reverse('app_reviews:home'))
@@ -205,10 +205,10 @@ class PostStatusTestCase(TestCase):
 
     def test_post_draft_should_not_be_published(self):
         data = {
-            'title': 'The draft review',
-            'body': 'This is the body of a draft review.',
+            'title': 'The second draft review',
+            'body': 'This is the body of a second draft review.',
             'status': 'DRAFT',
-            'slug': 'the-draft-review'
+            'slug': 'the-second-draft-review'
         }
         response = self.client.post(reverse('app_reviews:add_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
