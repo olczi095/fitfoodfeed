@@ -5,13 +5,14 @@ from reviews.models import Post
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'meta_description', 'body', 'image', 'slug']
+        fields = ['title', 'meta_description', 'body', 'image', 'slug', 'status']
         labels = {
             'title': 'Title',
             'meta_description': 'Meta Description',
             'body': 'Body',
             'image': 'Image',
-            'slug': 'Slug'
+            'slug': 'Slug',
+            'status': 'Status'
         }
         widgets = {
             'author': HiddenInput()
