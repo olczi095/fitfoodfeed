@@ -154,3 +154,39 @@ class PostCreateWithPermissionTestCase(TestCase):
         first_post = Post.objects.get(title='New Review')
         author_of_first_post = first_post.author
         self.assertEqual(author_of_first_post, self.adminuser)
+
+
+class PostStatusTestCase(TestCase):
+    def setUp(self):
+        self.adminuser = User.objects.create_superuser(
+            username='author',
+            password='author-password'
+        )
+        self.client.login(username='author', password='author-password')
+
+    def test_post_published_should_appear_on_homepage(self):
+        self.post = Post.objects.create(
+            title='The draft review',
+            body='This is the body of a nev review.',
+            status='PUB'
+        )
+        homepage = self.client.get(reverse('app_reviews:home'))
+        self.assertContains(homepage, self.post)
+
+    def test_post_to_publish_should_not_appear_on_homepage(self):
+        self.post = Post.objects.create(
+            title='The draft review',
+            body='This is the body of a nev review.',
+            status='TO_PUB'
+        )
+        homepage = self.client.get(reverse('app_reviews:home'))
+        self.assertNotContains(homepage, self.post)
+
+    def test_post_draft_should_not_appear_on_homepage(self):
+        self.post = Post.objects.create(
+            title='The draft review',
+            body='This is the body of a nev review.',
+            status='DRAFT'
+        )
+        homepage = self.client.get(reverse('app_reviews:home'))
+        self.assertNotContains(homepage, self.post)
