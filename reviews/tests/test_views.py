@@ -125,7 +125,8 @@ class PostCreateWithPermissionTestCase(TestCase):
     def test_successful_post_creation_redirect(self):
         new_review = {
             'title': 'New Review',
-            'body': 'The body of the new review'
+            'body': 'The body of the new review',
+            'status': 'PUB'
         }
         response = self.client.post(reverse_lazy('app_reviews:add_review'), data=new_review)
         expected_url_after_post = '/new-review/'  #slug created automatically based on 'New Review'
@@ -134,11 +135,14 @@ class PostCreateWithPermissionTestCase(TestCase):
     def test_successful_post_adding_to_database(self):
         first_review = {
             'title': 'New Review',
-            'body': 'The body of the new review'
+            'body': 'The body of the new review',
+            'status': 'PUB'
         }
         second_review = {
             'title': 'Second Review',
-            'body': 'The body of the new review'
+            'body': 'The body of the new review',
+            'status': 'PUB'
+
         }
         self.client.post(reverse_lazy('app_reviews:add_review'), data=first_review)
         self.client.post(reverse_lazy('app_reviews:add_review'), data=second_review)
