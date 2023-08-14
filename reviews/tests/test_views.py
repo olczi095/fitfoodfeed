@@ -182,6 +182,18 @@ class PostStatusTestCase(TestCase):
         homepage = self.client.get(reverse('app_reviews:home'))
         self.assertNotContains(homepage, self.post)
 
+    def test_post_to_publish_should_not_be_published(self):
+        data = {
+            'title': 'The to-publish review',
+            'body': 'This is the body of a two-publish review.',
+            'status': 'TO_PUB',
+            'slug': 'the-to-publish-review'
+        }
+        response = self.client.post(reverse('app_reviews:add_review'), data)
+        self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
+        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
+        self.assertEqual(response.status_code, 404)
+
     def test_post_draft_should_not_appear_on_homepage(self):
         self.post = Post.objects.create(
             title='The draft review',
@@ -190,3 +202,15 @@ class PostStatusTestCase(TestCase):
         )
         homepage = self.client.get(reverse('app_reviews:home'))
         self.assertNotContains(homepage, self.post)
+
+    def test_post_draft_should_not_be_published(self):
+        data = {
+            'title': 'The draft review',
+            'body': 'This is the body of a draft review.',
+            'status': 'DRAFT',
+            'slug': 'the-draft-review'
+        }
+        response = self.client.post(reverse('app_reviews:add_review'), data)
+        self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
+        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
+        self.assertEqual(response.status_code, 404)
