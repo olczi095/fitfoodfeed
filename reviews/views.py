@@ -1,4 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import Http404
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 
 from reviews.models import Post
@@ -29,4 +32,6 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        if form.instance.status == 'PUB':
+            return super().form_valid(form)
+        return redirect(reverse('app_reviews:home'))
