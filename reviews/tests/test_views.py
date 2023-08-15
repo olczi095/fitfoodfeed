@@ -194,6 +194,18 @@ class PostStatusTestCase(TestCase):
         response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
 
+    def test_post_to_publish_create_and_save(self):
+        data = {
+            'title': 'The third to-publish review',
+            'body': 'This is the body of a second two-publish review.',
+            'status': 'TO_PUB',
+        }
+        self.client.post(reverse('app_reviews:add_review'), data)
+
+        post_amount = Post.objects.count()
+        self.assertEqual(post_amount, 1)
+
+
     def test_post_draft_should_not_appear_on_homepage(self):
         self.post = Post.objects.create(
             title='The first draft review',
@@ -214,3 +226,14 @@ class PostStatusTestCase(TestCase):
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
         response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
+
+    def test_post_draft_create_and_save(self):
+        data = {
+            'title': 'The third draft review',
+            'body': 'This is the body of a third draft review.',
+            'status': 'DRAFT',
+        }
+        self.client.post(reverse('app_reviews:add_review'), data)
+
+        post_amount = Post.objects.count()
+        self.assertEqual(post_amount, 1)
