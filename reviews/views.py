@@ -21,8 +21,9 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+    queryset = Post.objects.filter(status="PUB")
 
-
+  
 class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -32,6 +33,10 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        if form.instance.status == 'PUB':
-            return super().form_valid(form)
-        return redirect(reverse('app_reviews:home'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if self.object.status == "PUB":
+            return super().get_success_url() 
+        return reverse('app_reviews:home')
+        
