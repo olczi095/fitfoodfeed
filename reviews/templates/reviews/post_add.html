@@ -97,9 +97,16 @@
             <div class="form-add-border">
                 {{ form|crispy}}
             </div>
-            <div class="text-right">
-                <br />
-                <button type="submit" class="btn btn-info btn-lg ">Submit</button>
+            <div class="form-buttons d-flex justify-content-between">
+                <div>
+                    <br />
+                    <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Submit</button>
+                    <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
+                </div>
+                <div>
+                    <br />
+                    <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                </div>
             </div>
         </form>
     </section>

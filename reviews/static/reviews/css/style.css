@@ -166,6 +166,8 @@
     padding: 2rem;
 }
 
-.text-right {
-    margin-right: 4rem;
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
