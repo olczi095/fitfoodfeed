@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 
+from taggit.managers import TaggableManager
+
 from accounts.models import User
 from accounts.validators import validate_avatar_type
 
@@ -36,6 +38,11 @@ class Post(models.Model):
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
     status = models.CharField(choices=Status.choices, max_length=50, default='DRAFT')
+
+    tags = TaggableManager(
+        blank=True, 
+        help_text="A comma-separated list of tags (case-insensitive)."
+    )
 
 
     class Meta:

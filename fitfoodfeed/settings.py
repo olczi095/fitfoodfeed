@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'accounts',
     'crispy_forms',
     'crispy_bootstrap4',
+    'taggit'
 ]
 
 MIDDLEWARE = [
@@ -114,3 +115,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 LOGOUT_REDIRECT_URL = 'app_reviews:home'
+
+TAGGIT_CASE_INSENSITIVE = True
