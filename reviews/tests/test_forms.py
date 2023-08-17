@@ -36,7 +36,9 @@ class PostFormTestCase(TestCase):
         post_form = PostForm()
         self.assertEqual(post_form.fields.get('title').label, 'Title')
         self.assertEqual(post_form.fields.get('meta_description').label, 'Meta Description')
+        self.assertEqual(post_form.fields.get('tags').label, 'Tags')
         self.assertEqual(post_form.fields.get('body').label, 'Body')
         self.assertEqual(post_form.fields.get('image').label, 'Image')
         self.assertEqual(post_form.fields.get('slug').label, 'Slug')
+        self.assertEqual(post_form.fields.get('status').label, 'Status')
         
