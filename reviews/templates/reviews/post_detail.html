@@ -22,5 +22,12 @@
         {% endif%}
         <h4><span class="post-tags">OPIS  |  CENA  |  DOSTĘPNOŚĆ  |  SKŁAD  |  TEST SMAKU</span></h4>
         <span class="post-typo">{{ post.body | safe }}</span>
+        <br /><br />
+            {% for tag in post.tags.all %}
+                <a href="#" class="badge badge-secondary">
+                    {{ tag|upper }}
+                </a>
+                    {% if not forloop.last %}|{% endif %}
+            {% endfor %}
     </div>
 {% endblock body %}
