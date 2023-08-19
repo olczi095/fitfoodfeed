@@ -171,3 +171,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.small-space {
+    margin-bottom: 1rem;
+}
