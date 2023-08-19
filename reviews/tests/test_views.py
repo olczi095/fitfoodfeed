@@ -1,6 +1,6 @@
-from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from taggit.models import Tag
 from reviews.models import User, Post
 
 
@@ -237,3 +237,39 @@ class PostStatusTestCase(TestCase):
 
         post_amount = Post.objects.count()
         self.assertEqual(post_amount, 1)
+
+    
+class TaggedPostsListTestCase(TestCase):
+    def setUp(self):
+        self.tag_bars = Tag.objects.create(
+            name='bars'
+        )
+        self.post1 = Post.objects.create(
+            title='Chocolate bar',
+            body='This is the body of the chocolate bar review.',
+            status='PUB',
+        )
+        self.post2 = Post.objects.create(
+            title='Protein bar',
+            body='This is the body of the protein bar review.',
+            status='TO_PUB',
+        )
+        self.post3 = Post.objects.create(
+            title='White chocolate bar',
+            body='This is the body of the white chocolate bar review.',
+            status='DRAFT',
+        )
+
+        posts = [self.post1, self.post2, self.post3]
+        for post in posts:
+            post.tags.add(self.tag_bars)
+
+    def test_tag_page_success(self):
+        tag_name = self.tag_bars.name
+        response = self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_tag_page_uses_home_template(self):
+        tag_name = self.tag_bars.name
+        self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
+        self.assertTemplateUsed('reviews/home.html')
