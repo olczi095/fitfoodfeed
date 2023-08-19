@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 from accounts.models import User
-from reviews.models import Post
+from reviews.models import Post, Model
 
 
 class PostModelExistenceTestCase(TestCase):
@@ -97,3 +97,9 @@ class PostModelTestCase(TestCase):
 
     def test_post_model_has_image_field(self):
         self.assertTrue(Post._meta.get_field('image'))
+
+
+class CategoryModelExistenceTestCase(TestCase):
+    def test_category_model_exists(self):
+        categories = Category.objects.all()
+        self.assertEqual(categories.count(), 0)
