@@ -238,6 +238,13 @@ class PostStatusTestCase(TestCase):
         post_amount = Post.objects.count()
         self.assertEqual(post_amount, 1)
 
+
+class TagsListTestCase(TestCase):
+    def test_successful_tags_list_displaying(self):
+        response = self.client.get(reverse('app_reviews:tags'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/tags.html')
+
     
 class TaggedPostsListTestCase(TestCase):
     def setUp(self):
