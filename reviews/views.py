@@ -31,6 +31,12 @@ class TaggedPostsListView(ListView):
         return super().get_queryset().filter(status='PUB').filter(tags=tag)
 
 
+class TagsListView(ListView):
+    model = Tag
+    template_name = 'reviews/tags.html'
+    context_object_name = 'tags'
+
+
 class PostDetailView(DetailView):
     model = Post
     queryset = Post.objects.filter(status="PUB")

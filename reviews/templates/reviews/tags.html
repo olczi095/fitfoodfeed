@@ -1,0 +1,23 @@
+{% extends 'reviews/base.html' %}
+{% load static %}
+
+{% block title %}
+    Mocne Żarcie - tagi
+{% endblock title %}
+
+{% block header %}
+    <div class="home-header">
+        <div class="header-text-main">MOCNE ŻARCIE<br /></div>
+        <div class="header-text">tags | tagi</div>
+    </div>  
+{% endblock header %}
+
+{% block body %}
+    <h1><div class="tags-content">
+        {% for tag in tags %}
+        <a href="{% url 'app_reviews:tag' tag_name=tag %}" class="badge badge-secondary">
+            {{ tag|upper }}
+        </a>
+        {% endfor %}
+    </div></h1>
+{% endblock body %}
