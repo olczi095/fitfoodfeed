@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.http import Http404
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
+from taggit.models import Tag
 
 from reviews.models import Post
 
@@ -18,6 +18,13 @@ class PostListView(ListView):
     def get_queryset(self):
         return super().get_queryset().filter(status='PUB').order_by('-pub_date')
     
+
+class TaggedPostsListView(ListView):
+    model = Post
+    template_name = 'reviews/home.html'
+    context_object_name = 'posts'
+    paginate_by = 3    
+
 
 class PostDetailView(DetailView):
     model = Post
