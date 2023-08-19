@@ -25,6 +25,11 @@ class TaggedPostsListView(ListView):
     context_object_name = 'posts'
     paginate_by = 3    
 
+    def get_queryset(self):
+        tag_name = self.kwargs['tag_name']
+        tag = get_object_or_404(Tag, name=tag_name)
+        return super().get_queryset().filter(status='PUB').filter(tags=tag)
+
 
 class PostDetailView(DetailView):
     model = Post
