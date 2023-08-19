@@ -244,6 +244,9 @@ class TaggedPostsListTestCase(TestCase):
         self.tag_bars = Tag.objects.create(
             name='bars'
         )
+        self.tag_drinks = Tag.objects.create(
+            name='drinks'
+        )
         self.post1 = Post.objects.create(
             title='Chocolate bar',
             body='This is the body of the chocolate bar review.',
@@ -259,10 +262,21 @@ class TaggedPostsListTestCase(TestCase):
             body='This is the body of the white chocolate bar review.',
             status='DRAFT',
         )
+        self.post4 = Post.objects.create(
+            title='Energydrink Zero',
+            body='This is the body of the Energydrink Zero',
+            status='PUB',
+        )
+        self.post5 = Post.objects.create(
+            title='Fruit Bar',
+            body='This is the body of the Fruit Zero',
+            status='PUB',
+        )
 
-        posts = [self.post1, self.post2, self.post3]
+        posts = [self.post1, self.post2, self.post3, self.post5]
         for post in posts:
             post.tags.add(self.tag_bars)
+        self.post4.tags.add(self.tag_drinks)
 
     def test_tag_page_success(self):
         tag_name = self.tag_bars.name
@@ -273,3 +287,14 @@ class TaggedPostsListTestCase(TestCase):
         tag_name = self.tag_bars.name
         self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
         self.assertTemplateUsed('reviews/home.html')
+
+    def test_filtering_tagged_posts(self):
+        tag_name = self.tag_bars.name
+
+        response = self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
+        filtered_tagged_posts = [self.post1, self.post5] # Posts with PUB status and BARS tag
+
+        self.assertQuerysetEqual(
+            response.context['posts'],
+            filtered_tagged_posts
+        )
