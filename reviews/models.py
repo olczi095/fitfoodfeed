@@ -85,6 +85,9 @@ class Category(models.Model):
     name = models.CharField(max_length=25, unique=True, blank=False, null=False)
     slug = models.SlugField(max_length=25, unique=True)
 
+    def __str__(self):
+        return self.name.title()
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = convert_to_slug(self.name)
