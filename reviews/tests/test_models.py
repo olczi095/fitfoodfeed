@@ -119,3 +119,7 @@ class CategoryModelTestCase(TestCase):
         }
         self.assertEqual(self.category.name, expected_fields['name'])
         self.assertEqual(self.category.slug, expected_fields['slug'])
+
+    def test_string_representation(self):
+        expected_representation = self.category.name.title()
+        self.assertEqual(str(self.category), expected_representation)
