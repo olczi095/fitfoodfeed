@@ -1,4 +1,3 @@
-from typing import Iterable, Optional
 from django_resized import ResizedImageField
 from django.db import models
 from django.urls import reverse
@@ -9,6 +8,26 @@ from taggit.managers import TaggableManager
 
 from accounts.models import User
 from accounts.validators import validate_avatar_type
+
+def convert_to_slug(text):
+        polish_signs_conversion = {
+            'ą': 'a',
+            'ć': 'c',
+            'ę': 'e',
+            'ł': 'l',
+            'ń': 'n',
+            'ó': 'o',
+            'ś': 's',
+            'ź': 'z',
+            'ż': 'z'
+        }
+        text_without_polish_signs = ''
+        for sign in text:
+            if sign in polish_signs_conversion.keys():
+                text_without_polish_signs += polish_signs_conversion[sign]
+            else:
+                text_without_polish_signs += sign
+        return slugify(text_without_polish_signs)
 
 
 class Post(models.Model):
@@ -57,25 +76,8 @@ class Post(models.Model):
         return reverse("app_reviews:review", args=[str(self.slug)])
 
     def save(self, *args, **kwargs):
-        polish_signs_conversion = {
-            'ą': 'a',
-            'ć': 'c',
-            'ę': 'e',
-            'ł': 'l',
-            'ń': 'n',
-            'ó': 'o',
-            'ś': 's',
-            'ź': 'z',
-            'ż': 'z'
-        }
         if not self.slug:
-            title_without_polish_signs = ''
-            for sign in self.title:
-                if sign in polish_signs_conversion.keys():
-                    title_without_polish_signs += polish_signs_conversion[sign]
-                else:
-                    title_without_polish_signs += sign
-            self.slug = slugify(title_without_polish_signs)
+            self.slug = convert_to_slug(self.title)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -84,23 +86,6 @@ class Category(models.Model):
     slug = models.SlugField(max_length=25, unique=True)
 
     def save(self, *args, **kwargs):
-        polish_signs_conversion = {
-            'ą': 'a',
-            'ć': 'c',
-            'ę': 'e',
-            'ł': 'l',
-            'ń': 'n',
-            'ó': 'o',
-            'ś': 's',
-            'ź': 'z',
-            'ż': 'z'
-        }
         if not self.slug:
-            name_without_polish_signs = ''
-            for sign in self.name:
-                if sign in polish_signs_conversion.keys():
-                    name_without_polish_signs += polish_signs_conversion[sign]
-                else:
-                    name_without_polish_signs += sign
-            self.slug = slugify(name_without_polish_signs)
+            self.slug = convert_to_slug(self.name)
         super(Category, self).save(*args, **kwargs)
