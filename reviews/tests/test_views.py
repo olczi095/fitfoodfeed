@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from taggit.models import Tag
-from reviews.models import User, Post
+from reviews.models import User, Post, Category
 
 
 class HomePageTestCase(TestCase):
@@ -305,3 +305,16 @@ class TaggedPostsListTestCase(TestCase):
             response.context['posts'],
             filtered_tagged_posts
         )
+
+    
+class CategoryViewsTestCase(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(
+            name='masła orzechowe'
+        )
+        self.assertTrue(self.category)
+
+    def test_successfull_category_page_load(self):
+        response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': self.category.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('reviews/home.html')
