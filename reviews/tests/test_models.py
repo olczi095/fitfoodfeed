@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 from accounts.models import User
-from reviews.models import Post, Model
+from reviews.models import Post, Category
 
 
 class PostModelExistenceTestCase(TestCase):
@@ -103,3 +103,19 @@ class CategoryModelExistenceTestCase(TestCase):
     def test_category_model_exists(self):
         categories = Category.objects.all()
         self.assertEqual(categories.count(), 0)
+
+
+class CategoryModelTestCase(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(
+            name='masła orzechowe'
+        )
+        self.assertTrue(self.category)
+
+    def test_category_fields(self):
+        expected_fields = {
+            'name': 'masła orzechowe',
+            'slug': 'masla-orzechowe'
+        }
+        self.assertEqual(self.category.name, expected_fields['name'])
+        self.assertEqual(self.category.slug, expected_fields['slug'])
