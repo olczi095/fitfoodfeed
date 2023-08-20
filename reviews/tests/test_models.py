@@ -24,7 +24,6 @@ class PostModelTestCase(TestCase):
             pub_date=timezone.now().date(),
             author=self.author,
             body='test_body',
-            category='other'
         )
         self.second_post = Post.objects.create(
             title='second_test_title',
@@ -42,7 +41,6 @@ class PostModelTestCase(TestCase):
         self.assertEqual(self.post.meta_description, '')
         self.assertEqual(self.post.body, 'test_body')
         self.assertEqual(self.post.status, 'DRAFT')
-        self.assertEqual(self.post.category, 'Other')
 
     def test_status_choices(self):
         expected_status_choices = [

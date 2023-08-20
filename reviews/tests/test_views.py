@@ -317,4 +317,4 @@ class CategoryViewsTestCase(TestCase):
     def test_successfull_category_page_load(self):
         response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': self.category.slug}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed('reviews/home.html')
+        self.assertTemplateUsed(response, 'reviews/home.html')
