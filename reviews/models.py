@@ -76,3 +76,7 @@ class Post(models.Model):
                     title_without_polish_signs += sign
             self.slug = slugify(title_without_polish_signs)
         super(Post, self).save(*args, **kwargs)
+
+
+class Category(models.Model):
+    pass
