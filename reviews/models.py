@@ -30,6 +30,19 @@ def convert_to_slug(text):
         return slugify(text_without_polish_signs)
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=25, unique=True, blank=False, null=False)
+    slug = models.SlugField(max_length=25, unique=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.name.title()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = convert_to_slug(self.name)
+        super(Category, self).save(*args, **kwargs)
+
+
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DRAFT', 'Draft'
@@ -79,16 +92,3 @@ class Post(models.Model):
         if not self.slug:
             self.slug = convert_to_slug(self.title)
         super(Post, self).save(*args, **kwargs)
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=25, unique=True, blank=False, null=False)
-    slug = models.SlugField(max_length=25, unique=True)
-
-    def __str__(self):
-        return self.name.title()
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = convert_to_slug(self.name)
-        super(Category, self).save(*args, **kwargs)
