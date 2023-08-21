@@ -18,12 +18,16 @@ class PostModelTestCase(TestCase):
             username='test_user',
             password='test_password'
         )
+        self.category = Category.objects.create(
+            name='test_category'
+        )
         self.post = Post.objects.create(
             title='test_title',
             slug='test_slug',
             pub_date=timezone.now().date(),
             author=self.author,
             body='test_body',
+            category=self.category
         )
         self.second_post = Post.objects.create(
             title='second_test_title',
@@ -41,6 +45,16 @@ class PostModelTestCase(TestCase):
         self.assertEqual(self.post.meta_description, '')
         self.assertEqual(self.post.body, 'test_body')
         self.assertEqual(self.post.status, 'DRAFT')
+        self.assertEqual(self.post.category.name, self.category.name)
+
+    def test_category_field(self):
+        post_fields = [field.name for field in self.post._meta.get_fields()]
+        category_field = 'category'
+        self.assertIn(category_field, post_fields)
+
+    def test_category_field_connected_with_category_model(self):
+        category_field = Post._meta.get_field('category')
+        self.assertEqual(category_field.related_model, Category)
 
     def test_status_choices(self):
         expected_status_choices = [
