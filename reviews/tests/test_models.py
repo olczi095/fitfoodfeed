@@ -56,6 +56,10 @@ class PostModelTestCase(TestCase):
         category_field = Post._meta.get_field('category')
         self.assertEqual(category_field.related_model, Category)
 
+    def test_category_default(self):
+        default_category = Category.objects.all()[0]
+        self.assertEqual(self.second_post.category, default_category.name)
+
     def test_status_choices(self):
         expected_status_choices = [
             ('DRAFT', 'Draft'),
