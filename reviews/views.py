@@ -1,10 +1,12 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 from taggit.models import Tag
 
-from reviews.models import Post
+from reviews.models import Post, Category
 
 from .forms import PostForm
 
@@ -58,3 +60,14 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
             return super().get_success_url() 
         return reverse('app_reviews:home')
         
+    
+class CategoryListView(ListView):
+    model = Post
+    template_name = 'reviews/home.html'
+    context_object_name = 'posts'
+    paginate_by = 3
+
+    # def get_queryset(self):
+    #     category_name = self.kwargs['category_name']
+    #     category = get_object_or_404(Category, slug=category_name)
+    #     return super().get_queryset().filter(status='PUB', category=category)
