@@ -68,6 +68,13 @@ class Post(models.Model):
         null=True,
         blank=True
     )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_DEFAULT,          
+        default=None,          
+        null=True,          
+        blank=True     
+    )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
     status = models.CharField(choices=Status.choices, max_length=50, default='DRAFT')
