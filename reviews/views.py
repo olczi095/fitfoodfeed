@@ -67,7 +67,7 @@ class CategoryListView(ListView):
     context_object_name = 'posts'
     paginate_by = 3
 
-    # def get_queryset(self):
-    #     category_name = self.kwargs['category_name']
-    #     category = get_object_or_404(Category, slug=category_name)
-    #     return super().get_queryset().filter(status='PUB', category=category)
+    def get_queryset(self):
+        category_name = self.kwargs['category_name']
+        category = get_object_or_404(Category, slug=category_name)
+        return super().get_queryset().filter(status='PUB', category=category)
