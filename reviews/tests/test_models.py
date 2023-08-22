@@ -57,8 +57,8 @@ class PostModelTestCase(TestCase):
         self.assertEqual(category_field.related_model, Category)
 
     def test_category_default(self):
-        default_category = Category.objects.all()[0]
-        self.assertEqual(self.second_post.category, default_category.name)
+        default_category = 'Other'
+        self.assertEqual(self.second_post.category.name, default_category)
 
     def test_status_choices(self):
         expected_status_choices = [
