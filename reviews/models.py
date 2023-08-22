@@ -41,6 +41,7 @@ class Category(models.Model):
         if not self.slug:
             self.slug = convert_to_slug(self.name)
         super(Category, self).save(*args, **kwargs)
+        
 
 class Post(models.Model):
     class Status(models.TextChoices):
