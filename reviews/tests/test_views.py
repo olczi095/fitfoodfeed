@@ -311,10 +311,36 @@ class CategoryViewsTestCase(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='masła orzechowe'
+        )        
+        self.post1 = Post.objects.create(
+            title='Chocolate bar',
+            body='This is the body of the chocolate bar review.',
+            status='PUB',
         )
-        self.assertTrue(self.category)
+        self.post2 = Post.objects.create(
+            title='Peanut Butter Crunchy',
+            category=self.category,
+            body='This is the body of the peanut butter crunchy review.',
+            status='PUB',
+        )
+        self.post3 = Post.objects.create(
+            title='Peanut Butter with white chocolate',
+            category=self.category,
+            body='This is the body of the peanut butter with white chocolate review.',
+            status='DRAFT',
+        )
 
     def test_successfull_category_page_load(self):
         response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': self.category.slug}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/home.html')
+
+    def test_display_published_post_from_proper_category(self):
+        category_peanut_butter = self.category.slug
+        response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': category_peanut_butter}))
+        
+        expected_posts = [self.post2]
+        self.assertQuerysetEqual(
+            response.context['posts'],
+            expected_posts
+        )
