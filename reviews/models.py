@@ -40,6 +40,8 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = convert_to_slug(self.name)
+        if self.name:
+            self.name = self.name.title()
         super(Category, self).save(*args, **kwargs)
         
 
