@@ -132,7 +132,7 @@ class CategoryModelTestCase(TestCase):
 
     def test_category_fields(self):
         expected_fields = {
-            'name': 'masła orzechowe',
+            'name': 'Masła Orzechowe',
             'slug': 'masla-orzechowe'
         }
         self.assertEqual(self.category.name, expected_fields['name'])
