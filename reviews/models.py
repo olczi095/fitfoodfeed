@@ -42,7 +42,6 @@ class Category(models.Model):
             self.slug = convert_to_slug(self.name)
         super(Category, self).save(*args, **kwargs)
 
-
 class Post(models.Model):
     class Status(models.TextChoices):
         DRAFT = 'DRAFT', 'Draft'
@@ -78,7 +77,6 @@ class Post(models.Model):
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
     status = models.CharField(choices=Status.choices, max_length=50, default='DRAFT')
-
     tags = TaggableManager(
         blank=True, 
         help_text="A comma-separated list of tags (case-insensitive)."
@@ -98,4 +96,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = convert_to_slug(self.title)
+        if not self.category:
+            default_category, created = Category.objects.get_or_create(name='Other')
+            self.category = default_category
         super(Post, self).save(*args, **kwargs)
