@@ -25,43 +25,53 @@
         <div class="posts">
             {% for post in posts %}
                     <div class="post">
-                        <h1><a href="{{ post.get_absolute_url }}" class="post-title">{{ post.title }}</a></h1>
-                        <a href="{{ post.category.get_absolute_url }}" class="category-name">{{ post.category.name|upper }}</a>
+                        <h1 class="post-title">
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </h1>
+                        <a href="{{ post.category.get_absolute_url }}" class="category-name">
+                            {{ post.category.name|upper }}
+                        </a>
                         <span class="post-info">{{ post.author }} / {{ post.pub_date }}</span>
+
                         <div class="small-space"></div>
                         {{ post.body | truncatewords:150}}<br /><br />
                         <div class="small-space"></div>
+
                         {% for tag in post.tags.all %}
                             <a href="{% url 'app_reviews:tag' tag_name=tag %}" class="badge badge-secondary">
                                 {{ tag|upper }}
                             </a>
                                 {% if not forloop.last %}|{% endif %}
                         {% endfor %}
+
                         <div class="small-space"></div>
-                        
                     </div>
             {% endfor %}
 
             <div class="pagination">
                 {% if page_obj.has_previous %}
                     <span class="previous">
-                        <a href="?page={{ page_obj.previous_page_number }}"><img src="/static/reviews/images/left-arrow.png" alt="poprzedni" class="arrow" /></a>
+                        <a href="?page={{ page_obj.previous_page_number }}">
+                            <img src="/static/reviews/images/left-arrow.png" alt="poprzedni" class="arrow" />
+                        </a>
                     </span>
                 {% endif %}
+
                     <span class="current">
                         strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
                     </span>
+
                 {% if page_obj.has_next %}
                     <span class="next">
                         <a href="?page={{ page_obj.next_page_number }}"><img src="/static/reviews/images/right-arrow.png" alt="nastepny" class="arrow" /></a>
                     </span>
                 {% endif %}
             </div>
-
         </div>
 
         <div class="sidebar">
             <img src="/static/reviews/images/me-avatar.png" class="avatar-style"/><br />
+
                 <div class="short-description">
                     Miłośniczka zdrowego trybu życia, sportu i jedzenia.
                     Na co dzień recenzuję produkty zaliczane do szeroko pojmowanej grupy "fit żywności" - batony proteinowe, produkty zero kalorii, produkty bez cukru, gorzkie czekolady i wysokobiałkowe przekąski.<br /><br />
