@@ -43,6 +43,9 @@ class Category(models.Model):
         if self.name:
             self.name = self.name.title()
         super(Category, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("app_reviews:category", kwargs={"category_name": self.slug})
         
 
 class Post(models.Model):
