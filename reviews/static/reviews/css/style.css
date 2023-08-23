@@ -8,6 +8,7 @@
     --color-lightorange: #efc38a;
     --color-lightgrey: #ccc;
     --color-dark-grey: #3d3f41;
+    --color-black: #000;
 }
 
 /* Global Styles */
@@ -80,9 +81,31 @@
     display: flex;
 }
 
+.home-content .post-title {
+    display: inline-block;
+    text-align: center;
+    color: var(--color-black);
+    font-weight: bolder;
+}
+
 .home-content .posts {
     width: 80%;
     padding-right: 5rem;
+}
+
+.home-content .post-info {
+    display: block;
+    text-align: center;
+    color: var(--color-lightgrey);
+    font-style: italic;
+}
+
+.home-content .category-name {
+    display: block;
+    text-align: center;
+    font-weight: bolder;
+    color: var(--color-orange);
+    font-size: 1.1rem;
 }
 
 .home-content .posts .post {
