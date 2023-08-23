@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib import admin
 from .models import Post, Category
 
@@ -15,6 +16,11 @@ class PostAdmin(admin.ModelAdmin):
     def tag_list(self, obj):
         return u", ".join(o.name for o in obj.tags.all())
     
+    def save_model(self, request, obj, *args, **kwargs):
+        if not obj.author:
+            obj.author = request.user
+        return super().save_model(request, obj, *args, **kwargs)
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
