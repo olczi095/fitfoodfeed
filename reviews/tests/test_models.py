@@ -141,3 +141,7 @@ class CategoryModelTestCase(TestCase):
     def test_string_representation(self):
         expected_representation = self.category.name.title()
         self.assertEqual(str(self.category), expected_representation)
+
+    def test_get_absolute_url(self):
+        expected_category_absolute_url = '/category/' + self.category.slug + '/'
+        self.assertEqual(self.category.get_absolute_url(), expected_category_absolute_url)
