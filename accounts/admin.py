@@ -1,15 +1,17 @@
 from django.contrib import admin
 from .models import User
+from .forms import CustomUserCreationForm
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    form = CustomUserCreationForm
     list_display = ['display_user', 'display_groups', 'email', 'is_author', 'is_staff',]
     fieldsets = [
         (
             'Identification Data',
             {
-                'fields': ['username', 'password', 'first_name', 'last_name', 'email'] 
+                'fields': ['username', 'password1', 'password2', 'first_name', 'last_name', 'email'] 
             }
         ),
         (
