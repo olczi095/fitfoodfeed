@@ -21,3 +21,25 @@ class UserAdminModelTestCase(TestCase):
         user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
         displayed_groups = user_admin.display_groups(self.user)
         self.assertEqual(displayed_groups, '')
+
+    def test_fieldsets_configuration(self):
+        admin = UserAdmin(model=User, admin_site=AdminSite())
+        expected_fieldsets = [
+            (
+                "Identification Data",
+                {'fields': ['username', 'password', 'first_name', 'last_name', 'email']}
+            ),
+            (
+                "Administration Properties",
+                {'fields': ['is_active', 'is_superuser', 'is_staff', 'is_author']}
+            ),
+            (
+                "Permission-related Fields",
+                {'fields': ['groups', 'user_permissions']}
+            ),
+            (
+                "Additional Information",
+                {'fields': ['avatar', 'bio']}
+            )
+        ]
+        self.assertEqual(admin.fieldsets, expected_fieldsets)
