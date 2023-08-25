@@ -25,7 +25,7 @@ class UserAdmin(admin.ModelAdmin):
             }
         ),
         (
-            'Additional Informations',
+            'Additional Information',
             {
                 'fields': ['avatar', 'bio']
             }
