@@ -27,7 +27,7 @@ class UserAdminModelTestCase(TestCase):
         expected_fieldsets = [
             (
                 "Identification Data",
-                {'fields': ['username', 'password1', 'password2', 'first_name', 'last_name', 'email']}
+                {'fields': ['username', 'password', 'first_name', 'last_name', 'email']}
             ),
             (
                 "Administration Properties",
