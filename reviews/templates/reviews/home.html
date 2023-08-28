@@ -1,13 +1,13 @@
 {% extends 'reviews/base.html' %}
 {% load static %}
 {% block title %}
-    Mocne Żarcie - recenzje zdrowych (lub mniej) produktów
+    Mocne Żarcie - Reviews of Healthy (or Less Healthy) Products
 {% endblock title%}
 
 {% block header %}
     <div class="home-header">
         <div class="header-text-main">MOCNE ŻARCIE<br /></div>
-        <div class="header-text">recenzje | e-sklep | społeczność</div>
+        <div class="header-text">reviews | e-shop | society</div>
     </div>  
 {% endblock header %}
 
@@ -54,12 +54,12 @@
                 {% endif %}
 
                     <span class="current">
-                        strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
+                        page {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
                     </span>
 
                 {% if page_obj.has_next %}
                     <span class="next">
-                        <a href="?page={{ page_obj.next_page_number }}"><img src="/static/reviews/images/right-arrow.png" alt="nastepny" class="arrow" /></a>
+                        <a href="?page={{ page_obj.next_page_number }}"><img src="/static/reviews/images/right-arrow.png" alt="next" class="arrow" /></a>
                     </span>
                 {% endif %}
             </div>
@@ -69,11 +69,11 @@
             <img src="/static/reviews/images/me-avatar.png" class="avatar-style"/><br />
 
                 <div class="short-description">
-                    Miłośniczka zdrowego trybu życia, sportu i jedzenia.
-                    Na co dzień recenzuję produkty zaliczane do szeroko pojmowanej grupy "fit żywności" - batony proteinowe, produkty zero kalorii, produkty bez cukru, gorzkie czekolady i wysokobiałkowe przekąski.<br /><br />
+                    Lover of healthy lifestyle, exercising and eating.
+                    Normally I review products that can be associated with "fit food" like protein bars, zero calorie products, no sugar food, dark chocolates and high-protein snacks.<br /><br />
 
-                    Nową częścią strony jest e-sklep, w którym można znaleźć polecane i sprawdzone przeze mnie produkty.
-                    Ponadto "Mocne Żarcie" to cała fit społeczność - ludzie o podobnych pasjach, którzy wzajemnie sobie radzą, samodzielnie dokonują recenzji różnych produktów i nawzajem zachęcają się do aktywniejszego i zdrowszego życia.
+                    New section of the website is the e-shop where you can discover recommended products that I have mostly personally testes. 
+                    Moreover, "Mocne Żarcie" is more than just a website - it's a big fitness society. It brings together people with similar passions who support each other, independently review many of products, and encourage each other to be active, fit and healthy. 
                 </div>
         </div>
     </div>

@@ -126,14 +126,14 @@ class CategoryModelExistenceTestCase(TestCase):
 class CategoryModelTestCase(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
-            name='masła orzechowe'
+            name='peanut butter'
         )
         self.assertTrue(self.category)
 
     def test_category_fields(self):
         expected_fields = {
-            'name': 'Masła Orzechowe',
-            'slug': 'masla-orzechowe'
+            'name': 'Peanut Butter',
+            'slug': 'peanut-butter'
         }
         self.assertEqual(self.category.name, expected_fields['name'])
         self.assertEqual(self.category.slug, expected_fields['slug'])
