@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.contrib.admin import AdminSite
 from taggit.models import Tag
 from accounts.models import User
-from reviews.models import Post
-from reviews.admin import PostAdmin
+from reviews.models import Post, Category
+from reviews.admin import PostAdmin, CategoryAdmin
 from unittest.mock import Mock
 
 
@@ -45,3 +45,31 @@ class PostAdminTestCase(TestCase):
         postModelAdmin.save_model(request, self.another_review, PostAdmin.form, change=False)
         new_review = Post.objects.get(pk=self.another_review.pk)
         self.assertEqual(new_review.author, self.author)
+
+
+class CategoryAdminTestCase(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(
+            name='Peanut Butter'
+        )
+        self.post1 = Post.objects.create(
+            title='Post 1',
+            body='The body of Post 1',
+            category=self.category
+        )
+        self.post2 = Post.objects.create(
+            title='Post 2',
+            body='The body of Post 2',
+            category=self.category
+        )
+        self.post3 = Post.objects.create(
+            title='Post 3',
+            body='The body of Post 3',
+            category=self.category
+        )
+
+    def test_post_count_for_category(self):
+        categoryModelAdmin = CategoryAdmin(model=Category, admin_site=AdminSite())
+        post_count = categoryModelAdmin.post_count(self.category)
+        expected_post_count = 3 
+        self.assertEqual(post_count, expected_post_count)
