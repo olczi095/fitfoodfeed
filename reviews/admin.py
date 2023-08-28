@@ -24,6 +24,9 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['name', 'slug', 'post_count']
     list_filter = ['name']
     search_fields = ['name']
+
+    def post_count(self, obj):
+        return obj.post_set.count()
