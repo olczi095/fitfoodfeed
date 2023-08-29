@@ -156,6 +156,32 @@ class PostCreateWithPermissionTestCase(TestCase):
         self.assertEqual(author_of_first_post, self.adminuser)
 
 
+class PostUpdateTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(
+            username='author', 
+            password='xyz', 
+            is_author=True
+        )
+        self.category = Category.objects.create(
+            name='Peanut Butter'
+        )
+        self.review = Post.objects.create(
+            title='Protein Bar Review',
+            body='This is a review of Protein Bar. I really liked it.',
+            author=self.author,
+            category=self.category,
+        )
+        self.assertEqual(self.review.author.username, 'author')
+        self.assertEqual(self.review.category.name, 'Peanut Butter')
+
+    def test_display_update_review_url_success(self):
+        self.assertTrue(self.author.is_authenticated)
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+
 class PostStatusTestCase(TestCase):
     def setUp(self):
         self.adminuser = User.objects.create_superuser(
