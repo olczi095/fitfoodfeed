@@ -9,7 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        Add a Review | MocneŻarcie
+        {% block title %}
+            Add a Review | MocneŻarcie
+        {% endblock title %}
     </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,28 +90,29 @@
         </div>
     </nav>
 
-
-    <section class="form-add-container">
-        <form method="post" class="form-add-review">
-            <h2>Create a new review</h2>
-            <br />
-            {% csrf_token %}
-            <div class="form-add-border">
-                {{ form|crispy}}
-            </div>
-            <div class="form-buttons d-flex justify-content-between">
-                <div>
-                    <br />
-                    <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Submit</button>
-                    <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
+    {% block form %}
+        <section class="form-add-container">
+            <form method="post" class="form-add-review">
+                <h2>Create a new review</h2>
+                <br />
+                {% csrf_token %}
+                <div class="form-add-border">
+                    {{ form|crispy}}
                 </div>
-                <div>
-                    <br />
-                    <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                <div class="form-buttons d-flex justify-content-between">
+                    <div>
+                        <br />
+                        <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Submit</button>
+                        <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
+                    </div>
+                    <div>
+                        <br />
+                        <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </section>
+            </form>
+        </section>
+    {% endblock form %}
 
 </body>
 </html>

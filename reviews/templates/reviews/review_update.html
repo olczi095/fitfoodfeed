@@ -1,0 +1,31 @@
+{% extends 'reviews/post_add.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Update a Review | MocneŻarcie
+{% endblock title %}
+
+{% block form %}
+    <section class="form-add-container">
+        <form method="post" class="form-add-review">
+            <h2>Update (edit) a review</h2>
+            <br />
+            {% csrf_token %}
+            <div class="form-add-border">
+                {{ form|crispy}}
+            </div>
+            <div class="form-buttons d-flex justify-content-between">
+                <div>
+                    <br />
+                    <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Update</button>
+                    <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
+                </div>
+                <div>
+                    <br />
+                    <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                </div>
+            </div>
+        </form>
+    </section>
+{% endblock form%}
