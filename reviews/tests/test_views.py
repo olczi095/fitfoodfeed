@@ -96,15 +96,15 @@ class PostCreateTestCase(TestCase):
         )
 
     def test_unlogged_user_redirect_to_login(self):
-        response = self.client.get(reverse('app_reviews:add_review'))
+        response = self.client.get(reverse('app_reviews:create_review'))
         self.assertEqual(response.status_code, 302)  
-        expected_url = reverse('app_accounts:login') + '?next=' + reverse('app_reviews:add_review')
+        expected_url = reverse('app_accounts:login') + '?next=' + reverse('app_reviews:create_review')
         self.assertRedirects(response, expected_url)
 
     
     def test_logged_user_without_permission_returns_403_page(self):
         self.client.login(username='random', password='testpassword')
-        response = self.client.get(reverse_lazy('app_reviews:add_review'))
+        response = self.client.get(reverse_lazy('app_reviews:create_review'))
         self.assertEqual(response.status_code, 403)
 
 
@@ -118,7 +118,7 @@ class PostCreateWithPermissionTestCase(TestCase):
 
     def test_display_add_review_success(self):
         self.assertTrue(self.adminuser.has_perm('reviews.add_post'))
-        response = self.client.get(reverse_lazy('app_reviews:add_review'))
+        response = self.client.get(reverse_lazy('app_reviews:create_review'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/post_add.html')
 
@@ -128,7 +128,7 @@ class PostCreateWithPermissionTestCase(TestCase):
             'body': 'The body of the new review',
             'status': 'PUB'
         }
-        response = self.client.post(reverse_lazy('app_reviews:add_review'), data=new_review)
+        response = self.client.post(reverse_lazy('app_reviews:create_review'), data=new_review)
         expected_url_after_post = '/new-review/'  #slug created automatically based on 'New Review'
         self.assertRedirects(response, expected_url_after_post)
 
@@ -144,8 +144,8 @@ class PostCreateWithPermissionTestCase(TestCase):
             'status': 'PUB'
 
         }
-        self.client.post(reverse_lazy('app_reviews:add_review'), data=first_review)
-        self.client.post(reverse_lazy('app_reviews:add_review'), data=second_review)
+        self.client.post(reverse_lazy('app_reviews:create_review'), data=first_review)
+        self.client.post(reverse_lazy('app_reviews:create_review'), data=second_review)
 
         posts_amount = len(Post.objects.all())
         self.assertEqual(posts_amount, 2)
@@ -189,7 +189,7 @@ class PostStatusTestCase(TestCase):
             'status': 'TO_PUB',
             'slug': 'the-second-to-publish-review'
         }
-        response = self.client.post(reverse('app_reviews:add_review'), data)
+        response = self.client.post(reverse('app_reviews:create_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
         response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
@@ -200,7 +200,7 @@ class PostStatusTestCase(TestCase):
             'body': 'This is the body of a second two-publish review.',
             'status': 'TO_PUB',
         }
-        self.client.post(reverse('app_reviews:add_review'), data)
+        self.client.post(reverse('app_reviews:create_review'), data)
 
         post_amount = Post.objects.count()
         self.assertEqual(post_amount, 1)
@@ -222,7 +222,7 @@ class PostStatusTestCase(TestCase):
             'status': 'DRAFT',
             'slug': 'the-second-draft-review'
         }
-        response = self.client.post(reverse('app_reviews:add_review'), data)
+        response = self.client.post(reverse('app_reviews:create_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
         response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
@@ -233,7 +233,7 @@ class PostStatusTestCase(TestCase):
             'body': 'This is the body of a third draft review.',
             'status': 'DRAFT',
         }
-        self.client.post(reverse('app_reviews:add_review'), data)
+        self.client.post(reverse('app_reviews:create_review'), data)
 
         post_amount = Post.objects.count()
         self.assertEqual(post_amount, 1)
