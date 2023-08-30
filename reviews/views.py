@@ -1,5 +1,6 @@
-from typing import Any
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from typing import Any, Optional
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.db import models
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -61,12 +62,18 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return reverse('app_reviews:home')
     
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'slug', 'pub_date', 'image', 'category', 'meta_description', 'body', 'status', 'tags']
+    permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
+    permission_required = 'reviews.update_post'
     template_name = 'reviews/review_update.html'
 
-    
+    def test_func(self):
+        # Only superusers, staff and the proper post's author can access the update view
+        return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
+
+
 class CategoryListView(ListView):
     model = Post
     template_name = 'reviews/home.html'
