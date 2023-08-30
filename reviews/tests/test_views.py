@@ -172,14 +172,59 @@ class PostUpdateTestCase(TestCase):
             author=self.author,
             category=self.category,
         )
-        self.assertEqual(self.review.author.username, 'author')
-        self.assertEqual(self.review.category.name, 'Peanut Butter')
 
-    def test_display_update_review_url_success(self):
-        self.assertTrue(self.author.is_authenticated)
+    def test_author_can_access_update_view(self):
+        self.client.login(username='author', password='xyz')
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_superuser_can_access_update_view(self):
+        self.superuser = User.objects.create_superuser(
+            username='admin',
+            password='pass'
+        )
+        self.client.login(username='admin', password='pass')
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_staff_can_access_update_view(self):
+        self.staff = User.objects.create_user(
+            username='staff',
+            password='abc',
+            is_staff=True
+        )
+        self.client.login(username='staff', password='abc')
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_normal_user_cannot_access_update_view(self):
+        self.normal_user = User.objects.create_user(
+            username='normal_user',
+            password='abc',
+        )
+        self.client.login(username='normal_user', password='abc')
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, '403.html')
+
+    def test_other_author_cannot_update_post(self):
+        self.second_author = User.objects.create_user(
+            username='second_author',
+            password='xyz',
+            is_author=True
+        )
+        self.client.login(username='second_author', password='xyz')
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, '403.html')
+    
+    def test_not_logged_user_redirect_login_page(self):
+        self.client.logout()
+        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertTemplateUsed(response, 'registration/login.html')
 
 
 class PostStatusTestCase(TestCase):
