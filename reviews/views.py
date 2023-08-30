@@ -1,9 +1,6 @@
-from typing import Any, Optional
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.db import models
-from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from taggit.models import Tag
 
