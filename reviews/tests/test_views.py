@@ -227,6 +227,63 @@ class PostUpdateTestCase(TestCase):
         self.assertTemplateUsed(response, 'registration/login.html')
 
 
+class PostDeleteTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(
+            username='author', 
+            password='xyz', 
+            is_author=True
+        )
+        self.review = Post.objects.create(
+            title='Vegan Chocolate Review',
+            body='This is a review of Vegan Chocolate. Not tasty.',
+            author=self.author,
+        )
+    
+    def test_author_can_access_delete_view(self):
+        self.client.login(username='author', password='xyz')
+        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('reviews/review_delete.html')
+
+    def test_staff_can_access_delete_view(self):
+        User.objects.create_user(
+            username='admin',
+            password='abc',
+            is_staff=True
+        )
+        self.client.login(username='admin', password='abc')
+        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('reviews/review_delete.html')
+
+    def test_superuser_can_access_delete_view(self):
+        User.objects.create_superuser(
+            username='superuser',
+            password='abc'
+        )
+        self.client.login(username='superuser', password='xyz')
+        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed('reviews/review_delete.html')
+
+    def test_other_author_cannot_delete_post(self):
+        User.objects.create_user(
+            username='other_author',
+            password='xyz',
+            is_author=True
+        )
+        self.client.login(username='other_author', password='xyz')
+        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, '403.html')
+
+    def test_random_user_redirect_login_page(self):
+        self.client.logout()
+        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertTemplateUsed(response, 'registration/login.html')
+
+
 class PostStatusTestCase(TestCase):
     def setUp(self):
         self.adminuser = User.objects.create_superuser(
