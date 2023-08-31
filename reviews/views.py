@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from taggit.models import Tag
 
 from reviews.models import Post, Category
@@ -68,6 +68,17 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         # Only superusers, staff and the proper post's author can access the update view
+        return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
+    
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
+    template_name = 'reviews/review_delete.html'
+    success_url = reverse_lazy('app_reviews:home')
+
+    def test_func(self):
+        # Only superusers, staff and the proper post's author can access the delete view
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
 
 

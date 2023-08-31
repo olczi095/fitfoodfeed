@@ -199,6 +199,24 @@
     padding: 2rem;
 }
 
+.form-delete-title {
+    display: flex;
+    justify-content: left !important;
+}
+
+.form-delete-container {
+    display: block;
+    text-align: center;
+    margin: 5rem 0;
+}
+
+.form-delete-review {
+    margin: auto;
+    width: 50%;
+    padding: 2rem;
+    border: 0.2rem double var(--color-dark-grey);
+}
+
 .form-buttons {
     display: flex;
     justify-content: space-between;
