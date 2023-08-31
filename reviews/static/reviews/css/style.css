@@ -175,6 +175,16 @@
     font-weight: 800;
 }
 
+.post-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.post-icons ion-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
 .form-add-container {
     margin: 2rem 18rem 3rem 18rem;
 }

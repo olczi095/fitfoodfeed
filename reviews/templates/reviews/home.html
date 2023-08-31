@@ -25,6 +25,15 @@
         <div class="posts">
             {% for post in posts %}
                     <div class="post">
+
+                        <div class="post-icons">
+                            {% if user == post.author or user.is_staff or user.is_superuser %}
+                                <a href="{% url 'app_reviews:update_review' post.pk %}">
+                                    <ion-icon name="create-outline"></ion-icon>
+                                </a>
+                            {% endif %}
+                        </div>
+                        
                         <h1><a href="{{ post.get_absolute_url }}" class="post-title">{{ post.title }}</a></h1>
                         <a href="{{ post.category.get_absolute_url }}" class="category-name">{{ post.category.name|upper }}</a>
                         <span class="post-info">{{ post.author }} / {{ post.pub_date }}</span>
