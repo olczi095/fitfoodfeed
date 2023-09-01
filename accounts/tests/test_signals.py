@@ -40,3 +40,13 @@ class SignalsTestCase(TestCase):
         test_author_permissions = [permission.codename for permission in test_author.user_permissions.all()]
         for expected_permission in expected_permissions:
             self.assertNotIn(expected_permission, test_author_permissions)
+
+    def test_superuser_is_staff_set_to_true(self):
+        test_user = User.objects.create_user(
+            username='superuser',
+            password='xyz'
+        )
+        test_user.is_superuser = True
+        test_user.save()
+        self.assertTrue(test_user.is_superuser)
+        self.assertTrue(test_user.is_staff)
