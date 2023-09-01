@@ -78,11 +78,11 @@ class PostDetailTestCase(TestCase):
         )
 
     def test_post_detail_returns_correct_response(self):
-        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
         self.assertEqual(response.status_code, 200)
 
     def test_post_detail_template_contains_body_and_title(self):
-        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
         self.assertContains(response, self.post1.body)
         self.assertContains(response, self.post1.title)
 
@@ -319,7 +319,7 @@ class PostStatusTestCase(TestCase):
         }
         response = self.client.post(reverse('app_reviews:create_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
-        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
 
     def test_post_to_publish_create_and_save(self):
@@ -352,7 +352,7 @@ class PostStatusTestCase(TestCase):
         }
         response = self.client.post(reverse('app_reviews:create_review'), data)
         self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
-        response = self.client.get(reverse('app_reviews:review', kwargs={'slug': data['slug']}))
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
 
     def test_post_draft_create_and_save(self):

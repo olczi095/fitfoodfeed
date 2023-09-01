@@ -97,7 +97,7 @@ class Post(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse("app_reviews:review", args=[str(self.slug)])
+        return reverse("app_reviews:detail_review", args=[str(self.slug)])
 
     def save(self, *args, **kwargs):
         if not self.slug:
