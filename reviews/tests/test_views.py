@@ -120,7 +120,7 @@ class PostCreateWithPermissionTestCase(TestCase):
         self.assertTrue(self.adminuser.has_perm('reviews.add_post'))
         response = self.client.get(reverse_lazy('app_reviews:create_review'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'reviews/post_add.html')
+        self.assertTemplateUsed(response, 'reviews/review_create.html')
 
     def test_successful_post_creation_redirect(self):
         new_review = {
