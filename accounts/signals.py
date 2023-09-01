@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
@@ -8,9 +8,15 @@ from .models import User
 
 @receiver(post_save, sender=User)
 def add_to_admin_group(sender, instance, **kwargs):
-    admin_group, created = Group.objects.get_or_create(name='admin')
+
     if instance.is_superuser:
+        admin_group, created = Group.objects.get_or_create(name='admin')
         instance.groups.add(admin_group)
+
+@receiver(pre_save, sender=User)
+def set_is_staff_for_superuser(sender, instance, **kwargs):
+    if instance.is_superuser:
+        instance.is_staff = True
 
 @receiver(post_save, sender=User)
 def add_add_and_view_post_permissions_to_author(sender, instance, **kwargs):
