@@ -40,6 +40,7 @@ class TagsListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     queryset = Post.objects.filter(status="PUB")
+    template_name = 'reviews/review_detail.html'
 
   
 class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
