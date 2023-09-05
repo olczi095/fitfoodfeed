@@ -10,8 +10,8 @@ class SignalsTestCase(TestCase):
             username='test_user', 
             password='test_password',
             bio='test_bio',
-            is_superuser=True
         )
+        user.is_superuser = True
         user_has_admin_group = admin_group in user.groups.all()
         self.assertTrue(user_has_admin_group)
 
