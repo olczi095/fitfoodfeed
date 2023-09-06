@@ -122,13 +122,21 @@
 }
 
 .pagination .current {
-    margin: 0 20rem;
+    margin: 0 1rem;
     text-align: center;
     font-weight: 500;
 }
 
 .pagination .arrow {
+    display: flex;
     width: 3rem;
+    color: var(--color-black);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.pagination .arrow:hover {
+    color: var(--color-orange);
 }
 
 .home-content .sidebar {

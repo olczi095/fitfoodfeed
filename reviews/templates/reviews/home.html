@@ -60,18 +60,24 @@
                 {% if page_obj.has_previous %}
                     <span class="previous">
                         <a href="?page={{ page_obj.previous_page_number }}">
-                            <img src="/static/reviews/images/left-arrow.png" alt="poprzedni" class="arrow" />
+                            <span class="arrow">
+                                <ion-icon name="arrow-back-outline"></ion-icon>
+                            </span>
                         </a>
                     </span>
                 {% endif %}
 
-                    <span class="current">
+                    <div class="current">
                         page {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
-                    </span>
+                    </div>
 
                 {% if page_obj.has_next %}
                     <span class="next">
-                        <a href="?page={{ page_obj.next_page_number }}"><img src="/static/reviews/images/right-arrow.png" alt="next" class="arrow" /></a>
+                        <a href="?page={{ page_obj.next_page_number }}">
+                            <span class="arrow">
+                                <ion-icon name="arrow-forward-outline" ></ion-icon>
+                            </span>
+                        </a>
                     </span>
                 {% endif %}
             </div>
