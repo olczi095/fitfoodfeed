@@ -1,4 +1,7 @@
+from typing import Dict
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -43,12 +46,13 @@ class PostDetailView(DetailView):
     template_name = 'reviews/review_detail.html'
 
   
-class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     permission_required = 'reviews.add_post'
     permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
     template_name = 'reviews/review_create.html'
+    success_message = "Post <strong>%(title)s</strong> added successfully."
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -60,19 +64,20 @@ class PostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return reverse('app_reviews:home')
     
 
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'slug', 'pub_date', 'image', 'category', 'meta_description', 'body', 'status', 'tags']
     permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
     permission_required = 'reviews.update_post'
     template_name = 'reviews/review_update.html'
+    success_message = "Post <strong>%(title)s</strong> successfully updated."
 
     def test_func(self):
         # Only superusers, staff and the proper post's author can access the update view
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
     
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
     template_name = 'reviews/review_delete.html'
@@ -82,6 +87,9 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Only superusers, staff and the proper post's author can access the delete view
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
 
+    def get_success_message(self, cleaned_data):
+        return f"Post <strong>{self.object.title}</strong> deleted successfully."
+    
 
 class CategoryListView(ListView):
     model = Post
