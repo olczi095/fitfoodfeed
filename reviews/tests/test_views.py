@@ -283,6 +283,15 @@ class PostDeleteTestCase(TestCase):
         response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertTemplateUsed(response, 'registration/login.html')
 
+    def test_get_success_message(self):
+        self.client.login(username='author', password='xyz')
+        response = self.client.post(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        self.assertTemplateUsed(response, 'reviews/home.html')
+
+        success_messages = [str(message) for message in response.context['messages']]
+        expected_message = f"Post <strong>{self.review.title}</strong> deleted successfully."
+        self.assertEqual(success_messages[0], expected_message)
+
 
 class PostStatusTestCase(TestCase):
     def setUp(self):
