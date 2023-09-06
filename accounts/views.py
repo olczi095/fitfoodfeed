@@ -17,7 +17,7 @@ class RegisterView(SuccessMessageMixin, CreateView):
         response = super().form_valid(form)
         username = form.cleaned_data['username']
         login(self.request, self.object)
-        messages.success(self.request, f"Registration Successful! Welcome {username}, you are now logged in.")
+        messages.success(self.request, f"Registration Successful! Welcome <strong>{username}</strong>, you are now logged in.")
         return response
 
 
