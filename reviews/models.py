@@ -115,7 +115,7 @@ class Comment(models.Model):
         null=True,
         blank=True
     )
-    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='Guest') 
+    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='guest') 
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,

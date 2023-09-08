@@ -175,5 +175,5 @@ class CommentModelTestCase(TestCase):
         self.comment.active = True
         self.comment.save()
         self.assertEqual(self.comment.logged_user, None)
-        self.assertEqual(self.comment.unlogged_user, 'Guest')
+        self.assertEqual(self.comment.unlogged_user, 'guest')
         self.assertTrue(self.comment.active)
