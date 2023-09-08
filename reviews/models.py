@@ -106,3 +106,7 @@ class Post(models.Model):
             default_category, created = Category.objects.get_or_create(name='Other')
             self.category = default_category
         super(Post, self).save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    pass
