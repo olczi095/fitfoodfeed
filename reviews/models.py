@@ -125,3 +125,7 @@ class Comment(models.Model):
     pub_datetime = models.DateTimeField(timezone.now)
     body = models.TextField()
     active = models.BooleanField(default=False)
+
+
+    class Meta:
+        ordering = ['-pub_datetime']
