@@ -122,7 +122,7 @@ class Comment(models.Model):
         null=False,
         blank=False
     )
-    pub_datetime = models.DateTimeField(timezone.now)
+    pub_datetime = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     active = models.BooleanField(default=False)
 

@@ -159,7 +159,6 @@ class CommentModelTestCase(TestCase):
         self.comment = Comment.objects.create(
             logged_user=self.user,
             post=self.review,
-            pub_datetime=timezone.now(),
             body='First comment'
         )
 
