@@ -151,3 +151,29 @@ class CommentModelExistenceTestCase(TestCase):
     def test_comment_model_exists(self):
         comments = Comment.objects.all()
         self.assertEqual(comments.count(), 0)
+
+class CommentModelTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='user', password='xyz')
+        self.review = Post.objects.create(title='New review', body='The body.')
+        self.comment = Comment.objects.create(
+            logged_user=self.user,
+            post=self.review,
+            pub_datetime=timezone.now(),
+            body='First comment'
+        )
+
+    def test_comment_creation_by_logged_user(self):
+        self.assertEqual(self.comment.logged_user, self.user)
+        self.assertEqual(self.comment.post, self.review)
+        self.assertTrue(self.comment.pub_datetime)
+        self.assertEqual(self.comment.body, 'First comment')
+        self.assertFalse(self.comment.active)
+
+    def test_comment_creation_by_unlogged_user(self):
+        self.comment.logged_user = None
+        self.comment.active = True
+        self.comment.save()
+        self.assertEqual(self.comment.logged_user, None)
+        self.assertEqual(self.comment.unlogged_user, 'Guest')
+        self.assertTrue(self.comment.active)
