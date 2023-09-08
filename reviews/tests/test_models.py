@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 from accounts.models import User
-from reviews.models import Post, Category
+from reviews.models import Post, Category, Comment
 
 
 class PostModelExistenceTestCase(TestCase):
@@ -145,3 +145,9 @@ class CategoryModelTestCase(TestCase):
     def test_get_absolute_url(self):
         expected_category_absolute_url = '/category/' + self.category.slug + '/'
         self.assertEqual(self.category.get_absolute_url(), expected_category_absolute_url)
+
+
+class CommentModelExistenceTestCase(TestCase):
+    def test_comment_model_exists(self):
+        comments = Comment.objects.all()
+        self.assertEqual(comments.count(), 0)
