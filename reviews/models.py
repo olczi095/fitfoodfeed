@@ -109,4 +109,19 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    pass
+    logged_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='Guest') 
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    pub_datetime = models.DateTimeField(timezone.now)
+    body = models.TextField()
+    active = models.BooleanField(default=False)
