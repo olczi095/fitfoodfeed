@@ -98,9 +98,20 @@ class CommentAdminTestCase(TestCase):
         displayed_author = comment_model_admin.author(self.user_comment)
         self.assertEqual(expected_author, displayed_author)
 
-
     def test_displaying_author_with_unlogged_user(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_author = 'guest'
         displayed_author = comment_model_admin.author(self.random_comment)
         self.assertEqual(expected_author, displayed_author)
+
+    def test_formatting_datetime(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_datetime = self.user_comment.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
+        displayed_comment = comment_model_admin.pub_datetime(self.user_comment)
+        self.assertEqual(expected_datetime, displayed_comment)
+
+    def test_title_of_datetime_column(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_title = 'DATE / TIME'
+        displayed_title = comment_model_admin.pub_datetime.short_description
+        self.assertEqual(expected_title, displayed_title)
