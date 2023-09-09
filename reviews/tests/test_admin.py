@@ -1,9 +1,10 @@
 from django.test import TestCase
 from django.contrib.admin import AdminSite
+from django.utils import timezone
 from taggit.models import Tag
 from accounts.models import User
-from reviews.models import Post, Category
-from reviews.admin import PostAdmin, CategoryAdmin
+from reviews.models import Post, Category, Comment
+from reviews.admin import PostAdmin, CategoryAdmin, CommentAdmin
 from unittest.mock import Mock
 
 
@@ -73,3 +74,33 @@ class CategoryAdminTestCase(TestCase):
         post_count = categoryModelAdmin.post_count(self.category)
         expected_post_count = 3 
         self.assertEqual(post_count, expected_post_count)
+
+
+class CommentAdminTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='user', password='xyz')
+        self.review = Post.objects.create(title='New review', body='The body.')
+        self.user_comment = Comment.objects.create(
+            logged_user=self.user,
+            post=self.review,
+            pub_datetime=timezone.now(),
+            body='Comment written by logged user.'
+        )
+        self.random_comment = Comment.objects.create(
+            post=self.review,
+            pub_datetime=timezone.now(),
+            body='Comment written by unlogged user.'
+        )
+
+    def test_displaying_author_with_logged_user(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_author = self.user.username
+        displayed_author = comment_model_admin.author(self.user_comment)
+        self.assertEqual(expected_author, displayed_author)
+
+
+    def test_displaying_author_with_unlogged_user(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_author = 'guest'
+        displayed_author = comment_model_admin.author(self.random_comment)
+        self.assertEqual(expected_author, displayed_author)
