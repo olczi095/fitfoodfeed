@@ -129,3 +129,9 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-pub_datetime']
+
+    def __str__(self):
+        if self.logged_user:
+            return f"Comment by {self.logged_user} on {self.post.title}."
+        else:
+            return f"Comment by {self.unlogged_user} on {self.post.title}."
