@@ -40,3 +40,8 @@ class CommentAdmin(admin.ModelAdmin):
             return obj.logged_user.username
         else:
             return obj.unlogged_user
+        
+    def pub_datetime(self, obj):
+        return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    
+    pub_datetime.short_description = "DATE / TIME"
