@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category
+from .models import Post, Category, Comment
 
 
 @admin.register(Post)
@@ -29,3 +29,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
     def post_count(self, obj):
         return obj.post_set.count()
+    
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['post', 'author', 'pub_datetime', 'active']
+
+    def author(self, obj):
+        if obj.logged_user:
+            return obj.logged_user.username
+        else:
+            return obj.unlogged_user
