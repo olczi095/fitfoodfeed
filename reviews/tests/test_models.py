@@ -176,3 +176,12 @@ class CommentModelTestCase(TestCase):
         self.assertEqual(self.comment.logged_user, None)
         self.assertEqual(self.comment.unlogged_user, 'guest')
         self.assertTrue(self.comment.active)
+
+    def test_string_representation_logged_user(self):
+        expected_representation = f"Comment by {self.comment.logged_user} on {self.comment.post.title}."
+        self.assertEqual(str(self.comment), expected_representation)
+
+    def test_string_representation_unlogged_user(self):
+        comment = Comment.objects.create(post=self.review, body="Body of comment.")
+        expected_representation = f"Comment by {comment.unlogged_user} on {comment.post.title}."
+        self.assertEqual(str(comment), expected_representation)
