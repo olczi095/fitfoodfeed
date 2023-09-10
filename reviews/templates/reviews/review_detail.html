@@ -38,5 +38,49 @@
                 </a>
                     {% if not forloop.last %}|{% endif %}
             {% endfor %}
+
+        <div class="comments">
+            <div class="title">
+                <h4>Comments</h4>
+            </div>
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="comment">
+                        {% if comment.logged_user and comment.logged_user.username == 'admin'%}
+                            <div class="author-admin">
+                                {{ comment.logged_user}}
+                            </div>
+                        {% elif comment.logged_user %}
+                            <div class="author">
+                                {{ comment.logged_user}}
+                            </div>
+
+                            <div class="datetime">
+                                {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
+                            </div>
+                        {% else %}
+                            <div class="author">
+                                {{ comment.unlogged_user }}
+                            </div> 
+                            <div class="datetime">
+                                {{ comment.pub_datetime|date:"Y-m-d H:M:S"}} at {{ comment.pub_datetime|date:"Y-m-d H:i:s" }}
+                            </div>
+                        {% endif %}
+                            <div class="body">
+                                {{ comment.body }}
+                                {% if not forloop.last %}
+                                    <hr class="comment-divider">
+                                {% endif %}
+                            </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="info">
+                    There are no comments for this post.
+                </div>
+            {% endif %}
+        </div>
+
     </div>
+
 {% endblock body %}
