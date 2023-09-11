@@ -66,12 +66,10 @@
                                 {{ comment.pub_datetime|date:"Y-m-d H:M:S"}} at {{ comment.pub_datetime|date:"Y-m-d H:i:s" }}
                             </div>
                         {% endif %}
-                            <div class="body">
-                                {{ comment.body }}
-                                {% if not forloop.last %}
-                                    <hr class="comment-divider">
-                                {% endif %}
-                            </div>
+                            {{ comment.body }}
+                            {% if not forloop.last %}
+                                <hr class="comment-divider">
+                            {% endif %}
                     </div>
                 {% endfor %}
             {% else %}

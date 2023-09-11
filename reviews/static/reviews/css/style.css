@@ -241,15 +241,17 @@
 }
 
 .comments .title {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0 0.8rem 0.2rem;
     border-top: 0.1rem solid var(--color-lightgrey);
-    border-bottom: 0.1rem solid var(--color-lightgrey);
     color: var(--color-medium-grey);
     font-weight: bolder;
     margin-bottom: 1rem;
 }
 
 .comment {
-    margin: 0 1rem;
+    margin: 0 1.7rem;
 }
 
 .comments .info {
@@ -257,21 +259,17 @@
 }
 
 .comment .author-admin {
-    color: var(--color-black);
+    color: var(--color-orange);
     font-weight: bolder;
 }
 
 .comment .author {
-    color: var(--color-orange);
+    color: var(--color-black);
     font-weight: bolder;
 }
 
 .comment .datetime {
     color: var(--color-lightgrey);
-}
-
-.comment .body {
-    margin: 0.6rem 0.5rem 1.5rem;
 }
 
 .comment-divider {
