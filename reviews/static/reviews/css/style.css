@@ -237,21 +237,34 @@
 }
 
 .comments {
-    margin: 2rem 0 0;
+    margin: 4rem 0 0;
 }
 
 .comments .title {
     align-items: center;
     justify-content: center;
-    padding: 1rem 0 0.8rem 0.2rem;
+    padding: 3rem 0 0.8rem 0.2rem;
     border-top: 0.1rem solid var(--color-lightgrey);
-    color: var(--color-medium-grey);
-    font-weight: bolder;
+    color: var(--color-black);
+    font-weight: 700;
+    font-size: 2rem;
     margin-bottom: 1rem;
 }
 
 .comment {
     margin: 0 1.7rem;
+}
+
+.comment-form {
+    border: 0.1rem solid var(--color-lightgrey);
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.comment-form-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-middleorange);
 }
 
 .comments .info {

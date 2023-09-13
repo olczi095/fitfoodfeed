@@ -1,5 +1,10 @@
+from typing import Any, Dict, Mapping, Optional, Type, Union
+from django.core.files.base import File
+from django.db.models.base import Model
 from django.forms import HiddenInput, ModelForm
-from reviews.models import Post
+from django.forms.utils import ErrorList
+from reviews.models import Post, Comment
+from django import forms
     
 
 class PostForm(ModelForm):
@@ -20,4 +25,18 @@ class PostForm(ModelForm):
         }
         help_texts = {
             'slug': 'You can leave this field empty. The slug will be created based on the title automatically.',
+        }
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['logged_user', 'unlogged_user', 'body']
+        labels = {
+            'logged_user': 'User',
+            'unlogged_user': 'Name',
+            'body': ''
+        }
+        widgets = {
+            'logged_user': forms.TextInput(attrs={'readonly': True})
         }

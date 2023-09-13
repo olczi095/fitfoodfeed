@@ -7,7 +7,7 @@ from taggit.models import Tag
 
 from reviews.models import Post, Category
 
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 
 class PostListView(ListView):
@@ -46,6 +46,8 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comment_set.filter(active=True)
+        context['form'] = CommentForm()
+        context['user'] = self.request.user
         return context
 
 
