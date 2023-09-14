@@ -3,6 +3,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
 from reviews.models import Post, Category
@@ -38,18 +39,38 @@ class TagsListView(ListView):
     context_object_name = 'tags'
 
 
-class PostDetailView(DetailView):
+class PostDetailView(FormMixin, DetailView):
+    form_class = CommentForm
     model = Post
     queryset = Post.objects.filter(status="PUB")
     template_name = 'reviews/review_detail.html'
 
+    def get_success_url(self) -> str:
+        return reverse('app_reviews:detail_review', kwargs={'slug': self.object.slug})
+    
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(PostDetailView, self).get_context_data(**kwargs)
         context['comments'] = self.object.comment_set.filter(active=True)
-        context['form'] = CommentForm()
+        context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
         return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
 
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        new_comment = form.save(commit=False)
+        new_comment.post = self.object
+        new_comment.save()
+        form.save()
+        return super(PostDetailView, self).form_valid(form)
+    
 
 class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post

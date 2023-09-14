@@ -47,7 +47,7 @@
             <div class="comment-form">
                 <h5>LEAVE YOUR COMMENT</h5><hr />
                 {% if user.is_authenticated %}
-                    <form method="POST">
+                    <form method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="{{ form.logged_user.id_for_label }}" class="comment-form-label">{{ form.logged_user.label }}</label><br />
@@ -60,7 +60,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 {% else %}
-                    <form method="POST">
+                    <form method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="{{ form.unlogged_user.id_for_label }}" class="comment-form-label">{{ form.unlogged_user.label }}</label><br />
