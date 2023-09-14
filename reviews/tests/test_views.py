@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from taggit.models import Tag
-from reviews.models import User, Post, Category
+from reviews.models import User, Post, Category, Comment
 
 
 class HomePageTestCase(TestCase):
@@ -85,6 +85,49 @@ class PostDetailTestCase(TestCase):
         response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
         self.assertContains(response, self.post1.body)
         self.assertContains(response, self.post1.title)
+
+    def test_comment_form_displayed(self):
+        response = self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), 0)
+                                   
+    def test_authenticated_user_can_add_comment(self):
+        self.client.login(username='random', password='testpassword')
+        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
+        response = self.client.post(
+            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
+            data=valid_comment_data
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_comment_fields_added_correctly_for_authenticated_user(self):
+        self.client.login(username='random', password='testpassword')
+        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
+        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),data=valid_comment_data)
+        new_comment = Comment.objects.last()
+
+        self.assertEqual(new_comment.post, self.post1)
+        self.assertFalse(new_comment.active)
+
+    def test_unauthenticated_user_can_add_comment(self):
+        self.client.logout()
+        valid_comment_data = {'body': 'This is a random comment written by an unauthenticated user.'}
+        response = self.client.post(
+            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
+            data=valid_comment_data
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_comment_fields_added_correctly_for_unauthenticated_user(self):
+        self.client.login(username='random', password='testpassword')
+        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
+        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),data=valid_comment_data)
+        new_comment = Comment.objects.last()
+        
+        self.assertEqual(new_comment.post, self.post1)
+        self.assertFalse(new_comment.active)
 
 
 class PostCreateTestCase(TestCase):
@@ -481,3 +524,7 @@ class CategoryViewsTestCase(TestCase):
             response.context['posts'],
             expected_posts
         )
+
+
+class CommentAddTestCase(TestCase):
+    pass
