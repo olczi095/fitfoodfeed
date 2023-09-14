@@ -109,6 +109,8 @@ class PostDetailTestCase(TestCase):
 
         self.assertEqual(new_comment.post, self.post1)
         self.assertFalse(new_comment.active)
+        self.assertIsNone(new_comment.unlogged_user)
+        self.assertEqual(new_comment.logged_user, self.author1)
 
     def test_unauthenticated_user_can_add_comment(self):
         self.client.logout()
@@ -128,6 +130,8 @@ class PostDetailTestCase(TestCase):
         
         self.assertEqual(new_comment.post, self.post1)
         self.assertFalse(new_comment.active)
+        self.assertIsNone(new_comment.logged_user)
+        self.assertEqual(new_comment.unlogged_user, 'guest')
 
 
 class PostCreateTestCase(TestCase):
