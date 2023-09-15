@@ -66,9 +66,16 @@ class PostDetailView(FormMixin, DetailView):
 
     def form_valid(self, form):
         new_comment = form.save(commit=False)
+
+        if self.request.user.is_authenticated:
+            new_comment.logged_user = self.request.user
+            new_comment.unlogged_user = None
+
         new_comment.post = self.object
         new_comment.save()
+
         form.save()
+        
         return super(PostDetailView, self).form_valid(form)
     
 
