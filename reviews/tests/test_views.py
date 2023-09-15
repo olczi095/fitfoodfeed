@@ -92,7 +92,7 @@ class PostDetailTestCase(TestCase):
         self.assertEqual(Comment.objects.count(), 0)
                                    
     def test_authenticated_user_can_add_comment(self):
-        self.client.login(username='random', password='testpassword')
+        self.client.force_login(self.author1)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
         response = self.client.post(
             reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
@@ -102,9 +102,9 @@ class PostDetailTestCase(TestCase):
         self.assertEqual(Comment.objects.count(), 1)
 
     def test_comment_fields_added_correctly_for_authenticated_user(self):
-        self.client.login(username='random', password='testpassword')
+        self.client.force_login(self.author1)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),data=valid_comment_data)
+        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}), data=valid_comment_data)
         new_comment = Comment.objects.last()
 
         self.assertEqual(new_comment.post, self.post1)
