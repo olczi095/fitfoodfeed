@@ -528,7 +528,3 @@ class CategoryViewsTestCase(TestCase):
             response.context['posts'],
             expected_posts
         )
-
-
-class CommentAddTestCase(TestCase):
-    pass
