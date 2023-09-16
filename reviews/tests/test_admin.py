@@ -115,3 +115,9 @@ class CommentAdminTestCase(TestCase):
         expected_title = 'DATE / TIME'
         displayed_title = comment_model_admin.pub_datetime.short_description
         self.assertEqual(expected_title, displayed_title)
+
+    def test_save_comment_with_authenticated_user(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        comment_model_admin.save_model(request=None, obj=self.user_comment, form=None, change=False)
+        self.assertIsNone(self.user_comment.unlogged_user)
+        self.assertEqual(self.user_comment.logged_user, self.user)
