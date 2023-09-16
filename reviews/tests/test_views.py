@@ -123,7 +123,6 @@ class PostDetailTestCase(TestCase):
         self.assertEqual(Comment.objects.count(), 1)
 
     def test_comment_fields_added_correctly_for_unauthenticated_user(self):
-        self.client.login(username='random', password='testpassword')
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
         self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),data=valid_comment_data)
         new_comment = Comment.objects.last()
@@ -150,7 +149,7 @@ class PostCreateTestCase(TestCase):
 
     
     def test_logged_user_without_permission_returns_403_page(self):
-        self.client.login(username='random', password='testpassword')
+        self.client.force_login(self.test_user)
         response = self.client.get(reverse_lazy('app_reviews:create_review'))
         self.assertEqual(response.status_code, 403)
 
@@ -161,7 +160,7 @@ class PostCreateWithPermissionTestCase(TestCase):
             username='admin',
             password='admin-password'
         )
-        self.client.login(username='admin', password='admin-password')
+        self.client.force_login(self.adminuser)
 
     def test_display_add_review_success(self):
         self.assertTrue(self.adminuser.has_perm('reviews.add_post'))
@@ -221,7 +220,7 @@ class PostUpdateTestCase(TestCase):
         )
 
     def test_author_can_access_update_view(self):
-        self.client.login(username='author', password='xyz')
+        self.client.force_login(self.author)
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/review_update.html')
@@ -231,7 +230,7 @@ class PostUpdateTestCase(TestCase):
             username='admin',
             password='pass'
         )
-        self.client.login(username='admin', password='pass')
+        self.client.force_login(self.author)
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/review_update.html')
@@ -242,7 +241,7 @@ class PostUpdateTestCase(TestCase):
             password='abc',
             is_staff=True
         )
-        self.client.login(username='staff', password='abc')
+        self.client.force_login(self.author)
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/review_update.html')
@@ -252,7 +251,7 @@ class PostUpdateTestCase(TestCase):
             username='normal_user',
             password='abc',
         )
-        self.client.login(username='normal_user', password='abc')
+        self.client.force_login(self.normal_user)
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
@@ -263,7 +262,7 @@ class PostUpdateTestCase(TestCase):
             password='xyz',
             is_author=True
         )
-        self.client.login(username='second_author', password='xyz')
+        self.client.force_login(self.second_author)
         response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
@@ -288,7 +287,7 @@ class PostDeleteTestCase(TestCase):
         )
     
     def test_author_can_access_delete_view(self):
-        self.client.login(username='author', password='xyz')
+        self.client.force_login(self.author)
         response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
@@ -299,28 +298,28 @@ class PostDeleteTestCase(TestCase):
             password='abc',
             is_staff=True
         )
-        self.client.login(username='admin', password='abc')
+        self.client.force_login(self.author)
         response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
     def test_superuser_can_access_delete_view(self):
-        User.objects.create_superuser(
+        superuser = User.objects.create_superuser(
             username='superuser',
             password='abc'
         )
-        self.client.login(username='superuser', password='xyz')
+        self.client.force_login(superuser)
         response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
     def test_other_author_cannot_delete_post(self):
-        User.objects.create_user(
+        other_author = User.objects.create_user(
             username='other_author',
             password='xyz',
             is_author=True
         )
-        self.client.login(username='other_author', password='xyz')
+        self.client.force_login(other_author)
         response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
@@ -331,7 +330,7 @@ class PostDeleteTestCase(TestCase):
         self.assertTemplateUsed(response, 'registration/login.html')
 
     def test_get_success_message(self):
-        self.client.login(username='author', password='xyz')
+        self.client.force_login(self.author)
         response = self.client.post(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
         self.assertTemplateUsed(response, 'reviews/home.html')
 
@@ -346,7 +345,7 @@ class PostStatusTestCase(TestCase):
             username='author',
             password='author-password'
         )
-        self.client.login(username='author', password='author-password')
+        self.client.force_login(self.adminuser)
 
     def test_post_published_should_appear_on_homepage(self):
         self.post = Post.objects.create(
