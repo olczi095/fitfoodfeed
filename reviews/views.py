@@ -39,11 +39,12 @@ class TagsListView(ListView):
     context_object_name = 'tags'
 
 
-class PostDetailView(FormMixin, DetailView):
+class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
     form_class = CommentForm
     model = Post
     queryset = Post.objects.filter(status="PUB")
     template_name = 'reviews/review_detail.html'
+    success_message = "Comment successfully submitted. It will be published after moderation and validation." 
 
     def get_success_url(self) -> str:
         return reverse('app_reviews:detail_review', kwargs={'slug': self.object.slug})
