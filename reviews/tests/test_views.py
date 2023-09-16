@@ -132,6 +132,17 @@ class PostDetailTestCase(TestCase):
         self.assertIsNone(new_comment.logged_user)
         self.assertEqual(new_comment.unlogged_user, 'guest')
 
+    def test_display_success_message_after_comment_addition(self):
+        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
+        response = self.client.post(
+            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
+                    data=valid_comment_data,
+                    follow=True
+            )
+        expected_success_message_excerpt = 'comment successfully submitted'
+        messages = [str(message).lower() for message in response.context['messages']]
+        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+
 
 class PostCreateTestCase(TestCase):
     def setUp(self):
