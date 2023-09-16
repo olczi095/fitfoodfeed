@@ -44,4 +44,9 @@ class CommentAdmin(admin.ModelAdmin):
     def pub_datetime(self, obj):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
     
+    def save_model(self, request, obj, form, change):
+        if obj.logged_user:
+            obj.unlogged_user = None
+        return super().save_model(request, obj, form, change)
+    
     pub_datetime.short_description = "DATE / TIME"
