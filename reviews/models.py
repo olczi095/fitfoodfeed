@@ -115,7 +115,8 @@ class Comment(models.Model):
         null=True,
         blank=True
     )
-    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='guest') 
+    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='guest')
+    email = models.EmailField(null=True, blank=True)
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -135,3 +136,8 @@ class Comment(models.Model):
             return f"Comment by {self.logged_user} on {self.post.title}."
         else:
             return f"Comment by {self.unlogged_user} on {self.post.title}."
+        
+    def save(self, *args, **kwargs):
+        if self.logged_user:
+            self.email = self.logged_user.email
+        return super().save(*args, **kwargs)

@@ -27,11 +27,12 @@ class PostForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['logged_user', 'unlogged_user', 'body']
+        fields = ['logged_user', 'unlogged_user', 'email', 'body']
         labels = {
             'logged_user': 'User',
             'unlogged_user': 'Name',
-            'body': ''
+            'body': '',
+            'email': 'Email'
         }
         widgets = {
             'logged_user': forms.TextInput(attrs={'readonly': True})

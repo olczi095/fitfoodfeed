@@ -43,7 +43,9 @@ class CommentAdmin(admin.ModelAdmin):
         
     def email(self, obj):
         if obj.logged_user:
-            return obj.logged_user.email
+            print(obj.logged_user)
+            return obj.email
+        return obj.email
         
     def pub_datetime(self, obj):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
