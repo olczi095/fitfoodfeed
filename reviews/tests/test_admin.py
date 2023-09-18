@@ -118,7 +118,7 @@ class CommentAdminTestCase(TestCase):
 
     def test_displaying_author_email_with_unlogged_user_without_email(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
-        expected_no_email = ''
+        expected_no_email = None
         displayed_email_from_comment_without_email = comment_model_admin.email(self.random_comment)
         self.assertEqual(expected_no_email, displayed_email_from_comment_without_email)
 
