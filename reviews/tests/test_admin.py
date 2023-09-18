@@ -91,6 +91,12 @@ class CommentAdminTestCase(TestCase):
             pub_datetime=timezone.now(),
             body='Comment written by unlogged user.'
         )
+        self.random_comment_with_email = Comment.objects.create(
+            post=self.review,
+            pub_datetime=timezone.now(),
+            body='Comment written by unlogged user with email',
+            email='random@mail.com'
+        )
 
     def test_displaying_author_with_logged_user(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
@@ -98,7 +104,7 @@ class CommentAdminTestCase(TestCase):
         displayed_author = comment_model_admin.author(self.user_comment)
         self.assertEqual(expected_author, displayed_author)
 
-    def test_displaying_author_email_with_logged_user(self):
+    def test_displaying_email_with_logged_user(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_email = self.user.email
         displayed_email = comment_model_admin.email(self.user_comment)
@@ -109,6 +115,18 @@ class CommentAdminTestCase(TestCase):
         expected_author = 'guest'
         displayed_author = comment_model_admin.author(self.random_comment)
         self.assertEqual(expected_author, displayed_author)
+
+    def test_displaying_author_email_with_unlogged_user_without_email(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_no_email = ''
+        displayed_email_from_comment_without_email = comment_model_admin.email(self.random_comment)
+        self.assertEqual(expected_no_email, displayed_email_from_comment_without_email)
+
+    def test_displaying_author_email_with_unlogged_user_with_email(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_email = self.random_comment_with_email.email
+        displayed_email_from_comment_with_email = comment_model_admin.email(self.random_comment_with_email)
+        self.assertEqual(expected_email, displayed_email_from_comment_with_email)
 
     def test_formatting_datetime(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
