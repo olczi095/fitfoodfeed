@@ -78,7 +78,7 @@ class CategoryAdminTestCase(TestCase):
 
 class CommentAdminTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='user', password='xyz')
+        self.user = User.objects.create_user(username='user', password='xyz', email='user@mail.com')
         self.review = Post.objects.create(title='New review', body='The body.')
         self.user_comment = Comment.objects.create(
             logged_user=self.user,
@@ -97,6 +97,12 @@ class CommentAdminTestCase(TestCase):
         expected_author = self.user.username
         displayed_author = comment_model_admin.author(self.user_comment)
         self.assertEqual(expected_author, displayed_author)
+
+    def test_displaying_author_email_with_logged_user(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_email = self.user.email
+        displayed_email = comment_model_admin.email(self.user_comment)
+        self.assertEqual(expected_email, displayed_email)
 
     def test_displaying_author_with_unlogged_user(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
