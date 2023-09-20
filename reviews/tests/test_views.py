@@ -432,6 +432,13 @@ class PostStatusTestCase(TestCase):
         post_amount = Post.objects.count()
         self.assertEqual(post_amount, 1)
 
+    def test_popular_posts_in_context(self):
+        response = self.client.get(reverse('app_reviews:home'))
+        self.assertIn('popular_posts', response.context)
+        self.assertIsInstance(response.context['popular_posts'], list)
+        self.assertLessEqual(len(response.context['popular_posts']), 5)
+        self.assertGreaterEqual(len(response.context['popular_posts']), 0)
+        
 
 class TagsListTestCase(TestCase):
     def test_successful_tags_list_displaying(self):
