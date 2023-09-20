@@ -120,8 +120,9 @@ class PostModelTestCase(TestCase):
         amount_of_no_comments = self.post.comment_counter()
         self.assertEqual(amount_of_no_comments, 0)
 
-        comment = Comment.objects.create(post=self.post, body='Test comment.')
+        comment = Comment.objects.create(post=self.post, body='Test comment.', active=True)
         comment.save()
+        self.post.save()
         amount_of_comments = self.post.comment_counter()
         self.assertEqual(amount_of_comments, 1)
 
