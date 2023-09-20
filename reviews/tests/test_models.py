@@ -115,6 +115,15 @@ class PostModelTestCase(TestCase):
 
     def test_post_model_has_image_field(self):
         self.assertTrue(Post._meta.get_field('image'))
+    
+    def test_comment_counter(self):
+        amount_of_no_comments = self.post.comment_counter()
+        self.assertEqual(amount_of_no_comments, 0)
+
+        comment = Comment.objects.create(post=self.post, body='Test comment.')
+        comment.save()
+        amount_of_comments = self.post.comment_counter()
+        self.assertEqual(amount_of_comments, 1)
 
 
 class CategoryModelExistenceTestCase(TestCase):
