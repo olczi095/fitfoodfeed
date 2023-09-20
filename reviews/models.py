@@ -107,6 +107,9 @@ class Post(models.Model):
             self.category = default_category
         super(Post, self).save(*args, **kwargs)
 
+    def comment_counter(self):
+        return self.comment_set.filter(active=True).count()
+
 
 class Comment(models.Model):
     logged_user = models.ForeignKey(
