@@ -6,10 +6,12 @@
     --color-middleorange: rgba(242, 145, 19, 0.7);
     --color-orange: rgb(242, 145, 19);
     --color-lightorange: #efc38a;
+    --color-whitegrey: #f8f9fa;
     --color-lightgrey: #ccc;
     --color-dark-grey: #3d3f41;
     --color-medium-grey: #7a7f83;
     --color-black: #000;
+    --color-visited-link: #800080;
 }
 
 /* Global Styles */
@@ -151,6 +153,7 @@
     text-align: justify;
     background-color: var(--color-orange);
     padding: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .post-detail-content {
@@ -287,4 +290,36 @@
 
 .comment-divider {
     border: 0.01rem solid var(--color-lightgrey);
+}
+
+.popular-posts {
+    padding: 1.5rem 1.5rem 1.0rem 1.5rem;
+    background-color: var(--color-whitegrey);
+}
+
+.popular-posts .title {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-bottom: 1rem;
+}
+
+.popular-posts .single-post {
+    display: block;
+    text-decoration: none;
+    color: var(--color-dark-grey);
+    font-weight: 400;
+    padding: 0.5rem 1.5rem;
+}
+
+.popular-posts .numeric {
+    font-weight: 500;
+}
+
+.popular-posts .single-post:visited {
+    color: var(--color-visited-link);
+}
+
+.popular-posts .single-post:hover {
+    color: var(--color-orange);
 }

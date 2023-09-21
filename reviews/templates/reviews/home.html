@@ -86,13 +86,25 @@
         <div class="sidebar">
             <img src="/static/reviews/images/me-avatar.png" class="avatar-style"/><br />
 
-                <div class="short-description">
-                    Lover of healthy lifestyle, exercising and eating.
-                    Normally I review products that can be associated with "fit food" like protein bars, zero calorie products, no sugar food, dark chocolates and high-protein snacks.<br /><br />
+            <div class="short-description">
+                Lover of healthy lifestyle, exercising and eating.
+                Normally I review products that can be associated with "fit food" like protein bars, zero calorie products, no sugar food, dark chocolates and high-protein snacks.<br /><br />
 
-                    New section of the website is the e-shop where you can discover recommended products that I have mostly personally testes. 
-                    Moreover, "Mocne Żarcie" is more than just a website - it's a big fitness society. It brings together people with similar passions who support each other, independently review many of products, and encourage each other to be active, fit and healthy. 
-                </div>
+                New section of the website is the e-shop where you can discover recommended products that I have mostly personally testes. 
+                Moreover, "Mocne Żarcie" is more than just a website - it's a big fitness society. It brings together people with similar passions who support each other, independently review many of products, and encourage each other to be active, fit and healthy. 
+            </div>
+
+            <div class="popular-posts">
+                <span class="title">Most popular</span>
+                    <ol>
+                        {% for post in popular_posts %}
+                            <a href="{{ post.get_absolute_url }}" class="single-post">
+                                <li>{{ post.title }}</li>
+                            </a>
+                        {% endfor %}
+                    </ol>
+            </div>
+
         </div>
     </div>
 {% endblock body %}

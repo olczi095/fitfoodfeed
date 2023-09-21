@@ -20,6 +20,17 @@ class PostListView(ListView):
     def get_queryset(self):
         return super().get_queryset().filter(status='PUB').order_by('-pub_date')
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        posts_with_comment_counters = {}
+        for post in Post.objects.filter(status='PUB'):
+            posts_with_comment_counters[post] = post.comment_counter()
+
+        popular_posts = sorted(posts_with_comment_counters.items(), key=lambda x: x[1], reverse=True)
+        popular_posts = [popular_post[0] for popular_post in popular_posts] # Get just posts without comment counters
+        context['popular_posts'] = popular_posts[:5]
+        return context
+    
 
 class TaggedPostsListView(ListView):
     model = Post
