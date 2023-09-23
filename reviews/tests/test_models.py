@@ -192,6 +192,11 @@ class CommentModelTestCase(TestCase):
         self.assertEqual(str(self.comment), expected_representation)
 
     def test_string_representation_unlogged_user(self):
-        comment = Comment.objects.create(post=self.review, body="Body of comment.")
+        comment = Comment.objects.create(post=self.review, body='Body of comment.')
         expected_representation = f"Comment by {comment.unlogged_user} on {comment.post.title}."
         self.assertEqual(str(comment), expected_representation)
+
+    def test_superuser_comment_set_active_automatically(self):
+        superuser = User.objects.create_superuser(username='superuser', password='superuser_password')
+        comment = Comment.objects.create(logged_user=superuser, post=self.review, body='Body of comment')
+        self.assertTrue(comment.active)
