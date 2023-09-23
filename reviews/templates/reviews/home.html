@@ -94,7 +94,7 @@
                 Moreover, "Mocne Żarcie" is more than just a website - it's a big fitness society. It brings together people with similar passions who support each other, independently review many of products, and encourage each other to be active, fit and healthy. 
             </div>
 
-            <div class="popular-posts">
+            <div class="sidebar-widget">
                 <span class="title">Most popular</span>
                     <ol>
                         {% for post in popular_posts %}
@@ -103,6 +103,30 @@
                             </a>
                         {% endfor %}
                     </ol>
+            </div>
+            <br />
+            <div class="sidebar-widget">
+                <span class="title">Recent comments</span>
+                    {% for comment in recent_comments %}
+                        <div class="sidebar-comment">
+                                <ion-icon name='person'></ion-icon>
+                                {% if comment.logged_user %}
+                                    <strong>{{ comment.logged_user }}</strong> on 
+                                    <a href="{{ comment.post.get_absolute_url }}" class="link">
+                                        {{ comment.post }}
+                                    </a>
+                                {% endif %}
+                                {% if comment.unlogged_user %}
+                                    <strong>{{ comment.unlogged_user }}</strong> on 
+                                    <a href="{{ comment.post.get_absolute_url }}" class="link">
+                                        {{ comment.post }}
+                                    </a>
+                                {% endif %}
+                                <div class="body">
+                                    {{ comment.body }}
+                                </div>
+                        </div>
+                    {% endfor %}
             </div>
 
         </div>

@@ -332,3 +332,18 @@
 .sidebar-comment .link {
     color: var(--color-orange);
 }
+
+.sidebar-widget .single-post:visited {
+    color: var(--color-visited-link);
+}
+
+.sidebar-comment .link:hover {
+    color: var(--color-blue);
+    text-decoration: none;
+}
+
+.sidebar-comment .body {
+    margin-top: 0.5rem;
+    margin-bottom: 0.7rem;
+    color: var(--color-dark-grey);
+}

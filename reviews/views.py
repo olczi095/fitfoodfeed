@@ -6,7 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
-from reviews.models import Post, Category
+from reviews.models import Post, Category, Comment
 
 from .forms import PostForm, CommentForm
 
@@ -23,12 +23,15 @@ class PostListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         posts_with_comment_counters = {}
+        recent_comments = [comment for comment in Comment.objects.filter(active=True).order_by('pub_datetime')[:3]]
+
         for post in Post.objects.filter(status='PUB'):
             posts_with_comment_counters[post] = post.comment_counter()
 
         popular_posts = sorted(posts_with_comment_counters.items(), key=lambda x: x[1], reverse=True)
         popular_posts = [popular_post[0] for popular_post in popular_posts] # Get just posts without comment counters
         context['popular_posts'] = popular_posts[:5]
+        context['recent_comments'] = recent_comments
         return context
     
 
