@@ -1,3 +1,4 @@
+from typing import Dict
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404
@@ -58,7 +59,6 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
     model = Post
     queryset = Post.objects.filter(status="PUB")
     template_name = 'reviews/review_detail.html'
-    success_message = "Comment successfully submitted. It will be published after moderation and validation." 
 
     def get_success_url(self) -> str:
         return reverse('app_reviews:detail_review', kwargs={'slug': self.object.slug})
@@ -85,6 +85,11 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
         if self.request.user.is_authenticated:
             new_comment.logged_user = self.request.user
             new_comment.unlogged_user = None
+            
+        if self.request.user.is_superuser:
+            self.success_message = "Comment successfully added." 
+        else:
+            self.success_message = "Comment successfully submitted. It will be published after moderation and validation." 
 
         new_comment.post = self.object
         new_comment.save()
