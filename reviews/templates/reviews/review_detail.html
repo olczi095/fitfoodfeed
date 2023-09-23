@@ -100,7 +100,7 @@
                                 {{ comment.unlogged_user }}
                             </div> 
                             <div class="datetime">
-                                {{ comment.pub_datetime|date:"Y-m-d H:M:S"}} at {{ comment.pub_datetime|date:"Y-m-d H:i:s" }}
+                                {{ comment.pub_datetime|date:"Y-m-d"}} at {{ comment.pub_datetime|date:"H:i:s" }}
                             </div>
                         {% endif %}
                             {{ comment.body }}
