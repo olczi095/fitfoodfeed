@@ -438,7 +438,14 @@ class PostStatusTestCase(TestCase):
         self.assertIsInstance(response.context['popular_posts'], list)
         self.assertLessEqual(len(response.context['popular_posts']), 5)
         self.assertGreaterEqual(len(response.context['popular_posts']), 0)
-        
+
+    def test_recent_comments_in_context(self):
+        response = self.client.get(reverse('app_reviews:home'))
+        self.assertIn('recent_comments', response.context)
+        self.assertIsInstance(response.context['recent_comments'], list)
+        self.assertLessEqual(len(response.context['recent_comments']), 3)
+        self.assertGreaterEqual(len(response.context['recent_comments']), 0)
+
 
 class TagsListTestCase(TestCase):
     def test_successful_tags_list_displaying(self):
