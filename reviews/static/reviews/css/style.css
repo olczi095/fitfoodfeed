@@ -292,19 +292,19 @@
     border: 0.01rem solid var(--color-lightgrey);
 }
 
-.popular-posts {
+.sidebar-widget {
     padding: 1.5rem 1.5rem 1.0rem 1.5rem;
     background-color: var(--color-whitegrey);
 }
 
-.popular-posts .title {
+.sidebar-widget .title {
     display: block;
     font-size: 1.5rem;
     font-weight: bold;
     padding-bottom: 1rem;
 }
 
-.popular-posts .single-post {
+.sidebar-widget .single-post {
     display: block;
     text-decoration: none;
     color: var(--color-dark-grey);
@@ -312,14 +312,14 @@
     padding: 0.5rem 1.5rem;
 }
 
-.popular-posts .numeric {
+.sidebar-widget .numeric {
     font-weight: 500;
 }
 
-.popular-posts .single-post:visited {
+.sidebar-widget .single-post:visited {
     color: var(--color-visited-link);
 }
 
-.popular-posts .single-post:hover {
+.sidebar-widget .single-post:hover {
     color: var(--color-orange);
 }
