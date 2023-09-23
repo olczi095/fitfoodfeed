@@ -143,6 +143,19 @@ class PostDetailTestCase(TestCase):
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
+    def test_comment_success_message_for_superuser(self):
+        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
+        self.client.force_login(superuser)
+        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
+        response = self.client.post(
+            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
+                    data=valid_comment_data,
+                    follow=True
+        )
+        expected_success_message_excerpt = 'comment successfully added'
+        messages = [str(message).lower() for message in response.context['messages']]
+        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+
 
 class PostCreateTestCase(TestCase):
     def setUp(self):
