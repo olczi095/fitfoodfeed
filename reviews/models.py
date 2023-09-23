@@ -143,4 +143,8 @@ class Comment(models.Model):
     def save(self, *args, **kwargs):
         if self.logged_user:
             self.email = self.logged_user.email
+            
+            if self.logged_user.is_superuser:
+                self.active = True
+                
         return super().save(*args, **kwargs)
