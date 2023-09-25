@@ -1,4 +1,3 @@
-from typing import Any, Optional
 from django.contrib import admin
 from .models import Post, Category, Comment
 
@@ -59,9 +58,9 @@ class CommentAdmin(admin.ModelAdmin):
     
     def get_form(self, request, obj, **kwargs):
         if obj and obj.logged_user is not None:
-            self.exclude = ('unlogged_user',)
+            self.readonly_fields = ('unlogged_user',)
         else:
-            self.exclude = ()
+            self.readonly_fields = ()
         return super().get_form(request, obj, **kwargs)
     
     pub_datetime.short_description = "DATE / TIME"
