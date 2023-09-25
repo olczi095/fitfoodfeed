@@ -34,6 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['post', 'author', 'email', 'pub_datetime', 'active']
+    ordering = ['active', 'pub_datetime']
 
     def author(self, obj):
         if obj.logged_user:
