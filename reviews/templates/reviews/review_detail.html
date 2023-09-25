@@ -46,16 +46,15 @@
             </div>
 
             <div class="comment-form">
-                <h5>LEAVE YOUR COMMENT</h5><hr />
+                <hr /><h5><strong>Leave your comment</strong></h5><hr />
                 {% if user.is_authenticated %}
                     <form method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="{{ form.logged_user.id_for_label }}" class="comment-form-label">{{ form.logged_user.label }}</label><br />
-                                {{ user }}
+                            <label for="{{ form.logged_user.id_for_label }}" class="comment-form-label">{{ form.logged_user.label }}</label> - 
+                                <strong>{{ user }}</strong>
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.body.id_for_label }}" class="comment-form-label">Comment</label><br />
                             {{ form.body }}
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -64,15 +63,14 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="{{ form.unlogged_user.id_for_label }}" class="comment-form-label">{{ form.unlogged_user.label }}</label><br />
+                            <label for="{{ form.unlogged_user.id_for_label }}" class="comment-form-label">{{ form.unlogged_user.label }}</label>
                             {{ form.unlogged_user }}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}" class="comment-form-label">{{ form.email.label }}</label><br />
+                            <label for="{{ form.email.id_for_label }}" class="comment-form-label">{{ form.email.label }}</label>
                                 {{ form.email }}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.body.id_for_label }}" class="comment-form-label">Comment</label><br />
                             {{ form.body }}
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>

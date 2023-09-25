@@ -241,18 +241,18 @@
 }
 
 .comments {
-    margin: 4rem 0 0;
+    margin: 2rem 0 0;
 }
 
 .comments .title {
     align-items: center;
     justify-content: center;
-    padding: 3rem 0 0.8rem 0.2rem;
+    padding: 3rem 0 0rem 0.2rem;
     border-top: 0.1rem solid var(--color-lightgrey);
     color: var(--color-black);
     font-weight: 700;
     font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: -0.5rem;
 }
 
 .comment {
@@ -260,15 +260,15 @@
 }
 
 .comment-form {
-    border: 0.1rem solid var(--color-lightgrey);
+    margin: -1rem auto 1.5rem 1.5rem;
     padding: 2rem;
-    margin-bottom: 3rem;
 }
 
 .comment-form-label {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--color-middleorange);
+    margin-right: 0.8rem;
 }
 
 .comments .info {
