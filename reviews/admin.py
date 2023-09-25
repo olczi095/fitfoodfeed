@@ -60,6 +60,8 @@ class CommentAdmin(admin.ModelAdmin):
     def get_form(self, request, obj, **kwargs):
         if obj and obj.logged_user is not None:
             self.exclude = ('unlogged_user',)
+        else:
+            self.exclude = ()
         return super().get_form(request, obj, **kwargs)
     
     pub_datetime.short_description = "DATE / TIME"
