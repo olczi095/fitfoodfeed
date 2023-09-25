@@ -153,3 +153,10 @@ class CommentAdminTestCase(TestCase):
 
         self.assertIn('logged_user', form.base_fields.keys())
         self.assertNotIn('unlogged_user', form.base_fields.keys())
+
+    def test_no_fields_exclusions_for_unlogged_users_in_form(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        comment_model_admin.save_model(request=None, obj=self.user_comment, form=None, change=False)
+        form = comment_model_admin.get_form(request=None, obj=self.random_comment)
+        self.assertIn('logged_user', form.base_fields.keys())
+        self.assertIn('unlogged_user', form.base_fields.keys())
