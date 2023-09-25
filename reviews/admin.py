@@ -1,3 +1,4 @@
+from typing import Any, Optional
 from django.contrib import admin
 from .models import Post, Category, Comment
 
@@ -55,5 +56,10 @@ class CommentAdmin(admin.ModelAdmin):
         if obj.logged_user:
             obj.unlogged_user = None
         return super().save_model(request, obj, form, change)
+    
+    def get_form(self, request, obj, **kwargs):
+        if obj and obj.logged_user is not None:
+            self.exclude = ('unlogged_user',)
+        return super().get_form(request, obj, **kwargs)
     
     pub_datetime.short_description = "DATE / TIME"
