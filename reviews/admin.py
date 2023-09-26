@@ -33,11 +33,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['comment', 'post', 'author', 'email', 'datetime', 'active']
+    list_display = ['comment', 'post_title', 'author', 'email', 'datetime', 'active']
     ordering = ['active', 'pub_datetime']
 
     def comment(self, obj):
         return obj.body[:75]
+    
+    def post_title(self, obj):
+        return obj.post.title
 
     def author(self, obj):
         if obj.logged_user:
@@ -70,3 +73,4 @@ class CommentAdmin(admin.ModelAdmin):
         return {'unlogged_user': ''}
     
     datetime.short_description = "DATE / TIME"
+    post_title.short_description = "POSTED IN"
