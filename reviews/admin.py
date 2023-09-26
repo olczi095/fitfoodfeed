@@ -63,4 +63,7 @@ class CommentAdmin(admin.ModelAdmin):
             self.readonly_fields = ()
         return super().get_form(request, obj, **kwargs)
     
+    def get_changeform_initial_data(self, request):
+        return {'unlogged_user': ''}
+    
     pub_datetime.short_description = "DATE / TIME"
