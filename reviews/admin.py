@@ -33,8 +33,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['post', 'author', 'email', 'pub_datetime', 'active']
+    list_display = ['comment', 'post', 'author', 'email', 'pub_datetime', 'active']
     ordering = ['active', 'pub_datetime']
+
+    def comment(self, obj):
+        return obj.body[:75]
 
     def author(self, obj):
         if obj.logged_user:
