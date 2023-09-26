@@ -128,6 +128,17 @@ class CommentAdminTestCase(TestCase):
         displayed_email_from_comment_with_email = comment_model_admin.email(self.random_comment_with_email)
         self.assertEqual(expected_email, displayed_email_from_comment_with_email)
 
+    def test_displaying_excerpt_of_comment(self):
+        long_comment = Comment.objects.create(
+            post=self.review,
+            pub_datetime=timezone.now(),
+            body='This is a very long comment, the longest from all comments. This comment contains more than 75 signs.'
+        )
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        expected_comment = long_comment.body[:75]
+        displayed_comment = comment_model_admin.comment(long_comment)
+        self.assertEqual(expected_comment, displayed_comment)
+
     def test_formatting_datetime(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_datetime = self.user_comment.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
