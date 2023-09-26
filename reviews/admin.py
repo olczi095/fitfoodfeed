@@ -33,7 +33,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['comment', 'post', 'author', 'email', 'pub_datetime', 'active']
+    list_display = ['comment', 'post', 'author', 'email', 'datetime', 'active']
     ordering = ['active', 'pub_datetime']
 
     def comment(self, obj):
@@ -51,7 +51,7 @@ class CommentAdmin(admin.ModelAdmin):
             return obj.email
         return obj.email
         
-    def pub_datetime(self, obj):
+    def datetime(self, obj):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
     
     def save_model(self, request, obj, form, change):
@@ -69,4 +69,4 @@ class CommentAdmin(admin.ModelAdmin):
     def get_changeform_initial_data(self, request):
         return {'unlogged_user': ''}
     
-    pub_datetime.short_description = "DATE / TIME"
+    datetime.short_description = "DATE / TIME"

@@ -142,13 +142,13 @@ class CommentAdminTestCase(TestCase):
     def test_formatting_datetime(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_datetime = self.user_comment.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
-        displayed_comment = comment_model_admin.pub_datetime(self.user_comment)
+        displayed_comment = comment_model_admin.datetime(self.user_comment)
         self.assertEqual(expected_datetime, displayed_comment)
 
     def test_title_of_datetime_column(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_title = 'DATE / TIME'
-        displayed_title = comment_model_admin.pub_datetime.short_description
+        displayed_title = comment_model_admin.datetime.short_description
         self.assertEqual(expected_title, displayed_title)
 
     def test_save_comment_with_authenticated_user(self):
