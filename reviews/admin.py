@@ -34,6 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['author', 'comment', 'active', 'post_title', 'email', 'datetime']
+    list_display_links = ['comment']
     ordering = ['active', 'pub_datetime']
 
     def comment(self, obj):
