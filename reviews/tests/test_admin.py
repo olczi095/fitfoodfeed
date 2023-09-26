@@ -160,3 +160,8 @@ class CommentAdminTestCase(TestCase):
         form = comment_model_admin.get_form(request=None, obj=self.random_comment)
         self.assertIn('logged_user', form.base_fields.keys())
         self.assertIn('unlogged_user', form.base_fields.keys())
+
+    def test_get_changeform_initial_data(self):
+        comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
+        initial_data = comment_model_admin.get_changeform_initial_data(request=None)
+        self.assertEqual(initial_data, {'unlogged_user': ''})
