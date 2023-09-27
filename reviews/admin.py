@@ -39,19 +39,19 @@ class CommentAdmin(admin.ModelAdmin):
     list_display_links = ['comment']
     ordering = ['active', 'pub_datetime']
 
-    def comment(self, obj):
-        return obj.body[:75]
-    
-    def post_title(self, obj):
-        post_change_url = reverse('admin:reviews_post_change', args=[obj.post.id])
-        return format_html(f'<a href="{post_change_url}">{obj.post.title}</a>')
-
     def author(self, obj):
         if obj.logged_user:
             logged_user_change_url = reverse('admin:accounts_user_change', args=[obj.logged_user.id])
             return format_html(f'<a href="{logged_user_change_url}">{obj.logged_user}</a>')
         else:
             return obj.unlogged_user
+        
+    def comment(self, obj):
+        return obj.body[:75]
+    
+    def post_title(self, obj):
+        post_change_url = reverse('admin:reviews_post_change', args=[obj.post.id])
+        return format_html(f'<a href="{post_change_url}">{obj.post.title}</a>')
         
     def email(self, obj):
         if obj.logged_user:
