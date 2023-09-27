@@ -6,10 +6,18 @@ from .models import Post, Category, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pk', 'author', 'category', 'status', 'pub_date', 'tag_list', 'slug']
+    list_display = ['title', 'pk', 'author_model', 'category_model', 'status', 'pub_date', 'tag_list', 'slug']
     list_filter = ['category', 'status', 'author']
     search_fields = ['title', 'meta_description', 'body']
     prepopulated_fields = {'slug': ('title',)}
+
+    def author_model(self, obj):
+        author_change_url = reverse('admin:accounts_user_change', args=[obj.author.id])
+        return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
+    
+    def category_model(self, obj):
+        category_change_url = reverse('admin:reviews_category_change', args=[obj.category.id])
+        return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('tags')
@@ -21,6 +29,8 @@ class PostAdmin(admin.ModelAdmin):
         if not obj.author:
             obj.author = request.user
         return super().save_model(request, obj, *args, **kwargs)
+    
+    author_model.short_description = 'AUTHOR'
 
 
 @admin.register(Category)
