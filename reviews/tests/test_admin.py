@@ -11,6 +11,9 @@ from unittest.mock import Mock
 
 class PostAdminTestCase(TestCase):
     def setUp(self):
+        self.category = Category.objects.create(
+            name='Peanut Butter'
+        )
         self.author = User.objects.create(
             username='test_user',
             password='test_password',
@@ -20,6 +23,7 @@ class PostAdminTestCase(TestCase):
             title='My Review',
             author=self.author,
             body='This is the body of my test review.',
+            category=self.category
         )
         
         tag_chocolate = Tag.objects.create(name='chocolate')
@@ -47,6 +51,20 @@ class PostAdminTestCase(TestCase):
         postModelAdmin.save_model(request, self.another_review, PostAdmin.form, change=False)
         new_review = Post.objects.get(pk=self.another_review.pk)
         self.assertEqual(new_review.author, self.author)
+
+    def test_displaying_author(self):
+        post_model_admin = PostAdmin(model=Post, admin_site=AdminSite())
+        expected_author = self.review.author.username
+        displayed_author = post_model_admin.author_model(self.review)
+        displayed_author_without_url = strip_tags(displayed_author)
+        self.assertEqual(expected_author, displayed_author_without_url)
+
+    def test_displaying_category(self):
+        post_model_admin = PostAdmin(model=Post, admin_site=AdminSite())
+        expected_category = self.review.category.name
+        displayed_category = post_model_admin.category_model(self.review)
+        displayed_category_without_url = strip_tags(displayed_category)
+        self.assertEqual(expected_category, displayed_category_without_url)
 
 
 class CategoryAdminTestCase(TestCase):
