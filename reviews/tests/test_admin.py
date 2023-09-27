@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.admin import AdminSite
 from django.utils import timezone
+from django.utils.html import strip_tags
 from taggit.models import Tag
 from accounts.models import User
 from reviews.models import Post, Category, Comment
@@ -102,7 +103,8 @@ class CommentAdminTestCase(TestCase):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_author = self.user.username
         displayed_author = comment_model_admin.author(self.user_comment)
-        self.assertEqual(expected_author, displayed_author)
+        displayed_author_without_url = strip_tags(displayed_author)
+        self.assertEqual(expected_author, displayed_author_without_url)
 
     def test_displaying_email_with_logged_user(self):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
@@ -132,7 +134,8 @@ class CommentAdminTestCase(TestCase):
         comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
         expected_title = self.random_comment.post.title
         displayed_title = comment_model_admin.post_title(self.random_comment)
-        self.assertEqual(expected_title, displayed_title)
+        displayed_title_without_url = strip_tags(displayed_title)
+        self.assertEqual(expected_title, displayed_title_without_url)
 
     def test_displaying_excerpt_of_comment(self):
         long_comment = Comment.objects.create(
