@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
 from .models import Post, Category, Comment
 
 
@@ -41,11 +43,13 @@ class CommentAdmin(admin.ModelAdmin):
         return obj.body[:75]
     
     def post_title(self, obj):
-        return obj.post.title
+        post_change_url = reverse('admin:reviews_post_change', args=[obj.post.id])
+        return format_html(f'<a href="{post_change_url}">{obj.post.title}</a>')
 
     def author(self, obj):
         if obj.logged_user:
-            return obj.logged_user.username
+            logged_user_change_url = reverse('admin:accounts_user_change', args=[obj.logged_user.id])
+            return format_html(f'<a href="{logged_user_change_url}">{obj.logged_user}</a>')
         else:
             return obj.unlogged_user
         
