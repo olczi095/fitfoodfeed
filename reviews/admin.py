@@ -23,7 +23,14 @@ class PostAdmin(admin.ModelAdmin):
         return super().get_queryset(request).prefetch_related('tags')
     
     def tag_list(self, obj):
-        return u", ".join(o.name for o in obj.tags.all())
+        tags = obj.tags.all()
+        tag_links = []
+
+        for tag in tags:
+            tag_change_url = reverse('admin:taggit_tag_change', args=[tag.pk])
+            tag_links.append(format_html(f'<a href="{tag_change_url}">{tag.name}</a>'))
+
+        return format_html(', '.join(tag_links))
     
     def save_model(self, request, obj, *args, **kwargs):
         if not obj.author:
