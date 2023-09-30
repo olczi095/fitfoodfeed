@@ -9,6 +9,7 @@
     <form class="form-register" method="post" action={% url 'app_accounts:register' %}>
         {% csrf_token %}
         <h2>Registration</h2>
+
             {% for field in form %}
             <div class="form-field">
                 {% if field.label != 'First name' and field.label != 'Last name' %}
@@ -22,7 +23,12 @@
                 {% endif %}
             </div>
             {% endfor %}
-        <br />
+
+            <br />
+            {% for field, error_message in form.errors.items %}
+                <div class="form-error-message">{{ error_message }}</div>
+            {% endfor %}
+            
         <button type="submit" class="btn btn-secondary btn-lg btn-block">Sign up!</button>
         <br />
     <p class="account-link">
