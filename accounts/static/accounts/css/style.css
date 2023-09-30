@@ -29,6 +29,8 @@
 }
 
 .form-register {
+    height: 100%;
+    width: 100%;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -37,12 +39,16 @@
 }
 
 .form-image {
-    height: 30rem;
+    max-width: 100%;
+    max-height: 100%;
     width: auto;
+    height: auto;
     margin: auto auto auto 0;
 }
 
 .form-field {
+    max-width: 100%;
+    max-height: 100%;
     display: flex;
     padding: 0.2rem;
     width: 100%;
