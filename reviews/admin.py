@@ -6,7 +6,7 @@ from .models import Post, Category, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'title', 'author_model', 'category_model', 'tag_list', 'pub_date', 'status']
+    list_display = ['pk', 'title', 'author_model', 'likes_model', 'category_model', 'tag_list', 'pub_date', 'status']
     list_display_links = ['title']
     list_filter = ['author', 'category', 'status']
     search_fields = ['title', 'meta_description', 'body']
@@ -15,6 +15,9 @@ class PostAdmin(admin.ModelAdmin):
     def author_model(self, obj):
         author_change_url = reverse('admin:accounts_user_change', args=[obj.author.id])
         return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
+    
+    def likes_model(self, obj):
+        return obj.likes.count()
     
     def category_model(self, obj):
         category_change_url = reverse('admin:reviews_category_change', args=[obj.category.id])
@@ -39,6 +42,7 @@ class PostAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, *args, **kwargs)
 
     author_model.short_description = 'author'
+    likes_model.short_description = 'likes'
     category_model.short_description = 'category'
     tag_list.short_description = 'tags'
 
