@@ -30,6 +30,19 @@ class PostAdminTestCase(TestCase):
         tag_bars = Tag.objects.create(name='bars')
         self.review.tags.add(tag_chocolate, tag_bars)
         
+    def test_likes_model_with_no_likes(self):
+        postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
+        calculated_review_likes = postModelAdmin.likes_model(self.review)
+        expected_likes = 0
+        self.assertEqual(calculated_review_likes, expected_likes)
+
+    def test_likes_model_with_one_like(self):
+        postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
+        self.review.likes.add(self.author)
+        calculated_review_likes = postModelAdmin.likes_model(self.review)
+        expected_likes = 1
+        self.assertEqual(calculated_review_likes, expected_likes)
+
     def test_get_queryset(self):
         postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
         queryset = postModelAdmin.get_queryset(self.review)
