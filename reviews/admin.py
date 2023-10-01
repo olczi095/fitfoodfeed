@@ -32,6 +32,15 @@ class PostAdmin(admin.ModelAdmin):
             tag_links.append(format_html(f'<a href="{tag_change_url}">{tag.name}</a>'))
 
         return format_html(', '.join(tag_links))
+    
+    def save_model(self, request, obj, *args, **kwargs):
+        if not obj.author:
+            obj.author = request.user
+        return super().save_model(request, obj, *args, **kwargs)
+
+    author_model.short_description = 'author'
+    category_model.short_description = 'category'
+    tag_list.short_description = 'tags'
 
 
 @admin.register(Category)
