@@ -110,6 +110,9 @@ class Post(models.Model):
     def comment_counter(self):
         return self.comment_set.filter(active=True).count()
 
+    def likes_counter(self):
+        return self.likes.count()
+    
 
 class Comment(models.Model):
     logged_user = models.ForeignKey(
