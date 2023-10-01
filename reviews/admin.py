@@ -6,8 +6,9 @@ from .models import Post, Category, Comment
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'pk', 'author_model', 'category_model', 'status', 'pub_date', 'tag_list', 'slug']
-    list_filter = ['category', 'status', 'author']
+    list_display = ['pk', 'title', 'author_model', 'category_model', 'tag_list', 'pub_date', 'status']
+    list_display_links = ['title']
+    list_filter = ['author', 'category', 'status']
     search_fields = ['title', 'meta_description', 'body']
     prepopulated_fields = {'slug': ('title',)}
 
@@ -31,13 +32,6 @@ class PostAdmin(admin.ModelAdmin):
             tag_links.append(format_html(f'<a href="{tag_change_url}">{tag.name}</a>'))
 
         return format_html(', '.join(tag_links))
-    
-    def save_model(self, request, obj, *args, **kwargs):
-        if not obj.author:
-            obj.author = request.user
-        return super().save_model(request, obj, *args, **kwargs)
-    
-    author_model.short_description = 'AUTHOR'
 
 
 @admin.register(Category)
