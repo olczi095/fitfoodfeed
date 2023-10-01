@@ -46,6 +46,7 @@ class PostModelTestCase(TestCase):
         self.assertEqual(self.post.body, 'test_body')
         self.assertEqual(self.post.status, 'DRAFT')
         self.assertEqual(self.post.category.name, self.category.name)
+        self.assertEqual(self.post.likes.count(), 0)
 
     def test_category_field(self):
         post_fields = [field.name for field in self.post._meta.get_fields()]
