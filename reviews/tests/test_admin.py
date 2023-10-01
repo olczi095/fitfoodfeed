@@ -32,14 +32,14 @@ class PostAdminTestCase(TestCase):
         
     def test_likes_model_with_no_likes(self):
         postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
-        calculated_review_likes = postModelAdmin.likes_model(self.review)
+        calculated_review_likes = postModelAdmin.likes_counter_model(self.review)
         expected_likes = 0
         self.assertEqual(calculated_review_likes, expected_likes)
 
     def test_likes_model_with_one_like(self):
         postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
         self.review.likes.add(self.author)
-        calculated_review_likes = postModelAdmin.likes_model(self.review)
+        calculated_review_likes = postModelAdmin.likes_counter_model(self.review)
         expected_likes = 1
         self.assertEqual(calculated_review_likes, expected_likes)
 
