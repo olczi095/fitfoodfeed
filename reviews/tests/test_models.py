@@ -127,6 +127,17 @@ class PostModelTestCase(TestCase):
         amount_of_comments = self.post.comment_counter()
         self.assertEqual(amount_of_comments, 1)
 
+    def test_likes_counter_with_no_likes(self):
+        calculated_post_likes = self.post.likes_counter()
+        expected_likes = 0
+        self.assertEqual(calculated_post_likes, expected_likes)
+
+    def test_likes_counter_with_one_like(self):
+        self.post.likes.add(self.author)
+        calculated_post_likes = self.post.likes_counter()
+        expected_likes = 1
+        self.assertEqual(calculated_post_likes, expected_likes)
+
 
 class CategoryModelExistenceTestCase(TestCase):
     def test_category_model_exists(self):
