@@ -38,7 +38,9 @@ class PostAdminTestCase(TestCase):
     def test_tag_list(self):
         postModelAdmin = PostAdmin(model=Post, admin_site=AdminSite())
         expected_tag_list = 'chocolate, bars'
-        self.assertEqual(postModelAdmin.tag_list(self.review), expected_tag_list)
+        tag_list_html = postModelAdmin.tag_list(self.review)
+        tag_list_text = strip_tags(tag_list_html)
+        self.assertEqual(expected_tag_list, tag_list_text)
 
     def test_assign_author_automatically_to_creating_post(self):
         self.another_review = Post(
