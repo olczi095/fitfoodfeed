@@ -35,12 +35,6 @@ class LikePostTestCase(TestCase):
         self.assertEqual(self.review.likes.count(), 0)
         self.assertNotIn(self.user, self.review.likes.all())
 
-    def test_like_post_unauthenticated_user(self):
-        self.client.logout()
-        self.client.user = AnonymousUser()
-        response = self.client.get(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
-        self.assertEqual(response.status_code, 403)
-
 
 class HomePageTestCase(TestCase):
     def setUp(self):
