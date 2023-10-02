@@ -188,6 +188,20 @@ class PostDetailTestCase(TestCase):
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
+    def test_post_likes_with_zero_likes(self):
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        post_likes_from_context = response.context['post_likes']
+        expected_post_likes = '0 Likes'
+        self.assertEqual(post_likes_from_context, expected_post_likes)
+
+    def test_post_likes_with_one_like(self):
+        self.client.force_login(self.author1)
+        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.post1.pk}))
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        post_likes_from_context = response.context['post_likes']
+        expected_post_likes = '1 Like'
+        self.assertEqual(post_likes_from_context, expected_post_likes)
+
 
 class PostCreateTestCase(TestCase):
     def setUp(self):
