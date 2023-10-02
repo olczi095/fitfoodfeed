@@ -73,6 +73,12 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
+
+        if self.object.likes_counter() == 1:
+            context['post_likes'] = '1 Like'
+        else:   
+            context['post_likes'] = f'{self.object.likes_counter()} Likes'
+            
         context['comments'] = self.object.comment_set.filter(active=True)
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
