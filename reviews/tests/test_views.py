@@ -1,7 +1,45 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.models import AnonymousUser
 from taggit.models import Tag
 from reviews.models import User, Post, Category, Comment
+
+
+class LikePostTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+        self.review = Post.objects.create(
+            title='Test Review',
+            body='Body of test review.'
+        )
+
+    def test_like_post_authenticated_user(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(self.user, self.review.likes.all())
+
+    def test_like_and_unlike_review_with_authenticated_user(self):
+        self.client.force_login(self.user)
+
+        # Like the review
+        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk})) # For like
+        self.assertEqual(self.review.likes.count(), 1)
+        self.assertIn(self.user, self.review.likes.all())
+
+        # Unlike the review
+        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
+        self.assertEqual(self.review.likes.count(), 0)
+        self.assertNotIn(self.user, self.review.likes.all())
+
+    def test_like_post_unauthenticated_user(self):
+        self.client.logout()
+        self.client.user = AnonymousUser()
+        response = self.client.get(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 403)
 
 
 class HomePageTestCase(TestCase):
