@@ -1,7 +1,6 @@
-from typing import Dict
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
@@ -10,6 +9,15 @@ from taggit.models import Tag
 from reviews.models import Post, Category, Comment
 
 from .forms import PostForm, CommentForm
+
+
+def like_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect(reverse('app_reviews:detail_review', kwargs={'slug': post.slug}))
 
 
 class PostListView(ListView):
