@@ -87,7 +87,7 @@ class Post(models.Model):
         blank=True, 
         help_text="A comma-separated list of tags (case-insensitive)."
     )
-    likes = models.ManyToManyField(User, related_name='liked_posts')
+    likes = models.ManyToManyField(User, related_name='post_likes')
 
     class Meta:
         ordering = ['-pub_date']
