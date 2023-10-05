@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
-from django.contrib.auth.models import AnonymousUser
 from taggit.models import Tag
 from reviews.models import User, Post, Category, Comment
 
@@ -106,8 +105,14 @@ class PostDetailTestCase(TestCase):
             pub_date = '2020-01-01',
             author=self.author1,
             body='Normally in this place I should have much longer text with the complete review for particular food product.',
-            status='PUB'
+            status='PUB',
         )
+        
+        self.tag1 = Tag.objects.create(name='test_tag_1')
+        self.tag2 = Tag.objects.create(name='test_tag_2')
+
+        self.post1.tags.add(self.tag1)
+        self.post1.tags.add(self.tag2)
 
     def test_post_detail_returns_correct_response(self):
         response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
@@ -201,6 +206,40 @@ class PostDetailTestCase(TestCase):
         post_likes_from_context = response.context['post_likes']
         expected_post_likes = '1 Like'
         self.assertEqual(post_likes_from_context, expected_post_likes)
+
+    def test_get_related_posts_with_zero_related_posts(self):
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        related_posts_of_post_1 = response.context['related_posts']
+        amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
+        expected_amount_of_related_posts = 0
+        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
+
+    def test_get_related_posts_with_one_related_post(self):
+        related_post1 = Post.objects.create(title='Related Post 1', body='Body of Related Post 1')
+        related_post1.tags.add(self.tag1)
+
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        related_posts_of_post_1 = response.context['related_posts']
+        amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
+        expected_amount_of_related_posts = 1
+        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
+
+    def test_get_related_posts_with_four_related_posts(self):
+        related_post1 = Post.objects.create(title='Related Post 1', body='Body of Related Post 1')
+        related_post2 = Post.objects.create(title='Related Post 2', body='Body of Related Post 2')
+        related_post3 = Post.objects.create(title='Related Post 3', body='Body of Related Post 3')
+        related_post4 = Post.objects.create(title='Related Post 4', body='Body of Related Post 4')
+        related_post1.tags.add(self.tag1)
+        related_post2.tags.add(self.tag2)
+        related_post3.tags.add(self.tag1)
+        related_post4.tags.add(self.tag1)
+        related_post4.tags.add(self.tag2)
+
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        related_posts_of_post1 = list(response.context['related_posts'])
+        amount_of_related_posts_for_post1 = len(related_posts_of_post1)
+        expected_amount_of_related_posts = 3
+        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
 
 
 class PostCreateTestCase(TestCase):
