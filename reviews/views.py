@@ -1,3 +1,5 @@
+from random import sample
+
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import get_object_or_404, redirect
@@ -7,7 +9,6 @@ from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
 from reviews.models import Post, Category, Comment
-
 from .forms import PostForm, CommentForm
 
 
@@ -71,6 +72,15 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
     def get_success_url(self) -> str:
         return reverse('app_reviews:detail_review', kwargs={'slug': self.object.slug})
     
+    def get_related_posts(self):
+        post_tags = self.object.tags.all()
+        all_related_posts = list(Post.objects.filter(tags__in=post_tags).exclude(pk=self.object.pk).distinct())
+        if len(all_related_posts) <= 3 :
+            return all_related_posts
+        else:
+            three_random_related_posts = sample(all_related_posts, k=3)
+            return three_random_related_posts
+    
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
 
@@ -82,6 +92,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
         context['comments'] = self.object.comment_set.filter(active=True)
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
+        context['related_posts'] = self.get_related_posts()
         return context
     
     def post(self, request, *args, **kwargs):
