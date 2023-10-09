@@ -364,7 +364,13 @@
     font-size: 0.1rem;
 }
 
-.like-button {
+.likes-button h5 {
+    margin: 0;
+    padding-left: 0.2rem;
+    font-weight: bold;
+}
+
+.like {
     display: flex;
     color: var(--color-green-alert);
     font-size: 2.5rem;
@@ -379,22 +385,16 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.like-button:hover {
+.like:hover {
     background-color: var(--color-lightorange);
     border-color: var(--color-lightgrey);
 }
 
-.likes-button h5 {
-    margin: 0;
-    padding-left: 0.2rem;
-    font-weight: bold;
-}
-
-.unlike-button {
+.unlike {
     color: var(--color-red-alert);
 }
 
-.unlike-button:hover {
+.unlike:hover {
     background-color: var(--color-lightgrey);
 }
 
