@@ -1,5 +1,5 @@
 from django.views.generic import CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
@@ -23,7 +23,7 @@ class RegisterView(SuccessMessageMixin, CreateView):
 
 class CustomLoginView(LoginView):
     def get_success_url(self):
-        return reverse_lazy('app_reviews:home')
+        return reverse('app_reviews:home')
     
     def form_invalid(self, form):
         messages.error(self.request, 'Invalid username or password.')
