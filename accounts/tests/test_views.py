@@ -47,6 +47,11 @@ class LoginTestCase(TestCase):
         response = self.client.post(reverse('app_accounts:login'), {'username':'admin', 'password':'asdf1234'}, follow=True)
         self.assertRedirects(response, reverse_lazy('app_reviews:home'))
 
+    def test_valid_login_display_success_message(self):
+        response = self.client.post(reverse("app_accounts:login"), {'username':'admin', 'password':'asdf1234'}, follow=True)
+        success_message = "Hello, <strong>admin</strong>!"
+        self.assertContains(response, success_message)
+
     def test_invalid_login_stay_on_page(self):
         response = self.client.post(reverse('app_accounts:login'), {'username':'incorrect_username', 'password':'incorrect_password'}, follow=True)
         self.assertTrue(response.status_code, 200)
