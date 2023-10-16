@@ -1,6 +1,6 @@
 from typing import Type
 
-from django.views.generic import CreateView
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
