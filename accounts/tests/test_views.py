@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from django.contrib.messages import get_messages
+
 from accounts.forms import CustomUserCreationForm
 from accounts.models import User
 
@@ -21,20 +23,14 @@ class RegisterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'registration/register.html')
 
-    def test_redirect_home_form_valid(self):
-        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
-        self.assertRedirects(response, reverse_lazy('app_reviews:home'))
-
     def test_display_success_message_after_valid_register(self):
-        success_message = f"Registration Successful! Welcome <strong>user1</strong>, you are now logged in."
+        success_message = f"Registration Successful! Now you can log in."
         response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
         self.assertContains(response, success_message)
-
-    def test_login_after_success_registration(self):
-        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
-        self.assertRedirects(response, reverse_lazy('app_reviews:home'))
-        self.assertTrue(response.context['user'].is_authenticated)
         
+    def test_redirect_login_page_after_successful_registration(self):
+        response = self.client.post(reverse('app_accounts:register'), self.valid_data, follow=True)
+        self.assertRedirects(response, reverse_lazy('app_accounts:login'))
 
 class LoginTestCase(TestCase):
     @classmethod
