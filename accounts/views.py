@@ -12,7 +12,7 @@ from django.forms import BaseForm
 from .forms import CustomUserCreationForm
 
 
-class RegisterView(SuccessMessageMixin, CreateView):
+class RegisterView(SuccessMessageMixin, CreateView): # type: ignore
     template_name: str = 'registration/register.html'
     form_class: Type[CustomUserCreationForm] = CustomUserCreationForm
     success_url: str = reverse_lazy('app_accounts:login')

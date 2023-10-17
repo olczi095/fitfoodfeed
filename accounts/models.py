@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+
 from .validators import validate_avatar_type, validate_avatar_dimensions
 
 
@@ -14,5 +15,5 @@ class User(AbstractUser):
                                )
     is_author = models.BooleanField(default=False, verbose_name='author status')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.username

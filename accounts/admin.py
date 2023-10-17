@@ -10,7 +10,7 @@ class AdminAttributes(Protocol):
     short_description: str
 
 
-def admin_attr_decorator(func: Any) -> AdminAttributes:
+def admin_attr_decorator(func: Any) -> Any:
     return func
 
 
