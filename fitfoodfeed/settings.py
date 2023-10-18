@@ -2,6 +2,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+import django_stubs_ext
+
+
+django_stubs_ext.monkeypatch()
+
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
