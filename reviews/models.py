@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from accounts.models import User
 from accounts.validators import validate_avatar_type
 
+
 def convert_to_slug(text: str) -> str:
         polish_signs_conversion = {
             'ą': 'a',

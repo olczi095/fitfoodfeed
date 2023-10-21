@@ -9,6 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 from .models import User
 from reviews.models import Post
 
+
 @receiver(post_save, sender=User)
 def add_to_admin_group(instance: User, **kwargs: Any) -> None:
     if instance.is_superuser and not instance.groups.filter(name='admin').exists():

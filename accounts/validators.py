@@ -3,6 +3,7 @@ from typing import Any
 
 from django.core.exceptions import ValidationError
 
+
 def validate_avatar_type(image: Any) -> None:
     allowed_image_types: list[str] = ['image/png', 'image/jpeg']
     file_mime_type = magic.from_buffer(image.read(2048), mime=True)
