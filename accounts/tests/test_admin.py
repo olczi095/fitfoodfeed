@@ -1,5 +1,6 @@
-from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
+from django.contrib.admin.sites import AdminSite
+
 from accounts.admin import UserAdmin
 from accounts.models import User
 

@@ -1,12 +1,14 @@
+from unittest.mock import Mock
+
 from django.test import TestCase
 from django.contrib.admin import AdminSite
 from django.utils import timezone
 from django.utils.html import strip_tags
 from taggit.models import Tag
+
 from accounts.models import User
 from reviews.models import Post, Category, Comment
 from reviews.admin import PostAdmin, CategoryAdmin, CommentAdmin
-from unittest.mock import Mock
 
 
 class PostAdminTestCase(TestCase):
