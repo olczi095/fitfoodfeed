@@ -1,5 +1,16 @@
 from django.urls import path
-from .views import PostListView, PostDetailView, PostCreateView, TaggedPostsListView, TagsListView, CategoryListView, PostUpdateView, PostDeleteView, like_post
+
+from .views import (
+    PostListView, 
+    PostDetailView, 
+    PostCreateView, 
+    PostUpdateView, 
+    PostDeleteView, 
+    TaggedPostsListView, 
+    TagsListView, 
+    CategoryListView, 
+    like_post
+)
 
 app_name = 'app_reviews'
 

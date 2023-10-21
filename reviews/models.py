@@ -1,15 +1,16 @@
+from typing import Any
+
 from django_resized import ResizedImageField
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-
 from taggit.managers import TaggableManager
 
 from accounts.models import User
 from accounts.validators import validate_avatar_type
 
-def convert_to_slug(text):
+def convert_to_slug(text: str) -> str:
         polish_signs_conversion = {
             'ą': 'a',
             'ć': 'c',
@@ -34,17 +35,17 @@ class Category(models.Model):
     name = models.CharField(max_length=25, unique=True, blank=False, null=False)
     slug = models.SlugField(max_length=25, unique=True, null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name.title()
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if not self.slug:
             self.slug = convert_to_slug(self.name)
         if self.name:
             self.name = self.name.title()
         super(Category, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("app_reviews:category", kwargs={"category_name": self.slug})
         
 
@@ -93,13 +94,13 @@ class Post(models.Model):
         ordering = ['-pub_date']
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
     
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("app_reviews:detail_review", args=[str(self.slug)])
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if not self.slug:
             self.slug = convert_to_slug(self.title)
         if not self.category:
@@ -107,10 +108,10 @@ class Post(models.Model):
             self.category = default_category
         super(Post, self).save(*args, **kwargs)
 
-    def comment_counter(self):
+    def comment_counter(self) -> int:
         return self.comment_set.filter(active=True).count()
 
-    def likes_counter(self):
+    def likes_counter(self) -> int:
         return self.likes.count()
     
 
@@ -137,13 +138,13 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-pub_datetime']
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.logged_user:
             return f"Comment by {self.logged_user} on {self.post.title}."
         else:
             return f"Comment by {self.unlogged_user} on {self.post.title}."
         
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         if self.logged_user:
             self.email = self.logged_user.email
             

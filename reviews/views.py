@@ -1,4 +1,5 @@
 from random import sample
+from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -6,74 +7,78 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.db.models import Model, QuerySet
+from django.forms import BaseForm, BaseModelForm, ModelForm
 from taggit.models import Tag
 
-from reviews.models import Post, Category, Comment
+from accounts.models import User
+from .models import Post, Category, Comment
 from .forms import PostForm, CommentForm
 
 
-def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if post.likes.filter(id=request.user.id).exists():
+def like_post(request: HttpRequest, pk:int) -> HttpResponseRedirect:
+    post = get_object_or_404(Post, pk=int(pk))
+    if post.likes.filter(id=str(request.user.id)).exists() and isinstance(request.user, User):
         post.likes.remove(request.user)
-    else:
+    elif isinstance(request.user, User):
         post.likes.add(request.user)
     return redirect(reverse('app_reviews:detail_review', kwargs={'slug': post.slug}))
 
 
-class PostListView(ListView):
+class PostListView(ListView[Model]):
     model = Post
     template_name = 'reviews/home.html'
     context_object_name = 'posts'
     paginate_by = 3
-
-    def get_queryset(self):
-        return super().get_queryset().filter(status='PUB').order_by('-pub_date')
+    queryset = Post.objects.filter(status='PUB').order_by('-pub_date')
     
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         posts_with_comment_counters = {}
         recent_comments = [comment for comment in Comment.objects.filter(active=True).order_by('pub_datetime')[:3]]
 
         for post in Post.objects.filter(status='PUB'):
             posts_with_comment_counters[post] = post.comment_counter()
-
-        popular_posts = sorted(posts_with_comment_counters.items(), key=lambda x: x[1], reverse=True)
-        popular_posts = [popular_post[0] for popular_post in popular_posts] # Get just posts without comment counters
+            
+        popular_posts_with_comment_counters = sorted(posts_with_comment_counters.items(), key=lambda x: x[1], reverse=True)
+        popular_posts = [popular_post[0] for popular_post in popular_posts_with_comment_counters] # Get just posts without comment counters
         context['popular_posts'] = popular_posts[:5]
         context['recent_comments'] = recent_comments
         return context
     
 
-class TaggedPostsListView(ListView):
+class TaggedPostsListView(ListView[Post]):
     model = Post
     template_name = 'reviews/home.html'
     context_object_name = 'posts'
     paginate_by = 3    
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Post]:
         tag_name = self.kwargs['tag_name']
         tag = get_object_or_404(Tag, name=tag_name)
-        return super().get_queryset().filter(status='PUB').filter(tags=tag)
+        queryset = Post.objects.filter(status='PUB').filter(tags=tag)
+        return queryset
 
 
-class TagsListView(ListView):
+class TagsListView(ListView[Model]):
     model = Tag
     template_name = 'reviews/tags.html'
     context_object_name = 'tags'
 
 
-class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
+class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]):
     form_class = CommentForm
     model = Post
     queryset = Post.objects.filter(status="PUB")
     template_name = 'reviews/review_detail.html'
 
     def get_success_url(self) -> str:
-        return reverse('app_reviews:detail_review', kwargs={'slug': self.object.slug})
+        data = {'slug': self.object.slug} if isinstance(self.object, Post) else {}
+        return reverse('app_reviews:detail_review', kwargs=data)
     
-    def get_related_posts(self):
-        post_tags = self.object.tags.all()
+    def get_related_posts(self) -> list[Post]:
+        post_tags = self.object.tags.all() if isinstance(self.object, Post) else None
         all_related_posts = list(Post.objects.filter(tags__in=post_tags).exclude(pk=self.object.pk).distinct())
         if len(all_related_posts) <= 3 :
             return all_related_posts
@@ -81,21 +86,22 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
             three_random_related_posts = sample(all_related_posts, k=3)
             return three_random_related_posts
     
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(PostDetailView, self).get_context_data(**kwargs)
 
-        if self.object.likes_counter() == 1:
-            context['post_likes'] = '1 Like'
-        else:   
-            context['post_likes'] = f'{self.object.likes_counter()} Likes'
+        if isinstance(self.object, Post):
+            context['comments'] = self.object.comment_set.filter(active=True)
+            if self.object.likes_counter() == 1:
+                context['post_likes'] = '1 Like'
+            else:   
+                context['post_likes'] = f'{self.object.likes_counter()} Likes'
             
-        context['comments'] = self.object.comment_set.filter(active=True)
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
         context['related_posts'] = self.get_related_posts()
         return context
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.object = self.get_object()
         form = self.get_form()
 
@@ -104,27 +110,27 @@ class PostDetailView(SuccessMessageMixin, FormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
-    def form_valid(self, form):
-        new_comment = form.save(commit=False)
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        if isinstance(form, CommentForm):
+            new_comment = form.save(commit=False)
 
-        if self.request.user.is_authenticated:
-            new_comment.logged_user = self.request.user
-            new_comment.unlogged_user = None
-            
-        if self.request.user.is_superuser:
-            self.success_message = "Comment successfully added." 
-        else:
-            self.success_message = "Comment successfully submitted. It will be published after moderation and validation." 
+            if isinstance(self.request.user, User) and self.request.user.is_authenticated and isinstance(new_comment, Comment):
+                new_comment.logged_user = self.request.user
+                new_comment.unlogged_user = None
+                
+            if self.request.user.is_superuser:
+                self.success_message = "Comment successfully added." 
+            else:
+                self.success_message = "Comment successfully submitted. It will be published after moderation and validation." 
 
-        new_comment.post = self.object
-        new_comment.save()
-
-        form.save()
+            if isinstance(new_comment, Comment) and isinstance(self.object, Post):
+                new_comment.post = self.object
+                new_comment.save()
         
-        return super(PostDetailView, self).form_valid(form)
+        return super().form_valid(form)
     
 
-class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, PermissionRequiredMixin, CreateView[Model, BaseModelForm[Any]]):
     model = Post
     form_class = PostForm
     permission_required = 'reviews.add_post'
@@ -132,17 +138,18 @@ class PostCreateView(SuccessMessageMixin, LoginRequiredMixin, PermissionRequired
     template_name = 'reviews/review_create.html'
     success_message = "Post <strong>%(title)s</strong> added successfully."
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        if isinstance(form, PostForm) and isinstance(form.instance, Post) and isinstance(self.request.user, User):
+            form.instance.author = self.request.user
         return super().form_valid(form)
 
-    def get_success_url(self):
-        if self.object.status == "PUB":
+    def get_success_url(self) -> str:
+        if isinstance(self.object, Post) and self.object.status == "PUB":
             return super().get_success_url() 
         return reverse('app_reviews:home')
     
 
-class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView[Post, ModelForm[Post]]):
     model = Post
     fields = ['title', 'slug', 'pub_date', 'image', 'category', 'meta_description', 'body', 'status', 'tags']
     permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
@@ -150,32 +157,33 @@ class PostUpdateView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixi
     template_name = 'reviews/review_update.html'
     success_message = "Post <strong>%(title)s</strong> successfully updated."
 
-    def test_func(self):
+    def test_func(self) -> bool:
         # Only superusers, staff and the proper post's author can access the update view
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
     
 
-class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PostDeleteView(SuccessMessageMixin, LoginRequiredMixin, UserPassesTestMixin, DeleteView): # type: ignore # a bug from mypy
     model = Post
     permission_denied_message = "You don't have permission to access this page. Please log in using a valid account"
     template_name = 'reviews/review_delete.html'
     success_url = reverse_lazy('app_reviews:home')
 
-    def test_func(self):
+    def test_func(self) -> bool:
         # Only superusers, staff and the proper post's author can access the delete view
         return self.request.user.is_superuser or self.request.user.is_staff or self.request.user == self.get_object().author
 
-    def get_success_message(self, cleaned_data):
+    def get_success_message(self, cleaned_data: dict[Any, Any]) -> str:
         return f"Post <strong>{self.object.title}</strong> deleted successfully."
     
 
-class CategoryListView(ListView):
+class CategoryListView(ListView[Model]):
     model = Post
     template_name = 'reviews/home.html'
     context_object_name = 'posts'
     paginate_by = 3
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet[Post]:
         category_name = self.kwargs['category_name']
         category = get_object_or_404(Category, slug=category_name)
-        return super().get_queryset().filter(status='PUB', category=category)
+        queryset = Post.objects.filter(status='PUB', category=category)
+        return queryset
