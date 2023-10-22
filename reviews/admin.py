@@ -57,9 +57,8 @@ class PostAdmin(admin.ModelAdmin[Model]):
         return format_html(', '.join(tag_links))
     
     def save_model(self, request: HttpRequest, obj: Model, form: ModelForm[Model], change: bool) -> None: 
-        if isinstance(obj, Post):
-            if obj.author is None and isinstance(request.user, User):
-                obj.author = request.user
+        if isinstance(obj, Post) and obj.author is None and isinstance(request.user, User):
+            obj.author = request.user
         return super().save_model(request, obj, form, change)
 
     author_model.short_description = 'author'
@@ -110,9 +109,8 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
     
     def save_model(self, request: HttpRequest, obj: Model, form: ModelForm[Comment], change: bool) -> None:   
-        if isinstance(obj, Comment):
-            if obj.logged_user:
-                obj.unlogged_user = None
+        if isinstance(obj, Comment) and obj.logged_user:
+            obj.unlogged_user = None
         return super().save_model(request, obj, form, change)
 
     def get_form(self, request: HttpRequest, obj: Model | None = None, change: bool = False, **kwargs: Any) -> type[ModelForm[Model]]:  
