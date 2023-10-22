@@ -19,7 +19,7 @@ from .forms import PostForm, CommentForm
 
 def like_post(request: HttpRequest, pk:int) -> HttpResponseRedirect:
     post = get_object_or_404(Post, pk=int(pk))
-    if post.likes.filter(id=str(request.user.id)).exists() and isinstance(request.user, User):
+    if post.likes.filter(pk=str(request.user.pk)).exists() and isinstance(request.user, User):
         post.likes.remove(request.user)
     elif isinstance(request.user, User):
         post.likes.add(request.user)

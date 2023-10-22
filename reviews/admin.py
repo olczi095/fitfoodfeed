@@ -29,7 +29,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
     @admin_attr_decorator
     def author_model(self, obj: Post) -> str:
         if obj.author:
-            author_change_url = reverse('admin:accounts_user_change', args=[obj.author.id])
+            author_change_url = reverse('admin:accounts_user_change', args=[obj.author.pk])
         return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
     
     @admin_attr_decorator 
@@ -39,7 +39,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
     @admin_attr_decorator
     def category_model(self, obj: Post) -> str:
         if obj.category:
-            category_change_url = reverse('admin:reviews_category_change', args=[obj.category.id])
+            category_change_url = reverse('admin:reviews_category_change', args=[obj.category.pk])
         return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Model]:
@@ -85,7 +85,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
 
     def author(self, obj: Comment) -> str | None:
         if obj.logged_user:
-            logged_user_change_url = reverse('admin:accounts_user_change', args=[obj.logged_user.id])
+            logged_user_change_url = reverse('admin:accounts_user_change', args=[obj.logged_user.pk])
             return format_html(f'<a href="{logged_user_change_url}">{obj.logged_user}</a>')
         else:
             return obj.unlogged_user
@@ -95,7 +95,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
     
     @admin_attr_decorator
     def post_title(self, obj: Comment) -> str:
-        post_change_url = reverse('admin:reviews_post_change', args=[obj.post.id])
+        post_change_url = reverse('admin:reviews_post_change', args=[obj.post.pk])
         return format_html(f'<a href="{post_change_url}">{obj.post.title}</a>')
         
     def email(self, obj: Comment) -> str | None:
