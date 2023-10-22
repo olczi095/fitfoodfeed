@@ -386,6 +386,15 @@
     background-color: var(--color-green-alert);
 }
 
+.like-static {
+    cursor: auto;
+}
+
+.like-static:hover {
+    color: var(--color-green-alert);
+    background-color: var(--color-white);
+}
+
 .unlike {
     color: var(--color-red-alert);
     border-color: var(--color-red-alert);
