@@ -61,20 +61,24 @@
                 <h5>{{ post_likes }}</h5>
             </div>
         {% endif %}
-
-        <div class="related-posts-container">
-            <h6>YOU MAY ALSO LIKE</h6>
-            <div class="related-posts-content">
-                {% for related_post in related_posts %}
-                    <span class="related-post">
-                        {% if related_post.image %}
-                            <img src="{{ related_post.image.url }}" alt="product image">
-                        {% endif %}
-                        <a href="{{ related_post.get_absolute_url }}">{{ related_post.title }}</a>
-                    </span>
-                {% endfor %}
+        
+        {% if related_posts %}
+            <div class="related-posts-container">
+                <h6>YOU MAY ALSO LIKE</h6>
+                <div class="related-posts-content">
+                    {% for related_post in related_posts %}
+                        <span class="related-post">
+                            {% if related_post.image %}
+                                <img src="{{ related_post.image.url }}" alt="product image">
+                            {% endif %}
+                            <a href="{{ related_post.get_absolute_url }}">{{ related_post.title }}</a>
+                        </span>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        {% else %}
+            <br />
+        {% endif %}
         
         <div class="comments">
             <div class="title">
