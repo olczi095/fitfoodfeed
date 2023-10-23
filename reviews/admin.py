@@ -100,8 +100,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         
     def email(self, obj: Comment) -> str | None:
         if obj.logged_user:
-            print(obj.logged_user)
-            return obj.email
+            return obj.logged_user.email
         return obj.email
         
     @admin_attr_decorator
