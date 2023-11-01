@@ -3,13 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    Update a Review | MocneŻarcie
+    Update Review
 {% endblock title %}
 
 {% block form %}
     <section class="form-add-container">
         <form method="post" class="form-add-review">
-            <h2>Update (edit) a review</h2>
+            <h2>Update Review: <strong>{{ post.title }}</strong></h2>
             <br />
             {% csrf_token %}
             <div class="form-add-border">
