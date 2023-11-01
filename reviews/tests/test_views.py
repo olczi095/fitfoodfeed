@@ -36,7 +36,7 @@ class LikePostTestCase(TestCase):
         self.assertNotIn(self.user, self.review.likes.all())
 
 
-class HomePageTestCase(TestCase):
+class ReviewsPageTestCase(TestCase):
     def setUp(self):
         self.author1 = User.objects.create(
             username='random',
@@ -78,16 +78,16 @@ class HomePageTestCase(TestCase):
         )
 
     def test_home_page_returns_correct_response(self):
-        response = self.client.get('/')
+        response = self.client.get('/reviews/')
         self.assertEqual(response.status_code, 200)
 
     def test_home_page_displays_added_posts(self):
-        response = self.client.get('/')
+        response = self.client.get('/reviews/')
         self.assertContains(response, self.post2.title)
         self.assertContains(response, self.post2.body)
 
     def test_pagination_displays(self):
-        response = self.client.get('/')
+        response = self.client.get('/reviews/')
         self.assertEqual(response.context['is_paginated'], True)
         self.assertIn('paginator', response.context)
 
@@ -285,7 +285,7 @@ class PostCreateWithPermissionTestCase(TestCase):
             'status': 'PUB'
         }
         response = self.client.post(reverse_lazy('app_reviews:create_review'), data=new_review)
-        expected_url_after_post = '/new-review/'  #slug created automatically based on 'New Review'
+        expected_url_after_post = '/reviews/new-review/'  #slug created automatically based on 'New Review'
         self.assertRedirects(response, expected_url_after_post)
 
     def test_successful_post_adding_to_database(self):
@@ -483,7 +483,7 @@ class PostStatusTestCase(TestCase):
             'slug': 'the-second-to-publish-review'
         }
         response = self.client.post(reverse('app_reviews:create_review'), data)
-        self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
+        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
         response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
 
@@ -516,7 +516,7 @@ class PostStatusTestCase(TestCase):
             'slug': 'the-second-draft-review'
         }
         response = self.client.post(reverse('app_reviews:create_review'), data)
-        self.assertRedirects(response, '/') # Redirect to the homepage, not to the post_detail
+        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
         response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
         self.assertEqual(response.status_code, 404)
 

@@ -113,7 +113,7 @@ class PostModelTestCase(TestCase):
         self.assertEqual(self.review.slug, 'tytul-z-polskimi-znakami')
 
     def test_get_absolute_url(self):
-        post_absolute_url = '/test_slug/'
+        post_absolute_url = '/reviews/test_slug/'
         self.assertEqual(self.post.get_absolute_url(), post_absolute_url)
 
     def test_post_model_has_image_field(self):
@@ -167,7 +167,7 @@ class CategoryModelTestCase(TestCase):
         self.assertEqual(str(self.category), expected_representation)
 
     def test_get_absolute_url(self):
-        expected_category_absolute_url = '/category/' + self.category.slug + '/'
+        expected_category_absolute_url = '/reviews/category/' + self.category.slug + '/'
         self.assertEqual(self.category.get_absolute_url(), expected_category_absolute_url)
 
 
