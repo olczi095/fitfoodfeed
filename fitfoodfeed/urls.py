@@ -5,7 +5,7 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('reviews.urls')),
+    path('reviews/', include('reviews.urls')),
     path('accounts/', include('accounts.urls'), name='accounts')
 ]
 
