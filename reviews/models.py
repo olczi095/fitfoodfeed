@@ -12,24 +12,28 @@ from accounts.validators import validate_avatar_type
 
 
 def convert_to_slug(text: str) -> str:
-        polish_signs_conversion = {
-            'ą': 'a',
-            'ć': 'c',
-            'ę': 'e',
-            'ł': 'l',
-            'ń': 'n',
-            'ó': 'o',
-            'ś': 's',
-            'ź': 'z',
-            'ż': 'z'
-        }
-        text_without_polish_signs = ''
-        for sign in text:
-            if sign in polish_signs_conversion.keys():
-                text_without_polish_signs += polish_signs_conversion[sign]
-            else:
-                text_without_polish_signs += sign
-        return slugify(text_without_polish_signs)
+    """
+    Converts polish signs into their ASCII substitutes,
+    creates a valid slug from the input text.
+    """
+    polish_signs_conversion = {
+        'ą': 'a',
+        'ć': 'c',
+        'ę': 'e',
+        'ł': 'l',
+        'ń': 'n',
+        'ó': 'o',
+        'ś': 's',
+        'ź': 'z',
+        'ż': 'z'
+    }
+    text_without_polish_signs = ''
+    for sign in text:
+        if sign in polish_signs_conversion.keys():
+            text_without_polish_signs += polish_signs_conversion[sign]
+        else:
+            text_without_polish_signs += sign
+    return slugify(text_without_polish_signs)
 
 
 class Category(models.Model):
@@ -51,6 +55,7 @@ class Category(models.Model):
         
 
 class Post(models.Model):
+
     class Status(models.TextChoices):
         DRAFT = 'DRAFT', 'Draft'
         PREPARED_TO_PUBLISH = 'TO_PUB', 'Prepared to publish'
@@ -84,7 +89,11 @@ class Post(models.Model):
     )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
-    status = models.CharField(choices=Status.choices, max_length=50, default='DRAFT')
+    status = models.CharField(
+        choices=Status.choices, 
+        max_length=50, 
+        default='DRAFT'
+    )
     tags = TaggableManager(
         blank=True, 
         help_text="A comma-separated list of tags (case-insensitive)."
@@ -93,7 +102,6 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
-
 
     def __str__(self) -> str:
         return self.title
@@ -123,7 +131,12 @@ class Comment(models.Model):
         null=True,
         blank=True
     )
-    unlogged_user = models.CharField(max_length=50, blank=True, null=True, default='guest')
+    unlogged_user = models.CharField(
+        max_length=50, 
+        blank=True, 
+        null=True, 
+        default='guest'
+    )
     email = models.EmailField(null=True, blank=True)
     post = models.ForeignKey(
         Post,
@@ -146,6 +159,10 @@ class Comment(models.Model):
             return f"Comment by {self.unlogged_user} on {self.post.title}."
         
     def save(self, *args: Any, **kwargs: Any) -> None:
+        """
+        Assigns email for logged-in users.
+        Switch for active if comment is written by superuser.
+        """
         if self.logged_user:
             self.email = self.logged_user.email
             

@@ -5,9 +5,18 @@ from reviews.models import Post, Comment
     
 
 class PostForm(forms.ModelForm[Model]):
+
     class Meta:
         model: type[Post] = Post
-        fields: list[str] = ['title', 'meta_description', 'tags', 'body', 'image', 'slug', 'status']
+        fields: list[str] = [
+            'title', 
+            'meta_description', 
+            'tags', 
+            'body', 
+            'image', 
+            'slug', 
+            'status'
+        ]
         labels: dict[str, str] = {
             'title': 'Title',
             'meta_description': 'Meta Description',
@@ -21,14 +30,20 @@ class PostForm(forms.ModelForm[Model]):
             'author': forms.HiddenInput()
         }
         help_texts: dict[str, str] = {
-            'slug': 'You can leave this field empty. The slug will be created based on the title automatically.',
+            'slug': 'You can leave this field empty. \
+                The slug will be created based on the title automatically.',
         }
 
 
 class CommentForm(forms.ModelForm[Model]):
+
     class Meta:
         model: type[Comment] = Comment
-        fields: list[str] = ['logged_user', 'unlogged_user', 'email', 'body']
+        fields: list[str] = [
+            'logged_user', 
+            'unlogged_user', 
+            'email', 'body'
+        ]
         labels: dict[str, str] = {
             'logged_user': 'User',
             'unlogged_user': 'Name',
