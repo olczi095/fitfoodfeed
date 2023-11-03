@@ -12,4 +12,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls'), name='accounts')
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # type: ignore
+urlpatterns += static(
+    settings.MEDIA_URL, 
+    document_root=settings.MEDIA_ROOT
+) # type: ignore
