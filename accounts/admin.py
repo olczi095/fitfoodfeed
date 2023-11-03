@@ -16,7 +16,13 @@ def admin_attr_decorator(func: Any) -> Any:
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display: list[Any] = ['display_user', 'display_groups', 'email', 'is_author', 'is_staff',]
+    list_display: list[Any] = [
+        'display_user', 
+        'display_groups', 
+        'email', 
+        'is_author', 
+        'is_staff',
+    ]
     fieldsets: list[Any] = [
         (
             'Identification Data',

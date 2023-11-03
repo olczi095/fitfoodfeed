@@ -12,4 +12,11 @@ class CustomUserCreationForm(UserCreationForm): # type: ignore
 
     class Meta:
         model: Type[User] = User
-        fields: tuple[str, ...] = ('username', 'password1', 'password2', 'first_name', 'last_name', 'email')
+        fields: tuple[str, ...] = (
+            'username', 
+            'password1', 
+            'password2', 
+            'first_name', 
+            'last_name', 
+            'email'
+        )
