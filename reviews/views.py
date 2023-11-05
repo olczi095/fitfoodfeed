@@ -41,9 +41,9 @@ class PostListView(ListView[Model]):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         posts_with_comment_counters = {}
-        recent_comments = Comment.objects.filter(active=True) \
+        recent_comments_qs: QuerySet[Comment] = Comment.objects.filter(active=True) \
             .order_by('pub_datetime')[:3]
-        recent_comments = [comment for comment in recent_comments]
+        recent_comments: list[Comment] = [comment for comment in recent_comments_qs]
 
         for post in Post.objects.filter(status='PUB'):
             posts_with_comment_counters[post] = post.comment_counter()
@@ -86,7 +86,9 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
     template_name = 'reviews/review_detail.html'
 
     def get_success_url(self) -> str:
-        return self.object.get_absolute_url()
+        if isinstance(self.object, Post):
+            return self.object.get_absolute_url()
+        return super().get_success_url()    
     
     def get_related_posts(self) -> list[Post]:
         """
@@ -152,7 +154,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
 class LikePostRedirectView(RedirectView):
     permanent = False
 
-    def get_redirect_url(self, *args, **kwargs):
+    def get_redirect_url(self, *args: Any, **kwargs: Any) -> str:
         pk = kwargs.get('pk')
         post = get_object_or_404(Post, pk=pk)
         user = self.request.user
@@ -229,9 +231,8 @@ class PostDeleteView(
     SuccessMessageMixin, 
     LoginRequiredMixin, 
     UserPassesTestMixin, 
-    DeleteView
+    DeleteView[Post, ModelForm[Post]]
 ): 
-    # type: ignore # a bug from mypy
     model = Post
     permission_denied_message = "You don't have permission to access this page. \
                                 Please log in using a valid account"
