@@ -40,7 +40,7 @@
             {% endfor %}
         
         {% if user.is_authenticated and user not in post.likes.all %}
-            <form action="{% url 'app_reviews:like_post' post.id %}" method="POST">
+            <form action="{% url 'app_reviews:like_post_redirect' post.id %}" method="POST">
                 {% csrf_token %}
                 <div class="likes-button">
                     <button type="submit" class="like"><ion-icon name="heart-circle-outline">Like</ion-icon></button>
@@ -48,7 +48,7 @@
                 </div>
             </form>
         {% elif user.is_authenticated %}
-            <form action="{% url 'app_reviews:like_post' post.id %}" method="POST">
+            <form action="{% url 'app_reviews:like_post_redirect' post.id %}" method="POST">
                 {% csrf_token %}
                 <div class="likes-button">
                     <button type="submit" class="unlike like"><ion-icon name="heart-dislike-circle-outline">Unlike</ion-icon></button>

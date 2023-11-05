@@ -14,7 +14,8 @@ from django.views.generic import (
     DetailView, 
     CreateView, 
     UpdateView, 
-    DeleteView
+    DeleteView,
+    RedirectView
 )
 from django.views.generic.edit import FormMixin
 from django.http import (
@@ -29,19 +30,6 @@ from taggit.models import Tag
 from accounts.models import User
 from .models import Post, Category, Comment
 from .forms import PostForm, CommentForm
-
-
-def like_post(request: HttpRequest, pk:int) -> HttpResponseRedirect:
-    post = get_object_or_404(Post, pk=int(pk))
-    if post.likes.filter(
-        pk=str(request.user.pk)).exists() and isinstance(request.user, User):
-        post.likes.remove(request.user)
-    elif isinstance(request.user, User):
-        post.likes.add(request.user)
-    return redirect(reverse(
-        'app_reviews:detail_review', 
-        kwargs={'slug': post.slug}
-    ))
 
 
 class PostListView(ListView[Model]):
@@ -161,7 +149,23 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
                 new_comment.save()
         
         return super().form_valid(form)
+
+
+class LikePostRedirectView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        post = get_object_or_404(Post, pk=pk)
+        user = self.request.user
     
+        if post.likes.filter(pk=str(user.pk)).exists() and isinstance(user, User):
+            post.likes.remove(user)
+        elif isinstance(user, User):
+            post.likes.add(user)
+
+        return reverse('app_reviews:detail_review', kwargs={'slug': post.slug})
+
 
 class PostCreateView(
     SuccessMessageMixin, 
