@@ -19,7 +19,6 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormMixin
 from django.http import (
-    HttpResponseRedirect, 
     HttpRequest, 
     HttpResponse
 )
@@ -87,8 +86,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
     template_name = 'reviews/review_detail.html'
 
     def get_success_url(self) -> str:
-        data = {'slug': self.object.slug} if isinstance(self.object, Post) else {}
-        return reverse('app_reviews:detail_review', kwargs=data)
+        return self.object.get_absolute_url()
     
     def get_related_posts(self) -> list[Post]:
         """
@@ -164,7 +162,7 @@ class LikePostRedirectView(RedirectView):
         elif isinstance(user, User):
             post.likes.add(user)
 
-        return reverse('app_reviews:detail_review', kwargs={'slug': post.slug})
+        return post.get_absolute_url()
 
 
 class PostCreateView(

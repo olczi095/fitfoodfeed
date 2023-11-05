@@ -116,33 +116,34 @@ class PostDetailTestCase(TestCase):
         self.post1.tags.add(self.tag2)
 
     def test_post_detail_returns_correct_response(self):
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        url = self.post1.get_absolute_url()
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_post_detail_template_contains_body_and_title(self):
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        url = self.post1.get_absolute_url()
+        response = self.client.get(url)
         self.assertContains(response, self.post1.body)
         self.assertContains(response, self.post1.title)
 
     def test_comment_form_displayed(self):
-        response = self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        url = self.post1.get_absolute_url()
+        response = self.client.post(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 0)
                                    
     def test_authenticated_user_can_add_comment(self):
         self.client.force_login(self.author1)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        response = self.client.post(
-            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
-            data=valid_comment_data
-        )
+        url = self.post1.get_absolute_url()
+        response = self.client.post(url, data=valid_comment_data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Comment.objects.count(), 1)
 
     def test_comment_fields_added_correctly_for_authenticated_user(self):
         self.client.force_login(self.author1)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}), data=valid_comment_data)
+        self.client.post(self.post1.get_absolute_url(), data=valid_comment_data)
         new_comment = Comment.objects.last()
 
         self.assertEqual(new_comment.post, self.post1)
@@ -154,7 +155,7 @@ class PostDetailTestCase(TestCase):
         self.client.logout()
         valid_comment_data = {'body': 'This is a random comment written by an unauthenticated user.'}
         response = self.client.post(
-            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
+            self.post1.get_absolute_url(),
             data=valid_comment_data
         )
         self.assertEqual(response.status_code, 302)
@@ -162,7 +163,7 @@ class PostDetailTestCase(TestCase):
 
     def test_comment_fields_added_correctly_for_unauthenticated_user(self):
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        self.client.post(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),data=valid_comment_data)
+        self.client.post(self.post1.get_absolute_url(), data=valid_comment_data)
         new_comment = Comment.objects.last()
         
         self.assertEqual(new_comment.post, self.post1)
@@ -173,10 +174,10 @@ class PostDetailTestCase(TestCase):
     def test_display_success_message_after_comment_addition(self):
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
         response = self.client.post(
-            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
-                    data=valid_comment_data,
-                    follow=True
-            )
+            self.post1.get_absolute_url(),
+            data=valid_comment_data,
+            follow=True
+        )
         expected_success_message_excerpt = 'comment successfully submitted'
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
@@ -186,16 +187,16 @@ class PostDetailTestCase(TestCase):
         self.client.force_login(superuser)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
         response = self.client.post(
-            reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}),
-                    data=valid_comment_data,
-                    follow=True
+            self.post1.get_absolute_url(),
+            data=valid_comment_data,
+            follow=True
         )
         expected_success_message_excerpt = 'comment successfully added'
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
     def test_post_likes_with_zero_likes(self):
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(self.post1.get_absolute_url())
         post_likes_from_context = response.context['post_likes']
         expected_post_likes = '0 Likes'
         self.assertEqual(post_likes_from_context, expected_post_likes)
@@ -203,13 +204,13 @@ class PostDetailTestCase(TestCase):
     def test_post_likes_with_one_like(self):
         self.client.force_login(self.author1)
         self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.post1.pk}))
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(self.post1.get_absolute_url())
         post_likes_from_context = response.context['post_likes']
         expected_post_likes = '1 Like'
         self.assertEqual(post_likes_from_context, expected_post_likes)
 
     def test_get_related_posts_with_zero_related_posts(self):
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(self.post1.get_absolute_url())
         related_posts_of_post_1 = response.context['related_posts']
         amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
         expected_amount_of_related_posts = 0
@@ -219,7 +220,7 @@ class PostDetailTestCase(TestCase):
         related_post1 = Post.objects.create(title='Related Post 1', body='Body of Related Post 1')
         related_post1.tags.add(self.tag1)
 
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(self.post1.get_absolute_url())
         related_posts_of_post_1 = response.context['related_posts']
         amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
         expected_amount_of_related_posts = 1
@@ -236,7 +237,7 @@ class PostDetailTestCase(TestCase):
         related_post4.tags.add(self.tag1)
         related_post4.tags.add(self.tag2)
 
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': self.post1.slug}))
+        response = self.client.get(self.post1.get_absolute_url())
         related_posts_of_post1 = list(response.context['related_posts'])
         amount_of_related_posts_for_post1 = len(related_posts_of_post1)
         expected_amount_of_related_posts = 3
