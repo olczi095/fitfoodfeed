@@ -1,5 +1,6 @@
 from typing import Type
 
+from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse
@@ -15,14 +16,11 @@ from .forms import CustomUserCreationForm
 class RegisterView(SuccessMessageMixin, CreateView): # type: ignore
     template_name: str = 'registration/register.html'
     form_class: Type[CustomUserCreationForm] = CustomUserCreationForm
-    success_url: str = reverse_lazy('app_accounts:login')
+    success_url: str = reverse_lazy(settings.LOGIN_URL)
     success_message: str = f"Registration Successful! Now you can log in."
 
 
-class CustomLoginView(LoginView):
-    def get_success_url(self) -> str:
-        return reverse('app_reviews:home')
-    
+class CustomLoginView(LoginView):    
     def form_valid(self, form: AuthenticationForm) -> HttpResponse:
         username: str | None = form.cleaned_data.get('username')
         messages.success(self.request, f"Hello, <strong>{username}</strong>!")

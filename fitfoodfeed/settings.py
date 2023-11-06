@@ -120,6 +120,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = BASE_DIR / 'media'  # for user-uploaded media files
 MEDIA_URL = '/media/'  # for user-uploaded media files
 
+LOGIN_URL = 'app_accounts:login'
+LOGIN_REDIRECT_URL = 'app_reviews:home'
 LOGOUT_REDIRECT_URL = 'app_reviews:home'
 
 TAGGIT_CASE_INSENSITIVE = True
