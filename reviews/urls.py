@@ -9,7 +9,7 @@ from .views import (
     TaggedPostsListView, 
     TagsListView, 
     CategoryListView, 
-    LikePostRedirectView,
+    PostLikeView,
 )
 
 app_name = 'app_reviews'
@@ -23,5 +23,5 @@ urlpatterns = [
     path('category/<str:category_name>/', CategoryListView.as_view(), name='category'),
     path('tag/<str:tag_name>/', TaggedPostsListView.as_view(), name='tag'),
     path('<slug:slug>/', PostDetailView.as_view(), name='detail_review'),
-    path('like/<int:pk>/', LikePostRedirectView.as_view(), name='like_post_redirect'),
+    path('like/<int:pk>/', PostLikeView.as_view(), name='like_post_redirect'),
 ]

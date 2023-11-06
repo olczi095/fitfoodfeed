@@ -151,7 +151,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
         return super().form_valid(form)
 
 
-class LikePostRedirectView(RedirectView):
+class PostLikeView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args: Any, **kwargs: Any) -> str:
