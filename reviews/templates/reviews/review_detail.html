@@ -28,7 +28,7 @@
             <span class="post-image">
                 <img src="{{ post.image.url }}">
             </span>
-        {% endif%}
+        {% endif %}
         <h4><span class="post-tags">DESCRIPTION  |  PRICE  |  AVAILABILITY  |  INGREDIENTS  |  TASTE TEST</span></h4>
         <span class="post-typo">{{ post.body | safe }}</span>
         <br /><br />
@@ -38,30 +38,11 @@
                 </a>
                     {% if not forloop.last %}|{% endif %}
             {% endfor %}
-        
-        {% if user.is_authenticated and user not in post.likes.all %}
-            <form action="{% url 'app_reviews:like_post_redirect' post.id %}" method="POST">
-                {% csrf_token %}
-                <div class="likes-button">
-                    <button type="submit" class="like"><ion-icon name="heart-circle-outline">Like</ion-icon></button>
-                    <h5>{{ post_likes }}</h5>
-                </div>
-            </form>
-        {% elif user.is_authenticated %}
-            <form action="{% url 'app_reviews:like_post_redirect' post.id %}" method="POST">
-                {% csrf_token %}
-                <div class="likes-button">
-                    <button type="submit" class="unlike like"><ion-icon name="heart-dislike-circle-outline">Unlike</ion-icon></button>
-                    <h5>{{ post_likes }}</h5>
-                </div>
-            </form>
-        {% else %}
-            <div class="likes-button">
-                <span class="like like-static"><ion-icon name="heart-circle-outline">Like</ion-icon></span>
-                <h5>{{ post_likes }}</h5>
-            </div>
-        {% endif %}
-        
+
+        <div id="like-section">
+            {% include 'reviews/includes/like_section.html' %}
+        </div>
+
         {% if related_posts %}
             <div class="related-posts-container">
                 <h6>YOU MAY ALSO LIKE</h6>
@@ -156,5 +137,9 @@
         </div>
 
     </div>
+    
+    {% block scripts %}
+        <script src="{% static 'reviews/js/like-review.js' %}"></script>
+    {% endblock scripts%}
 
 {% endblock body %}

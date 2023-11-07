@@ -368,8 +368,8 @@
 }
 
 .like {
-    display: flex;
     color: var(--color-green-alert);
+    display: flex;
     font-size: 2.5rem;
     font-weight: bold;
     border: 0.1rem solid var(--color-green-alert);

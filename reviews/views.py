@@ -15,12 +15,13 @@ from django.views.generic import (
     CreateView, 
     UpdateView, 
     DeleteView,
-    RedirectView
+    View
 )
 from django.views.generic.edit import FormMixin
 from django.http import (
     HttpRequest, 
-    HttpResponse
+    HttpResponse,
+    JsonResponse
 )
 from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
@@ -30,6 +31,11 @@ from accounts.models import User
 from .models import Post, Category, Comment
 from .forms import PostForm, CommentForm
 
+
+def count_post_likes(post):
+    likes_count = post.likes_counter()
+    likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
+    return likes_counter
 
 class PostListView(ListView[Model]):
     model = Post
@@ -109,9 +115,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
         if isinstance(self.object, Post):
             comments = self.object.comment_set.filter(active=True)
             context['comments'] = comments
-
-            likes_count = self.object.likes_counter()
-            context['post_likes'] = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
+            context['post_likes'] = count_post_likes(self.object)
             
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
@@ -151,21 +155,27 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
         return super().form_valid(form)
 
 
-class PostLikeView(RedirectView):
-    permanent = False
-
-    def get_redirect_url(self, *args: Any, **kwargs: Any) -> str:
+class PostLikeView(View):
+    def post(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         post = get_object_or_404(Post, pk=pk)
         user = self.request.user
+        liked = False
     
         if post.likes.filter(pk=str(user.pk)).exists() and isinstance(user, User):
             post.likes.remove(user)
+            liked = False
         elif isinstance(user, User):
             post.likes.add(user)
+            liked = True
 
-        return post.get_absolute_url()
-
+        data = {
+            'url': post.get_absolute_url(),
+            'liked': liked,
+            'likes_counter': count_post_likes(post)
+        }
+        return JsonResponse(data)
+    
 
 class PostCreateView(
     SuccessMessageMixin, 
