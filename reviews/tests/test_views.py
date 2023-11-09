@@ -1,5 +1,8 @@
+from reviews.views import PostDetailView
+
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from django.http import Http404
 from taggit.models import Tag
 
 from reviews.models import User, Post, Category, Comment
@@ -18,8 +21,8 @@ class LikePostTestCase(TestCase):
 
     def test_like_post_authenticated_user(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk}))
-        self.assertEqual(response.status_code, 302)
+        response = self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk}))
+        self.assertEqual(response.status_code, 200)
         self.assertIn(self.user, self.review.likes.all())
 
     def test_like_and_unlike_review_with_authenticated_user(self):
@@ -115,6 +118,14 @@ class PostDetailTestCase(TestCase):
         self.post1.tags.add(self.tag1)
         self.post1.tags.add(self.tag2)
 
+    def test_get_success_url_with_invalid_object(self):
+        view = PostDetailView()
+        view.object = None  # Ustawienie object na None, aby symulować brak instancji Post
+
+        with self.assertRaises(Http404) as context:
+            view.get_success_url()
+
+        self.assertEqual(str(context.exception), "Post not found.")
     def test_post_detail_returns_correct_response(self):
         url = self.post1.get_absolute_url()
         response = self.client.get(url)
