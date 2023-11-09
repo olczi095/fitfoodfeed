@@ -21,7 +21,8 @@ from django.views.generic.edit import FormMixin
 from django.http import (
     HttpRequest, 
     HttpResponse,
-    JsonResponse
+    JsonResponse,
+    Http404
 )
 from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
@@ -92,9 +93,9 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
     template_name = 'reviews/review_detail.html'
 
     def get_success_url(self) -> str:
-        if isinstance(self.object, Post):
-            return self.object.get_absolute_url()
-        return super().get_success_url()    
+        if not isinstance(self.object, Post):
+            raise Http404("Post not found.")
+        return self.object.get_absolute_url()
     
     def get_related_posts(self) -> list[Post]:
         """
