@@ -57,6 +57,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'reviews.context_processors.categories',
+                'reviews.context_processors.navbar_tags'
             ],
         },
     },

@@ -9,11 +9,10 @@
                 REVIEWS
                 </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">🍫 SWEETS</a>
-                <a class="dropdown-item" href="#">🥨 SNACKS</a>
-                <a class="dropdown-item" href="#">🥤 DRINKS</a>
-                <a class="dropdown-item" href="#">🥗 READY-TO-EAT</a>
-            <div class="dropdown-divider"></div>
+                {% for tag in navbar_tags %}
+                    <a class="dropdown-item" href="{% url 'app_reviews:tag' tag %}">{{ tag }}</a>
+                {% endfor %}
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
             </div>
             </li>
