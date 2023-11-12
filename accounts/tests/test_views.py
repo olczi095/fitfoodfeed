@@ -1,8 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth import get_user_model
 
 from accounts.forms import CustomUserCreationForm
-from accounts.models import User
+
+
+User = get_user_model()
 
 
 class RegisterTestCase(TestCase):

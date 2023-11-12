@@ -3,9 +3,12 @@ from datetime import datetime
 from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
-from accounts.models import User
 from reviews.models import Post, Category, Comment
+
+
+User = get_user_model()
 
 
 class PostModelExistenceTestCase(TestCase):

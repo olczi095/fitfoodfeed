@@ -1,6 +1,7 @@
 from random import sample
 from typing import Any
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
@@ -8,7 +9,7 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin
 )
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     ListView, 
@@ -29,10 +30,11 @@ from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
 from taggit.models import Tag
 
-from accounts.models import User
 from .models import Post, Category, Comment
 from .forms import PostForm, CommentForm
 
+
+User = get_user_model()
 
 def count_post_likes(post: Post) -> str:
     likes_count = post.likes_counter()

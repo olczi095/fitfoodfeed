@@ -5,11 +5,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 
-from accounts.models import User
 from accounts.validators import validate_avatar_type
 
+
+User = get_user_model()
 
 def convert_to_slug(text: str) -> str:
     """

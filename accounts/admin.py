@@ -2,9 +2,7 @@ from typing import Any, Protocol
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-from .models import User
-
+from django.contrib.auth import get_user_model
 
 class AdminAttributes(Protocol):
     short_description: str
@@ -12,6 +10,9 @@ class AdminAttributes(Protocol):
 
 def admin_attr_decorator(func: Any) -> Any:
     return func
+
+
+User = get_user_model()
 
 
 @admin.register(User)

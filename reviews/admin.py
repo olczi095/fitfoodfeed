@@ -1,14 +1,17 @@
 from typing import Any, Protocol
 
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.html import format_html
 from django.http import HttpRequest
 from django.db.models import Model, QuerySet
 from django.forms import ModelForm
 
-from accounts.models import User
 from .models import Post, Category, Comment
+
+
+User = get_user_model()
 
 
 class AdminAttributes(Protocol):

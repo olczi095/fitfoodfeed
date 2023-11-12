@@ -3,9 +3,13 @@ from reviews.views import PostDetailView
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from django.http import Http404
+from django.contrib.auth import get_user_model
 from taggit.models import Tag
 
-from reviews.models import User, Post, Category, Comment
+from reviews.models import Post, Category, Comment
+
+
+User = get_user_model()
 
 
 class LikePostTestCase(TestCase):
