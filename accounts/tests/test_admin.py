@@ -9,25 +9,28 @@ User = get_user_model()
 
 
 class UserAdminModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create(
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='something about the user'
         )
 
+        cls.user_admin = UserAdmin(model=cls.user, admin_site=AdminSite())
+
     def test_display_user_on_admin_page(self):
-        user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
-        displayed_user = user_admin.display_user(self.user)
+        displayed_user = self.user_admin.display_user(self.user)
         self.assertEqual(displayed_user, 'test_user')
 
     def test_display_groups_on_admin_page(self):
-        user_admin = UserAdmin(model=self.user, admin_site=AdminSite())
-        displayed_groups = user_admin.display_groups(self.user)
+        displayed_groups = self.user_admin.display_groups(self.user)
         self.assertEqual(displayed_groups, '')
 
     def test_fieldsets_configuration(self):
-        admin = UserAdmin(model=User, admin_site=AdminSite())
+        actual_fieldsets = self.user_admin.fieldsets
         expected_fieldsets = [
             (
                 "Identification Data",
@@ -46,4 +49,5 @@ class UserAdminModelTestCase(TestCase):
                 {'fields': ['avatar', 'bio']}
             )
         ]
-        self.assertEqual(admin.fieldsets, expected_fieldsets)
+        for actual, expected in zip(actual_fieldsets, expected_fieldsets):
+            self.assertTupleEqual(actual, expected)

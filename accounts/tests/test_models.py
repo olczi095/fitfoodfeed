@@ -12,24 +12,25 @@ class UserModelExistenceTestCase(TestCase):
 
         
 class UserModelTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create(
             username='test_user', 
             password='test_password',
             bio='test_bio'
         )
 
-    def test_bio_with_expected_value(self):
+    def test_user_bio_matches_expected_value(self):
         self.assertEqual(self.user.bio, 'test_bio')
 
-    def test_string_representation_with_username(self):
+    def test_user_string_is_correct(self):
         self.assertEqual(str(self.user), 'test_user')
 
-    def test_image_field_with_default_image(self):
+    def test_image_field_has_default_image(self):
         self.assertIsNotNone(self.user.avatar)
         self.assertEqual(self.user.avatar.name, 'avatars/default-avatar.png')
 
     def test_is_author_field_exists(self):
-        field_exists = 'is_author' in [field.name for field in self.user._meta.get_fields()]
-        self.assertTrue(field_exists)
+        self.assertTrue(hasattr(self.user, 'is_author'))
         self.assertEqual(self.user._meta.get_field('is_author').verbose_name, 'author status')
