@@ -4,9 +4,6 @@ from reviews.forms import PostForm
 
 
 class PostFormTestCase(TestCase):
-    def test_post_form_exists(self):
-        self.assertTrue(hasattr(PostForm, '__init__'))
-
     def test_post_form_valid(self):
         valid_data = {
                 'title': 'Lorem Ipsum',
@@ -35,11 +32,14 @@ class PostFormTestCase(TestCase):
 
     def test_labels(self):
         post_form = PostForm()
-        self.assertEqual(post_form.fields.get('title').label, 'Title')
-        self.assertEqual(post_form.fields.get('meta_description').label, 'Meta Description')
-        self.assertEqual(post_form.fields.get('tags').label, 'Tags')
-        self.assertEqual(post_form.fields.get('body').label, 'Body')
-        self.assertEqual(post_form.fields.get('image').label, 'Image')
-        self.assertEqual(post_form.fields.get('slug').label, 'Slug')
-        self.assertEqual(post_form.fields.get('status').label, 'Status')
-        
+        expected_labels = {
+            'title': 'Title',
+            'meta_description': 'Meta Description',
+            'tags': 'Tags',
+            'body': 'Body',
+            'image': 'Image',
+            'slug': 'Slug',
+            'status': 'Status',
+        }
+        for field_name, expected_label in expected_labels.items():
+            self.assertEqual(post_form.fields.get(field_name).label, expected_label)

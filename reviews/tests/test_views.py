@@ -1,5 +1,3 @@
-from reviews.views import PostDetailView
-
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from django.http import Http404
@@ -7,18 +5,21 @@ from django.contrib.auth import get_user_model
 from taggit.models import Tag
 
 from reviews.models import Post, Category, Comment
+from reviews.views import PostDetailView
 
 
 User = get_user_model()
 
 
 class LikePostTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(
             username='testuser',
             password='testpassword'
         )
-        self.review = Post.objects.create(
+        cls.review = Post.objects.create(
             title='Test Review',
             body='Body of test review.'
         )
@@ -85,21 +86,21 @@ class ReviewsPageTestCase(TestCase):
         )
 
     def test_home_page_returns_correct_response(self):
-        response = self.client.get('/reviews/')
+        response = self.client.get(reverse('app_reviews:home'))
         self.assertEqual(response.status_code, 200)
 
     def test_home_page_displays_added_posts(self):
-        response = self.client.get('/reviews/')
+        response = self.client.get(reverse('app_reviews:home'))
         self.assertContains(response, self.post2.title)
         self.assertContains(response, self.post2.body)
 
     def test_pagination_displays(self):
-        response = self.client.get('/reviews/')
-        self.assertEqual(response.context['is_paginated'], True)
+        response = self.client.get(reverse('app_reviews:home'))
+        self.assertTrue(response.context['is_paginated'])
         self.assertIn('paginator', response.context)
 
     
-class PostDetailTestCase(TestCase):
+class PostDetailViewTestCase(TestCase):
     def setUp(self):
         self.author1 = User.objects.create(
             username='random',
@@ -124,12 +125,13 @@ class PostDetailTestCase(TestCase):
 
     def test_get_success_url_with_invalid_object(self):
         view = PostDetailView()
-        view.object = None  # Ustawienie object na None, aby symulować brak instancji Post
+        view.object = None  # Setting 'object' to 'None' to simulate the absence of the Post instance
 
         with self.assertRaises(Http404) as context:
             view.get_success_url()
 
         self.assertEqual(str(context.exception), "Post not found.")
+
     def test_post_detail_returns_correct_response(self):
         url = self.post1.get_absolute_url()
         response = self.client.get(url)
@@ -143,7 +145,7 @@ class PostDetailTestCase(TestCase):
 
     def test_comment_form_displayed(self):
         url = self.post1.get_absolute_url()
-        response = self.client.post(url)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 0)
                                    
@@ -288,6 +290,12 @@ class PostCreateWithPermissionTestCase(TestCase):
         )
         self.client.force_login(self.adminuser)
 
+        self.first_review = {
+            'title': 'New Review',
+            'body': 'The body of the new review',
+            'status': 'PUB'
+        }
+
     def test_display_add_review_success(self):
         self.assertTrue(self.adminuser.has_perm('reviews.add_post'))
         response = self.client.get(reverse_lazy('app_reviews:create_review'))
@@ -295,31 +303,21 @@ class PostCreateWithPermissionTestCase(TestCase):
         self.assertTemplateUsed(response, 'reviews/review_create.html')
 
     def test_successful_post_creation_redirect(self):
-        new_review = {
-            'title': 'New Review',
-            'body': 'The body of the new review',
-            'status': 'PUB'
-        }
-        response = self.client.post(reverse_lazy('app_reviews:create_review'), data=new_review)
+        response = self.client.post(reverse_lazy('app_reviews:create_review'), data=self.first_review)
         expected_url_after_post = '/reviews/new-review/'  #slug created automatically based on 'New Review'
         self.assertRedirects(response, expected_url_after_post)
 
     def test_successful_post_adding_to_database(self):
-        first_review = {
-            'title': 'New Review',
-            'body': 'The body of the new review',
-            'status': 'PUB'
-        }
         second_review = {
             'title': 'Second Review',
             'body': 'The body of the new review',
             'status': 'PUB'
 
         }
-        self.client.post(reverse_lazy('app_reviews:create_review'), data=first_review)
+        self.client.post(reverse_lazy('app_reviews:create_review'), data=self.first_review)
         self.client.post(reverse_lazy('app_reviews:create_review'), data=second_review)
 
-        posts_amount = len(Post.objects.all())
+        posts_amount = Post.objects.count()
         self.assertEqual(posts_amount, 2)
 
         # Check if the author is assigned to the posts
@@ -473,79 +471,100 @@ class PostStatusTestCase(TestCase):
         )
         self.client.force_login(self.adminuser)
 
+    def check_post_visibility(self, title, body, status, should_appear):
+        post = Post.objects.create(title=title, body=body, status=status)
+        homepage = self.client.get(reverse('app_reviews:home'))
+
+        if should_appear:
+            self.assertContains(homepage, post)
+        else:
+            self.assertNotContains(homepage, post)
+
+    def check_post_not_published(self, title, body, status, slug):
+        response = self.client.post(
+            reverse('app_reviews:create_review'), 
+            data={'title': title, 'body': body, 'status': status}
+        )
+        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
+        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': slug}))
+        self.assertEqual(response.status_code, 404)
+
+    def check_post_create_and_save(self, title, body, status):
+        post_data = {'title': title, 'body': body, 'status': status}
+        self.client.post(reverse('app_reviews:create_review'), post_data)
+        post_amount = Post.objects.count()
+        self.assertEqual(post_amount, 1)
+
+    # Start testing
+    def test_post_to_publish_should_not_appear_on_homepage(self):
+        self.check_post_visibility(
+            title='The first to-publish review',
+            body='This is the body of a two-publish review.',
+            status='TO_PUB',
+            should_appear=False
+        )
+
+    def test_post_to_publish_should_not_be_published(self):
+        self.check_post_not_published(
+            title='The second to-publish review',
+            body='This is the body of a second two-publish review.',
+            status='TO_PUB',
+            slug='the-second-to-publish-review'
+        )
+
+    def test_post_to_publish_create_and_save(self):
+        self.check_post_create_and_save(
+            title='The third to-publish review',
+            body='This is the body of a second two-publish review.',
+            status='TO_PUB',
+        )
+
     def test_post_published_should_appear_on_homepage(self):
-        self.post = Post.objects.create(
+        self.check_post_visibility(
+            title='The new review',
+            body='This is the body of the new review.',
+            status='PUB',
+            should_appear=True
+        )
+    def test_post_published_should_be_published(self):
+        post_data = {
+            'title': 'The new review',
+            'body': 'This is the body of the new review.',
+            'status': 'PUB',
+            'slug': 'the-new-review'
+        }
+        response = self.client.post(reverse('app_reviews:create_review'), post_data)
+        self.assertRedirects(response, reverse('app_reviews:detail_review', kwargs={'slug': post_data['slug']}))
+
+    def test_post_published_create_and_save(self):
+        self.check_post_create_and_save(
             title='The new review',
             body='This is the body of the new review.',
             status='PUB'
         )
-        homepage = self.client.get(reverse('app_reviews:home'))
-        self.assertContains(homepage, self.post)
-
-    def test_post_to_publish_should_not_appear_on_homepage(self):
-        self.post = Post.objects.create(
-            title='The first to-publish review',
-            body='This is the body of a two-publish review.',
-            status='TO_PUB'
-        )
-        homepage = self.client.get(reverse('app_reviews:home'))
-        self.assertNotContains(homepage, self.post)
-
-    def test_post_to_publish_should_not_be_published(self):
-        data = {
-            'title': 'The second to-publish review',
-            'body': 'This is the body of a second two-publish review.',
-            'status': 'TO_PUB',
-            'slug': 'the-second-to-publish-review'
-        }
-        response = self.client.post(reverse('app_reviews:create_review'), data)
-        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
-        self.assertEqual(response.status_code, 404)
-
-    def test_post_to_publish_create_and_save(self):
-        data = {
-            'title': 'The third to-publish review',
-            'body': 'This is the body of a second two-publish review.',
-            'status': 'TO_PUB',
-        }
-        self.client.post(reverse('app_reviews:create_review'), data)
-
-        post_amount = Post.objects.count()
-        self.assertEqual(post_amount, 1)
-
 
     def test_post_draft_should_not_appear_on_homepage(self):
-        self.post = Post.objects.create(
+        self.check_post_visibility(
             title='The first draft review',
             body='This is the body of a draft review.',
-            status='DRAFT'
+            status='DRAFT',
+            should_appear=False
         )
-        homepage = self.client.get(reverse('app_reviews:home'))
-        self.assertNotContains(homepage, self.post)
 
     def test_post_draft_should_not_be_published(self):
-        data = {
-            'title': 'The second draft review',
-            'body': 'This is the body of a second draft review.',
-            'status': 'DRAFT',
-            'slug': 'the-second-draft-review'
-        }
-        response = self.client.post(reverse('app_reviews:create_review'), data)
-        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': data['slug']}))
-        self.assertEqual(response.status_code, 404)
+        self.check_post_not_published(
+            title='The second draft review',
+            body='This is the body of a second draft review.',
+            status='DRAFT',
+            slug='the-second-draft-review'
+        )
 
     def test_post_draft_create_and_save(self):
-        data = {
-            'title': 'The third draft review',
-            'body': 'This is the body of a third draft review.',
-            'status': 'DRAFT',
-        }
-        self.client.post(reverse('app_reviews:create_review'), data)
-
-        post_amount = Post.objects.count()
-        self.assertEqual(post_amount, 1)
+        self.check_post_create_and_save(
+            title='The second draft review',
+            body='This is the body of a second draft review.',
+            status='DRAFT',
+        )
 
     def test_popular_posts_in_context(self):
         response = self.client.get(reverse('app_reviews:home'))

@@ -122,6 +122,24 @@ class PostModelTestCase(TestCase):
     def test_post_model_has_image_field(self):
         self.assertTrue(Post._meta.get_field('image'))
     
+
+class PostFunctionalityTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create(
+            username='test_user',
+            password='test_password'
+        )
+        self.category = Category.objects.create(
+            name='test_category'
+        )
+        self.post = Post.objects.create(
+            title='test_title',
+            pub_date=timezone.now().date(),
+            author=self.author,
+            body='test_body',
+            category=self.category
+    )
+        
     def test_comment_counter(self):
         amount_of_no_comments = self.post.comment_counter()
         self.assertEqual(amount_of_no_comments, 0)
