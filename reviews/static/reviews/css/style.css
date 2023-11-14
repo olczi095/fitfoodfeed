@@ -123,6 +123,34 @@
     padding-bottom: 1rem;
 }
 
+@media screen and (min-width: 600px) and (max-width: 992px) {
+    .home-content {
+        padding: 2rem;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
+
+    s .home-content .posts {
+        width: 100%;
+        padding-right: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .home-content {
+        padding: 1rem 1rem;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
+
+    .home-content .posts {
+        width: 100%;
+        padding-right: 0;
+    }
+}
+
 .pagination {
     margin-top: 1rem;
     display: flex;
@@ -166,6 +194,18 @@
     padding: 3rem 15rem;
 }
 
+@media screen and (min-width: 600px) and (max-width: 992px) {
+    .post-detail-content {
+        padding: 2rem 5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .post-detail-content {
+        padding: 1rem 1rem;
+    }
+}
+
 .post-title {
     display: flex;
     justify-content: center;
@@ -201,6 +241,18 @@
 
 .form-add-container {
     margin: 2rem 18rem 3rem 18rem;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+    .form-add-container {
+        margin: 1rem 5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .form-add-container {
+        margin: 0;
+    }
 }
 
 .form-add-review {
@@ -243,6 +295,18 @@
 
 .tags-content {
     padding: 3rem 15rem;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+    .tags-content {
+        padding: 2rem 7rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .tags-content {
+        padding: 1rem 1rem;
+    }
 }
 
 .comments {
