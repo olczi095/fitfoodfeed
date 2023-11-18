@@ -32,6 +32,9 @@ This project is developed with **Python 3.11.4**.
 _While it may work with lower Python versions, it's recommended to use Python 3.11.4 for optimal compatibility. Using versions below Python 3.6 is not guaranteed to work properly._
 
 ## Installation
+***Note:** Depending on your operating system, you may need to use `python3` instead of `python` - mainly on MacOS and Linux.
+<br />
+<br/>
 
 1. **Clone the Repository and navigate to the project directory**
 ```bash
@@ -42,18 +45,24 @@ cd fitfoodfeed
 
 2. **Create and activate Virtual Environment(optional):**
 ```bash
-python3 -m venv venv  # or your own venv name
-venv/bin/activate  # on MacOS and Linux, or venv\Scripts\activate  # on Windows
+python -m venv venv  # or your own venv name
+
+# On MacOS and Linux
+source venv/bin/activate
+
+# On Windows
+venv\Scripts\activate
 ```
 <br />
 
 3. **Install Dependencies:**
 ```bash
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
-    Optionally, install additional developer dependencies:
+Optionally, install additional developer dependencies:
+    
 ```bash
-pip3 install -r requirements-dev.txt
+pip install -r requirements-dev.txt
 ```
 <br />
 
@@ -62,31 +71,35 @@ pip3 install -r requirements-dev.txt
     Create a ".env" file with your unique secret key and set DEBUG to "True" or "False":
 
 ```bash
-SECRET_KEY=your_own_secret_key_here
+SECRET_KEY=your_unique_secret_key_here
+# Generate your unique secret key, for instance using get_random_secret_key() from django.core.management.utils
+
 DEBUG=true_or_false
+# Set to "True" for development mode with detailed errors pages.
 ```
 <br />
 
 5. **Apply Migrations for initialize database:**
 
 ```bash
-python3 manage.py migrate
+python manage.py migrate
 ```
 <br />
 
 6. **Create a Superuser for admin panel access:**
 
 ```bash
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 ```
 <br />
 
 7. **Run Development Server:**
 
 ```bash
-python3 manage.py runserver
+python manage.py runserver
 ```
 <br />
+
 
 **The website will be available in browsers at:**
 
