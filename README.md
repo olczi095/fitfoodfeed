@@ -8,8 +8,9 @@
 
 ### Upcoming Segments:
 - 🛒 e-commerce platform
-- 👩‍💻 mini social networking site  
-The code includes type hints and unit tests written with unittest, but the tests will be modified with Faker and Factory Boy.
+- 👩‍💻 mini social networking site
+  
+The implementation incorporates type hints and unit tests written with unittest, but the tests will be modified with Faker and Factory Boy.
 
 _The code has been written according to TDD principles since commit 5acc9d4 from 19-07-23_
 
@@ -32,7 +33,7 @@ This project is developed with **Python 3.11.4**.
 _While it may work with lower Python versions, it's recommended to use Python 3.11.4 for optimal compatibility. Using versions below Python 3.6 is not guaranteed to work properly._
 
 ## Installation
-***Note:** Depending on your operating system, you may need to use `python3` instead of `python` - mainly on MacOS and Linux.
+**Note:** Depending on your operating system, you may need to use `python3` instead of `python` - mainly on MacOS and Linux.
 <br />
 <br/>
 
@@ -68,7 +69,7 @@ pip install -r requirements-dev.txt
 
 4. **Configure Environment Variables:**
 
-    Create a ".env" file with your unique secret key and set DEBUG to "True" or "False":
+Create an ".env" file with your unique secret key and set DEBUG to "True" or "False":
 
 ```bash
 SECRET_KEY=your_unique_secret_key_here
