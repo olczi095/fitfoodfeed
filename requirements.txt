@@ -7,7 +7,9 @@ django-stubs-ext==4.2.2
 django-taggit==4.0.0
 Pillow==10.0.0
 python-dotenv==1.0.0
-python-magic==0.4.27
+python-magic==0.4.27; sys_platform != 'win32'
+python-magic-bin==0.4.14; sys_platform == 'win32'
 python-slugify==8.0.1
 sqlparse==0.4.4
+text-unidecode==1.3
 typing_extensions==4.8.0
