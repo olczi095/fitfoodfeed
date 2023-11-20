@@ -39,7 +39,7 @@
                     {% if not forloop.last %}|{% endif %}
             {% endfor %}
 
-        <div id="like-section">
+        <div class="like-section">
             {% include 'reviews/includes/like_section.html' %}
         </div>
 
@@ -62,78 +62,8 @@
         {% endif %}
         
         <div class="comments">
-            <div class="title">
-                Comments
-                ({{ post.comment_counter }})
-            </div>
-
-            <div class="comment-form">
-                <hr /><h5><strong>Leave your comment</strong></h5><hr />
-                {% if user.is_authenticated %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="{{ form.logged_user.id_for_label }}" class="comment-form-label">{{ form.logged_user.label }}</label> - 
-                                <strong>{{ user }}</strong>
-                        </div>
-                        <div class="form-group">
-                            {{ form.body }}
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                {% else %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="{{ form.unlogged_user.id_for_label }}" class="comment-form-label">{{ form.unlogged_user.label }}</label>
-                            {{ form.unlogged_user }}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}" class="comment-form-label">{{ form.email.label }}</label>
-                                {{ form.email }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.body }}
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                {% endif %}
-            </div>
-
-            {% if comments %}
-                {% for comment in comments %}
-                    <div class="comment">
-                        {% if comment.logged_user and comment.logged_user.username == 'admin'%}
-                            <div class="author-admin">
-                                {{ comment.logged_user}}
-                            </div>
-                        {% elif comment.logged_user %}
-                            <div class="author">
-                                {{ comment.logged_user}}
-                            </div>
-
-                            <div class="datetime">
-                                {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
-                            </div>
-                        {% else %}
-                            <div class="author">
-                                {{ comment.unlogged_user }}
-                            </div> 
-                            <div class="datetime">
-                                {{ comment.pub_datetime|date:"Y-m-d"}} at {{ comment.pub_datetime|date:"H:i:s" }}
-                            </div>
-                        {% endif %}
-                            {{ comment.body }}
-                            {% if not forloop.last %}
-                                <hr class="comment-divider">
-                            {% endif %}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="info">
-                    There are no comments for this post.
-                </div>
-            {% endif %}
+            {% include 'reviews/includes/comment_form.html' %}
+            {% include 'reviews/includes/comment_list.html' %}
         </div>
 
     </div>

@@ -1,0 +1,36 @@
+{% load static %}
+
+{% if comments %}
+    {% for comment in comments %}
+        <div class="comment">
+            {% if comment.logged_user and comment.logged_user.username == 'admin'%}
+                <div class="author-admin">
+                    {{ comment.logged_user}}
+                </div>
+            {% elif comment.logged_user %}
+                <div class="author">
+                    {{ comment.logged_user}}
+                </div>
+
+                <div class="datetime">
+                    {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
+                </div>
+            {% else %}
+                <div class="author">
+                    {{ comment.unlogged_user }}
+                </div> 
+                <div class="datetime">
+                    {{ comment.pub_datetime|date:"Y-m-d"}} at {{ comment.pub_datetime|date:"H:i:s" }}
+                </div>
+            {% endif %}
+                {{ comment.body }}
+                {% if not forloop.last %}
+                    <hr class="comment-divider">
+                {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="info">
+        There are no comments for this post.
+    </div>
+{% endif %}
