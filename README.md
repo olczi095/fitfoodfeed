@@ -12,7 +12,10 @@
   
 The implementation incorporates type hints and unit tests written with unittest, but the tests will be modified with Faker and Factory Boy.
 
-_The code has been written according to TDD principles since commit 5acc9d4 from 19-07-23_
+<br />
+
+#### Project History
+The code has been written according to TDD principles since commit 5acc9d4 from 19-07-23 until commit 2d9586a from 20-11-23
 
 ## Features
 <br />
