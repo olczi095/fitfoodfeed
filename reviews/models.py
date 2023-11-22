@@ -5,6 +5,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.core.validators import MaxValueValidator
 from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 
@@ -120,7 +121,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     def comment_counter(self) -> int:
-        return self.comment_set.filter(active=True).count()
+        return self.comments.filter(active=True).count()
 
     def likes_counter(self) -> int:
         return self.likes.count()
@@ -139,16 +140,25 @@ class Comment(models.Model):
         null=True, 
         default='guest'
     )
+    response_to = models.ForeignKey(
+        'self', 
+        null=True, 
+        blank=True,
+        on_delete=models.CASCADE, 
+        related_name='replies'
+    )
     email = models.EmailField(null=True, blank=True)
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
         null=False,
-        blank=False
+        blank=False,
+        related_name='comments'
     )
     pub_datetime = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     active = models.BooleanField(default=False)
+    level = models.PositiveIntegerField(default=1, validators=[MaxValueValidator(8)])
 
 
     class Meta:

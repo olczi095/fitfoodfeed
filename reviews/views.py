@@ -41,6 +41,13 @@ def count_post_likes(post: Post) -> str:
     likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
     return likes_counter
 
+def assign_comment_level(comments: QuerySet, level: int = 1) -> None:
+    for comment in comments:
+        comment.level = 8 if comment.level >= 8 else level
+        comment.save()
+        assign_comment_level(comment.replies.all(), level + 1)
+        
+
 class PostListView(ListView[Model]):
     model = Post
     template_name = 'reviews/home.html'
@@ -117,8 +124,9 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
         context = super(PostDetailView, self).get_context_data(**kwargs)
 
         if isinstance(self.object, Post):
-            comments = self.object.comment_set.filter(active=True)
-            context['comments'] = comments
+            top_level_comments = self.object.comments.filter(active=True, response_to=None)
+            assign_comment_level(top_level_comments)
+            context['comments'] = top_level_comments
             context['post_likes'] = count_post_likes(self.object)
             
         context['form'] = CommentForm(initial={'post': self.object})

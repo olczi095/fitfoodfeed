@@ -1,0 +1,46 @@
+{% load static %}
+
+<div class="comment" data-level="{{ comment.level }}">
+
+    {% if comment.logged_user and comment.logged_user.username == 'admin'%}
+        <div class="author-admin">
+            {{ comment.logged_user}}
+        </div>
+        <div class="datetime">
+            {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
+        </div>
+
+    {% elif comment.logged_user %}
+        <div class="author">
+            {{ comment.logged_user}}
+        </div>
+        <div class="datetime">
+            {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
+        </div>
+
+    {% else %}
+        <div class="author">
+            {{ comment.unlogged_user }}
+        </div> 
+        <div class="datetime">
+            {{ comment.pub_datetime|date:"Y-m-d"}} at {{ comment.pub_datetime|date:"H:i:s" }}
+        </div>
+
+    {% endif %}
+    {{ comment.body }}
+    <br />
+    <button type="button" id="load-more-button" class="comment-reply-label" data-comment-id={{ comment.id }}>Reply</button>
+
+    <!--form for adding a reply-->
+    <div class="comment-reply-form">
+        {% include 'reviews/includes/comment_form_reply.html'%}
+    </div>
+
+    {% for reply in comment.replies.all %}
+        {% include 'reviews/includes/comment_detail.html' with comment=reply %}
+    {% endfor %}
+
+    {% if comment.level == 1 and not forloop.last %}
+        <hr class="comment-divider">
+    {% endif %}  
+</div>
