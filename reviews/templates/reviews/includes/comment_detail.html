@@ -29,7 +29,7 @@
     {% endif %}
     {{ comment.body }}
     <br />
-    <button type="button" id="load-more-button" class="comment-reply-label" data-comment-id={{ comment.id }} onclick="
+    <button type="button" class="comment-reply-label" data-comment-id={{ comment.id }} onclick="
         toggleCommentFormReply(this);
     ">Reply</button>
 

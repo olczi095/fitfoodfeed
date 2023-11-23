@@ -393,8 +393,20 @@
     cursor: pointer;
 }
 
+.comment-reply-label:hover {
+    color: var(--color-blue);
+}
+
+.comment-reply-label:focus {
+    outline: none;
+}
+
+.comment-reply-label:active {
+    color: var(--color-blue);
+}
+
 .comment-form-reply {
-    margin: 1rem auto 2rem;
+    margin: 1rem auto 0.5rem 1rem;
     padding: 1rem;
     border-top: 0.1rem dashed var(--color-lightgrey);
     border-bottom: 0.1rem dashed var(--color-lightgrey);
