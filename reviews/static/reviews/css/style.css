@@ -393,14 +393,14 @@
     cursor: pointer;
 }
 
-.comment-reply-form {
+.comment-form-reply {
     margin: 1rem auto 2rem;
     padding: 1rem;
     border-top: 0.1rem dashed var(--color-lightgrey);
     border-bottom: 0.1rem dashed var(--color-lightgrey);
 }
 
-.comment-reply-form .btn-orange {
+.comment-form-reply .btn-orange {
     background-color: var(--color-orange);
     border: none;
     margin-left: auto;
@@ -408,7 +408,7 @@
     font-size: smaller;
 }
 
-.comment-reply-form .btn-orange:hover {
+.comment-form-reply .btn-orange:hover {
     background-color: var(--color-darkorange);
 }
 
