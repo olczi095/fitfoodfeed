@@ -29,13 +29,16 @@
     {% endif %}
     {{ comment.body }}
     <br />
-    <button type="button" id="load-more-button" class="comment-reply-label" data-comment-id={{ comment.id }}>Reply</button>
+    <button type="button" id="load-more-button" class="comment-reply-label" data-comment-id={{ comment.id }} onclick="
+        toggleCommentFormReply(this);
+    ">Reply</button>
 
-    <!--form for adding a reply-->
-    <div class="comment-reply-form">
+    <!--form for adding a reply; default doesn't display-->
+    <div class="comment-reply-form" style="display: none;">
         {% include 'reviews/includes/comment_form_reply.html'%}
     </div>
 
+    <!--displaying all replies for a particular comment-->
     {% for reply in comment.replies.all %}
         {% include 'reviews/includes/comment_detail.html' with comment=reply %}
     {% endfor %}
