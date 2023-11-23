@@ -405,6 +405,10 @@
     color: var(--color-blue);
 }
 
+.comment-reply-label-blue {
+    color: var(--color-blue);
+}
+
 .comment-form-reply {
     margin: 1rem auto 0.5rem 1rem;
     padding: 1rem;

@@ -29,8 +29,9 @@
     {% endif %}
     {{ comment.body }}
     <br />
-    <button type="button" class="comment-reply-label" data-comment-id={{ comment.id }} onclick="
+    <button type="button" class="comment-reply-label" onclick="
         toggleCommentFormReply(this);
+        toggleReplyButtonColor(this);
     ">Reply</button>
 
     <!--form for adding a reply; default doesn't display-->
