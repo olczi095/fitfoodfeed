@@ -14,10 +14,10 @@ def categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
 def filter_existing_tags_for_navbar() -> list[str]:
     expected_tags = ['sweets', 'snacks', 'drinks', 'ready-to-eat']
     tags_qs = Tag.objects.filter(name__in=expected_tags)
-    navbar_tags = tags_qs.values_list('name', flat=True)
+    navbar_tags = list(tags_qs.values_list('name', flat=True))
     return navbar_tags
 
-def navbar_tags(request: HttpRequest) -> dict[str, str]:
+def navbar_tags(request: HttpRequest) -> dict[str, list[str]]:
     """
     Returns a tag list to include it in the lower_navbar template.
     """

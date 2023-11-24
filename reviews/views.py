@@ -32,6 +32,7 @@ from taggit.models import Tag
 
 from .models import Post, Category, Comment
 from .forms import PostForm, CommentForm
+from accounts.models import User as AccountsUser  # Importing User directly for type hints
 
 
 User = get_user_model()
@@ -41,7 +42,7 @@ def count_post_likes(post: Post) -> str:
     likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
     return likes_counter
 
-def assign_comment_level(comments: QuerySet, level: int = 1) -> None:
+def assign_comment_level(comments: QuerySet['Comment'], level: int = 1) -> None:
     for comment in comments:
         comment.level = 8 if comment.level >= 8 else level
         comment.save()
@@ -171,7 +172,7 @@ class PostLikeView(View):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
         pk: int | None = kwargs.get('pk')
         post: Post = get_object_or_404(Post, pk=pk)
-        user: User | AnonymousUser = self.request.user
+        user: AccountsUser | AnonymousUser = self.request.user
         liked: bool = False
     
         if post.likes.filter(pk=str(user.pk)).exists() and isinstance(user, User):

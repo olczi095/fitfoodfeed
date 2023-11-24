@@ -3,18 +3,15 @@ from typing import Any
 from django.db import transaction
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
+from .models import User as AccountsUser  # Importing User directly for type hints
 from reviews.models import Post
 
 
-User = get_user_model()
-
-
-@receiver(post_save, sender=User)
-def add_to_admin_group(instance: User, **kwargs: Any) -> None:
+@receiver(post_save, sender=AccountsUser)
+def add_to_admin_group(instance: AccountsUser, **kwargs: Any) -> None:
     """
     Assigns the user to the 'admin' group if it is a superuser
     and not already in the group.
@@ -24,14 +21,14 @@ def add_to_admin_group(instance: User, **kwargs: Any) -> None:
         admin_group, _ = Group.objects.get_or_create(name='admin')
         transaction.on_commit(lambda: instance.groups.add(admin_group))
 
-@receiver(pre_save, sender=User)
-def set_is_staff_for_superuser(instance: User, **kwargs: Any) -> None:
+@receiver(pre_save, sender=AccountsUser)
+def set_is_staff_for_superuser(instance: AccountsUser, **kwargs: Any) -> None:
     if instance.is_superuser:
         instance.is_staff = True
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=AccountsUser)
 def add_add_and_view_post_permissions_to_author(
-    instance: User, 
+    instance: AccountsUser, 
     **kwargs: Any
 ) -> None:
     """Adds 'add_post' and 'view_post' permissions to authors."""
