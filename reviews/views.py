@@ -41,12 +41,6 @@ def count_post_likes(post: Post) -> str:
     likes_count = post.likes_counter()
     likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
     return likes_counter
-
-def assign_comment_level(comments: QuerySet['Comment'], level: int = 1) -> None:
-    for comment in comments:
-        comment.level = 8 if comment.level >= 8 else level
-        comment.save()
-        assign_comment_level(comment.replies.all(), level + 1)
         
 
 class PostListView(ListView[Model]):
@@ -72,7 +66,7 @@ class PostListView(ListView[Model]):
             reverse=True
         )
         popular_posts = [popular_post[0] 
-                        for popular_post in popular_posts_with_comment_counters] # Get just posts without comment counters
+                        for popular_post in popular_posts_with_comment_counters]  # Get just posts without comment counters
         context['popular_posts'] = popular_posts[:5]
         context['recent_comments'] = recent_comments
         return context
@@ -126,7 +120,6 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
 
         if isinstance(self.object, Post):
             top_level_comments = self.object.comments.filter(active=True, response_to=None)
-            assign_comment_level(top_level_comments)
             context['comments'] = top_level_comments
             context['post_likes'] = count_post_likes(self.object)
             
@@ -148,6 +141,13 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
     def form_valid(self, form: BaseForm) -> HttpResponse:
         if isinstance(form, CommentForm):
             new_comment = form.save(commit=False)
+
+            # Set the response_to comment field if comment parent exists
+            comment_parent_id = self.request.POST.get('comment_parent_id')  # id from comment_form_reply template
+            comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
+
+            if comment_parent:
+                new_comment.response_to = comment_parent
 
             if isinstance(self.request.user, User) and \
                     self.request.user.is_authenticated and \

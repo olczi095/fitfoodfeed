@@ -180,5 +180,8 @@ class Comment(models.Model):
             
             if self.logged_user.is_superuser:
                 self.active = True
+
+        if self.response_to:
+            self.level = self.response_to.level + 1
                 
         return super().save(*args, **kwargs)

@@ -325,6 +325,11 @@
     margin-bottom: -0.5rem;
 }
 
+.comment {
+    margin-top: 1.2rem;
+    margin-left: calc(4.0rem - (0.4rem * var(--level)));
+}
+
 .comment .author {
     color: var(--color-black);
     font-weight: bolder;
@@ -336,41 +341,6 @@
 
 .comment-divider {
     border: 0.01rem solid var(--color-lightgrey);
-}
-
-.comment[data-level='2'] {
-    margin-left: 2.0rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='3'] {
-    margin-left: 2.5rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='4'] {
-    margin-left: 3.0rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='5'] {
-    margin-left: 3.5rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='6'] {
-    margin-left: 4.0rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='7'] {
-    margin-left: 4.5rem;
-    margin-top: 1.2rem;
-}
-
-.comment[data-level='8'] {
-    margin-left: 5.0rem;
-    margin-top: 1.2rem;
 }
 
 .comment-form {

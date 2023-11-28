@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="comment" data-level="{{ comment.level }}">
+<div class="comment" style="--level: {{ comment.level }}" data-level="{{ comment.level }}">
 
     {% if comment.logged_user and comment.logged_user.username == 'admin'%}
         <div class="author-admin">

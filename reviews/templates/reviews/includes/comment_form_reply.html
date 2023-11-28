@@ -11,6 +11,7 @@
             {{ form.body }}
         </div>
         <button type="submit" class="btn btn-primary btn-orange">Submit</button>
+        <input type="hidden" name="comment_parent_id" value="{{ comment.id }}">
     </form>
 {% else %}
     <form method="post">
