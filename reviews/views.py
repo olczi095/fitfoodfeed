@@ -109,11 +109,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
         """
         post_tags = self.object.tags.all() if isinstance(self.object, Post) else None
         all_related_posts = list(Post.objects.filter(tags__in=post_tags).exclude(pk=self.object.pk).distinct())
-        if len(all_related_posts) <= 3 :
-            return all_related_posts
-        else:
-            three_random_related_posts = sample(all_related_posts, k=3)
-            return three_random_related_posts
+        return all_related_posts[:3]
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(PostDetailView, self).get_context_data(**kwargs)
@@ -155,11 +151,8 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
                 new_comment.logged_user = self.request.user
                 new_comment.unlogged_user = None
                 
-            if self.request.user.is_superuser:
-                self.success_message = "Comment successfully added." 
-            else:
-                self.success_message = "Comment successfully submitted. \
-                                        It will be published after moderation and validation." 
+            self.success_message = "Comment successfully added." if self.request.user.is_superuser \
+                        else "Comment successfully submitted. It will be published after moderation and validation." 
 
             if isinstance(new_comment, Comment) and isinstance(self.object, Post):
                 new_comment.post = self.object
