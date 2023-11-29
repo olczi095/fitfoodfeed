@@ -160,6 +160,9 @@ class Comment(models.Model):
     active = models.BooleanField(default=False)
     level = models.PositiveIntegerField(default=1, validators=[MaxValueValidator(8)])
 
+    @property
+    def active_replies(self):
+        return self.replies.filter(active=True)
 
     class Meta:
         ordering = ['-pub_datetime']
