@@ -124,12 +124,15 @@ http://localhost:8000/
    
 ![review](https://github.com/olczi095/fitfoodfeed/assets/114907948/a2124689-2dbc-4106-8ce7-17e60b458760)
 <br /><br />
-
+  <p align="center">Smart multilevel Commenting System (non-superuser comments require approval).</p>
+  
+![comment-section](https://github.com/olczi095/bmi-calculator/assets/114907948/7b58dd01-4caf-450e-a328-7bec25837a39)
+<br /><br />
 
 **<p align="center">MAIN PAGE FOR AUTHORS</p>**
    <p align="center">Featuring additional functionalities like edit and delete buttons for reviews.</p>
    
-![page-for-authors](https://github.com/olczi095/fitfoodfeed/assets/114907948/6644ba8a-aba1-44ef-964f-b65484da4b6f)
+![page-for-authors](https://github.com/olczi095/bmi-calculator/assets/114907948/2e324cf6-4d03-4a2e-800d-480ec676f07f)
 <br /><br />
 
 
