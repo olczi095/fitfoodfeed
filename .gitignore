@@ -13,5 +13,6 @@ log/
 fff_venv/
 
 .coverage
+.pylintrc
 
 node_modules/
