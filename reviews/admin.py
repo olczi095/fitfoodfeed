@@ -48,11 +48,11 @@ class PostAdmin(admin.ModelAdmin[Model]):
                 args=[obj.author.pk]
             )
         return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
-    
-    @admin_attr_decorator 
+
+    @admin_attr_decorator
     def likes_counter_model(self, obj: Post) -> Any:
         return obj.likes_counter()
-    
+
     @admin_attr_decorator
     def category_model(self, obj: Post) -> str:
         """Allows to redirect to the "category change" admin panel. """
@@ -66,7 +66,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
     def get_queryset(self, request: HttpRequest) -> QuerySet[Model]:
         """Optimizes query performance by prefetching related 'tags' data."""
         return super().get_queryset(request).prefetch_related('tags')
-    
+
     @admin_attr_decorator
     def tag_list(self, obj: Post) -> str:
         """Allows to redirect to the "taggit tag change" admin panel."""
@@ -78,14 +78,14 @@ class PostAdmin(admin.ModelAdmin[Model]):
             tag_links.append(format_html(f'<a href="{tag_change_url}">{tag.name}</a>'))
 
         return format_html(', '.join(tag_links))
-    
+
     def save_model(
-            self, 
-            request: HttpRequest, 
-            obj: Model, 
-            form: ModelForm[Model], 
+            self,
+            request: HttpRequest,
+            obj: Model,
+            form: ModelForm[Model],
             change: bool
-        ) -> None: 
+        ) -> None:
 
         if isinstance(obj, Post) and obj.author is None and \
             isinstance(request.user, User):
@@ -106,7 +106,7 @@ class CategoryAdmin(admin.ModelAdmin[Model]):
 
     def post_count(self, obj: Category) -> int:
         return obj.post_set.count()
-    
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin[Model]):
@@ -132,45 +132,44 @@ class CommentAdmin(admin.ModelAdmin[Model]):
                 args=[obj.logged_user.pk]
             )
             return format_html(f'<a href="{logged_user_change_url}">{obj.logged_user}</a>')
-        else:
-            return obj.unlogged_user
-        
+        return obj.unlogged_user
+
     def comment(self, obj: Comment) -> str:
         return obj.body[:75]
-    
+
     @admin_attr_decorator
     def post_title(self, obj: Comment) -> str:
         """Allows to redirect to the "post change" admin panel."""
         post_change_url = reverse('admin:reviews_post_change', args=[obj.post.pk])
         return format_html(f'<a href="{post_change_url}">{obj.post.title}</a>')
-        
+
     def email(self, obj: Comment) -> str | None:
         if obj.logged_user:
             return obj.logged_user.email
         return obj.email
-        
+
     @admin_attr_decorator
     def datetime(self, obj: Comment) -> str:
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    
+
     def save_model(
-            self, 
-            request: HttpRequest, 
-            obj: Model, 
-            form: ModelForm[Comment], 
+            self,
+            request: HttpRequest,
+            obj: Model,
+            form: ModelForm[Comment],
             change: bool
-        ) -> None:  
+        ) -> None:
         if isinstance(obj, Comment) and obj.logged_user:
             obj.unlogged_user = None
         return super().save_model(request, obj, form, change)
 
     def get_form(
-            self, 
-            request: HttpRequest, 
-            obj: Model | None = None, 
-            change: bool = False, 
+            self,
+            request: HttpRequest,
+            obj: Model | None = None,
+            change: bool = False,
             **kwargs: Any
-        ) -> type[ModelForm[Model]]: 
+        ) -> type[ModelForm[Model]]:
         if isinstance(obj, Comment):
             if obj.logged_user is not None:
                 self.readonly_fields = ('unlogged_user',)
@@ -179,10 +178,10 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         return super().get_form(request, obj, **kwargs)
 
     def get_changeform_initial_data(
-            self, 
+            self,
             request: HttpRequest
         ) -> dict[str, str | list[str]]:
         return {'unlogged_user': ''}
-    
-    datetime.short_description = "DATE / TIME" 
+
+    datetime.short_description = "DATE / TIME"
     post_title.short_description = "POSTED IN"

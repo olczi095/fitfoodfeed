@@ -2,6 +2,7 @@ from typing import Any
 
 from django_resized import ResizedImageField
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -32,7 +33,7 @@ def convert_to_slug(text: str) -> str:
     }
     text_without_polish_signs = ''
     for sign in text:
-        if sign in polish_signs_conversion.keys():
+        if sign in polish_signs_conversion:
             text_without_polish_signs += polish_signs_conversion[sign]
         else:
             text_without_polish_signs += sign
@@ -51,11 +52,11 @@ class Category(models.Model):
             self.slug = convert_to_slug(self.name)
         if self.name:
             self.name = self.name.title()
-        super(Category, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
         return reverse("app_reviews:category", kwargs={"category_name": self.slug})
-        
+
 
 class Post(models.Model):
 
@@ -76,8 +77,8 @@ class Post(models.Model):
         null=True
         )
     author = models.ForeignKey(
-        User, 
-        on_delete=models.SET_DEFAULT, 
+        User,
+        on_delete=models.SET_DEFAULT,
         default=None,
         related_name='review_posts',
         null=True,
@@ -85,20 +86,20 @@ class Post(models.Model):
     )
     category = models.ForeignKey(
         Category,
-        on_delete=models.SET_DEFAULT,          
-        default=None,          
-        null=True,          
-        blank=True     
+        on_delete=models.SET_DEFAULT,
+        default=None,
+        null=True,
+        blank=True
     )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
     status = models.CharField(
-        choices=Status.choices, 
-        max_length=50, 
+        choices=Status.choices,
+        max_length=50,
         default='DRAFT'
     )
     tags = TaggableManager(
-        blank=True, 
+        blank=True,
         help_text="A comma-separated list of tags (case-insensitive)."
     )
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
@@ -108,7 +109,7 @@ class Post(models.Model):
 
     def __str__(self) -> str:
         return self.title
-    
+
     def get_absolute_url(self) -> str:
         return reverse("app_reviews:detail_review", args=[str(self.slug)])
 
@@ -116,16 +117,16 @@ class Post(models.Model):
         if not self.slug:
             self.slug = convert_to_slug(self.title)
         if not self.category:
-            default_category, created = Category.objects.get_or_create(name='Other')
+            default_category, _ = Category.objects.get_or_create(name='Other')
             self.category = default_category
-        super(Post, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def comment_counter(self) -> int:
         return self.comments.filter(active=True).count()
 
     def likes_counter(self) -> int:
         return self.likes.count()
-    
+
 
 class Comment(models.Model):
     logged_user = models.ForeignKey(
@@ -135,16 +136,16 @@ class Comment(models.Model):
         blank=True
     )
     unlogged_user = models.CharField(
-        max_length=50, 
-        blank=True, 
-        null=True, 
+        max_length=50,
+        blank=True,
+        null=True,
         default='guest'
     )
     response_to = models.ForeignKey(
-        'self', 
-        null=True, 
+        'self',
+        null=True,
         blank=True,
-        on_delete=models.CASCADE, 
+        on_delete=models.CASCADE,
         related_name='replies'
     )
     email = models.EmailField(null=True, blank=True)
@@ -161,7 +162,7 @@ class Comment(models.Model):
     level = models.PositiveIntegerField(default=1, validators=[MaxValueValidator(8)])
 
     @property
-    def active_replies(self):
+    def active_replies(self) -> QuerySet['Comment']:
         return self.replies.filter(active=True)
 
     class Meta:
@@ -170,9 +171,8 @@ class Comment(models.Model):
     def __str__(self) -> str:
         if self.logged_user:
             return f"Comment by {self.logged_user} on {self.post.title}."
-        else:
-            return f"Comment by {self.unlogged_user} on {self.post.title}."
-        
+        return f"Comment by {self.unlogged_user} on {self.post.title}."
+
     def save(self, *args: Any, **kwargs: Any) -> None:
         """
         Assigns email for logged-in users.
@@ -180,11 +180,12 @@ class Comment(models.Model):
         """
         if self.logged_user:
             self.email = self.logged_user.email
-            
+
             if self.logged_user.is_superuser:
                 self.active = True
 
         if self.response_to:
             self.level = self.response_to.level + 1
-                
+
         return super().save(*args, **kwargs)
+    

@@ -26,7 +26,9 @@ class LikePostTestCase(TestCase):
 
     def test_like_post_authenticated_user(self):
         self.client.force_login(self.user)
-        response = self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk}))
+        response = self.client.post(
+            reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk})
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user, self.review.likes.all())
 
@@ -34,7 +36,9 @@ class LikePostTestCase(TestCase):
         self.client.force_login(self.user)
 
         # Like the review
-        self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk})) # For like
+        self.client.post(
+            reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk})
+        ) # For like
         self.assertEqual(self.review.likes.count(), 1)
         self.assertIn(self.user, self.review.likes.all())
 
@@ -57,7 +61,7 @@ class ReviewsPageTestCase(TestCase):
             slug='sample-post-review',
             pub_date = '2020-01-01',
             author=self.author1,
-            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            body='The body of the sample post review',
             status='PUB'
         )
         self.post2 = Post.objects.create(
@@ -65,7 +69,7 @@ class ReviewsPageTestCase(TestCase):
             slug='another-post-review',
             pub_date = '2021-01-01',
             author=self.author1,
-            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            body='The body of the another sample post review.',
             status='PUB'
         )
         self.post3 = Post.objects.create(
@@ -73,7 +77,7 @@ class ReviewsPageTestCase(TestCase):
             slug='once-more-post-review',
             pub_date = '2021-08-01',
             author=self.author1,
-            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            body='The body of the third sample post review',
             status='PUB'
         )
         self.post4 = Post.objects.create(
@@ -81,7 +85,7 @@ class ReviewsPageTestCase(TestCase):
             slug='the-last-test-post',
             pub_date = '2023-01-01',
             author=self.author1,
-            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            body='The body of the fourth sample post review.',
             status='PUB'
         )
 
@@ -99,7 +103,7 @@ class ReviewsPageTestCase(TestCase):
         self.assertTrue(response.context['is_paginated'])
         self.assertIn('paginator', response.context)
 
-    
+
 class PostDetailViewTestCase(TestCase):
     def setUp(self):
         self.author1 = User.objects.create(
@@ -113,10 +117,10 @@ class PostDetailViewTestCase(TestCase):
             slug='sample-post-review',
             pub_date = '2020-01-01',
             author=self.author1,
-            body='Normally in this place I should have much longer text with the complete review for particular food product.',
+            body='The body of the Sample Post Review.',
             status='PUB',
         )
-        
+
         self.tag1 = Tag.objects.create(name='test_tag_1')
         self.tag2 = Tag.objects.create(name='test_tag_2')
 
@@ -125,7 +129,7 @@ class PostDetailViewTestCase(TestCase):
 
     def test_get_success_url_with_invalid_object(self):
         view = PostDetailView()
-        view.object = None  # Setting 'object' to 'None' to simulate the absence of the Post instance
+        view.object = None  # Simulating the absence of the Post instance
 
         with self.assertRaises(Http404) as context:
             view.get_success_url()
@@ -148,7 +152,7 @@ class PostDetailViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 0)
-                                   
+
     def test_authenticated_user_can_add_comment(self):
         self.client.force_login(self.author1)
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
@@ -170,7 +174,9 @@ class PostDetailViewTestCase(TestCase):
 
     def test_unauthenticated_user_can_add_comment(self):
         self.client.logout()
-        valid_comment_data = {'body': 'This is a random comment written by an unauthenticated user.'}
+        valid_comment_data = {
+            'body': 'This is a random comment written by an unauthenticated user.'
+        }
         response = self.client.post(
             self.post1.get_absolute_url(),
             data=valid_comment_data
@@ -182,7 +188,7 @@ class PostDetailViewTestCase(TestCase):
         valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
         self.client.post(self.post1.get_absolute_url(), data=valid_comment_data)
         new_comment = Comment.objects.last()
-        
+
         self.assertEqual(new_comment.post, self.post1)
         self.assertFalse(new_comment.active)
         self.assertIsNone(new_comment.logged_user)
@@ -271,11 +277,15 @@ class PostCreateTestCase(TestCase):
 
     def test_unlogged_user_redirect_to_login(self):
         response = self.client.get(reverse('app_reviews:create_review'))
-        self.assertEqual(response.status_code, 302)  
-        expected_url = reverse('app_accounts:login') + '?next=' + reverse('app_reviews:create_review')
+        self.assertEqual(response.status_code, 302)
+        expected_url = (
+            reverse('app_accounts:login') +
+            '?next=' +
+            reverse('app_reviews:create_review')
+        )
         self.assertRedirects(response, expected_url)
 
-    
+
     def test_logged_user_without_permission_returns_403_page(self):
         self.client.force_login(self.test_user)
         response = self.client.get(reverse_lazy('app_reviews:create_review'))
@@ -303,8 +313,11 @@ class PostCreateWithPermissionTestCase(TestCase):
         self.assertTemplateUsed(response, 'reviews/review_create.html')
 
     def test_successful_post_creation_redirect(self):
-        response = self.client.post(reverse_lazy('app_reviews:create_review'), data=self.first_review)
-        expected_url_after_post = '/reviews/new-review/'  #slug created automatically based on 'New Review'
+        response = self.client.post(
+            reverse_lazy('app_reviews:create_review'),
+            data=self.first_review
+        )
+        expected_url_after_post = '/reviews/new-review/'  #slug created automatically
         self.assertRedirects(response, expected_url_after_post)
 
     def test_successful_post_adding_to_database(self):
@@ -329,9 +342,18 @@ class PostCreateWithPermissionTestCase(TestCase):
 class PostUpdateTestCase(TestCase):
     def setUp(self):
         self.author = User.objects.create_user(
-            username='author', 
-            password='xyz', 
+            username='author',
+            password='xyz',
             is_author=True
+        )
+        self.second_author = User.objects.create_user(
+            username='second_author',
+            password='xyz',
+            is_author=True
+        )
+        self.superuser = User.objects.create_superuser(
+            username='admin',
+            password='pass'
         )
         self.category = Category.objects.create(
             name='Peanut Butter'
@@ -342,66 +364,87 @@ class PostUpdateTestCase(TestCase):
             author=self.author,
             category=self.category,
         )
-
-    def test_author_can_access_update_view(self):
-        self.client.force_login(self.author)
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'reviews/review_update.html')
-
-    def test_superuser_can_access_update_view(self):
-        self.superuser = User.objects.create_superuser(
-            username='admin',
-            password='pass'
-        )
-        self.client.force_login(self.author)
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'reviews/review_update.html')
-
-    def test_staff_can_access_update_view(self):
         self.staff = User.objects.create_user(
             username='staff',
             password='abc',
             is_staff=True
         )
-        self.client.force_login(self.author)
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'reviews/review_update.html')
-
-    def test_normal_user_cannot_access_update_view(self):
         self.normal_user = User.objects.create_user(
             username='normal_user',
             password='abc',
         )
+
+    def test_author_can_access_update_view(self):
+        self.client.force_login(self.author)
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_superuser_can_access_update_view(self):
+        self.client.force_login(self.superuser)
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_staff_can_access_update_view(self):
+        self.client.force_login(self.staff)
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/review_update.html')
+
+    def test_normal_user_cannot_access_update_view(self):
         self.client.force_login(self.normal_user)
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}
+            )
+        )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
 
     def test_other_author_cannot_update_post(self):
-        self.second_author = User.objects.create_user(
-            username='second_author',
-            password='xyz',
-            is_author=True
-        )
         self.client.force_login(self.second_author)
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}))
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}
+            )
+        )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
-    
+
     def test_not_logged_user_redirect_login_page(self):
         self.client.logout()
-        response = self.client.get(reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:update_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertTemplateUsed(response, 'registration/login.html')
 
 
 class PostDeleteTestCase(TestCase):
     def setUp(self):
         self.author = User.objects.create_user(
-            username='author', 
-            password='xyz', 
+            username='author',
+            password='xyz',
             is_author=True
         )
         self.review = Post.objects.create(
@@ -409,10 +452,15 @@ class PostDeleteTestCase(TestCase):
             body='This is a review of Vegan Chocolate. Not tasty.',
             author=self.author,
         )
-    
+
     def test_author_can_access_delete_view(self):
         self.client.force_login(self.author)
-        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -423,7 +471,12 @@ class PostDeleteTestCase(TestCase):
             is_staff=True
         )
         self.client.force_login(self.author)
-        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -433,7 +486,12 @@ class PostDeleteTestCase(TestCase):
             password='abc'
         )
         self.client.force_login(superuser)
-        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -444,18 +502,33 @@ class PostDeleteTestCase(TestCase):
             is_author=True
         )
         self.client.force_login(other_author)
-        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
 
     def test_random_user_redirect_login_page(self):
         self.client.logout()
-        response = self.client.get(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.get(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertTemplateUsed(response, 'registration/login.html')
 
     def test_get_success_message(self):
         self.client.force_login(self.author)
-        response = self.client.post(reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}), follow=True)
+        response = self.client.post(
+            reverse(
+                'app_reviews:delete_review', 
+                kwargs={'pk': self.review.pk}),
+                follow=True
+            )
         self.assertTemplateUsed(response, 'reviews/home.html')
 
         success_messages = [str(message) for message in response.context['messages']]
@@ -482,11 +555,15 @@ class PostStatusTestCase(TestCase):
 
     def check_post_not_published(self, title, body, status, slug):
         response = self.client.post(
-            reverse('app_reviews:create_review'), 
+            reverse('app_reviews:create_review'),
             data={'title': title, 'body': body, 'status': status}
         )
-        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not to the post_detail
-        response = self.client.get(reverse('app_reviews:detail_review', kwargs={'slug': slug}))
+        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not post_detail
+        response = self.client.get(
+            reverse(
+                'app_reviews:detail_review', 
+                kwargs={'slug': slug}
+            ))
         self.assertEqual(response.status_code, 404)
 
     def check_post_create_and_save(self, title, body, status):
@@ -534,7 +611,10 @@ class PostStatusTestCase(TestCase):
             'slug': 'the-new-review'
         }
         response = self.client.post(reverse('app_reviews:create_review'), post_data)
-        self.assertRedirects(response, reverse('app_reviews:detail_review', kwargs={'slug': post_data['slug']}))
+        self.assertRedirects(
+            response,
+            reverse('app_reviews:detail_review', kwargs={'slug': post_data['slug']})
+        )
 
     def test_post_published_create_and_save(self):
         self.check_post_create_and_save(
@@ -587,7 +667,7 @@ class TagsListTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/tags.html')
 
-    
+
 class TaggedPostsListTestCase(TestCase):
     def setUp(self):
         self.tag_bars = Tag.objects.create(
@@ -629,12 +709,16 @@ class TaggedPostsListTestCase(TestCase):
 
     def test_tag_page_success(self):
         tag_name = self.tag_bars.name
-        response = self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
+        response = self.client.get(
+            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+        )
         self.assertEqual(response.status_code, 200)
-    
+
     def test_tag_page_uses_home_template(self):
         tag_name = self.tag_bars.name
-        self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
+        self.client.get(
+            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+        )
         self.assertTemplateUsed('reviews/home.html')
 
     def test_filtering_tagged_posts(self):
@@ -648,12 +732,12 @@ class TaggedPostsListTestCase(TestCase):
             filtered_tagged_posts
         )
 
-    
+
 class CategoryViewsTestCase(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='masła orzechowe'
-        )        
+        )
         self.post1 = Post.objects.create(
             title='Chocolate bar',
             body='This is the body of the chocolate bar review.',
@@ -673,14 +757,18 @@ class CategoryViewsTestCase(TestCase):
         )
 
     def test_successfull_category_page_load(self):
-        response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': self.category.slug}))
+        response = self.client.get(
+            reverse('app_reviews:category', kwargs={'category_name': self.category.slug})
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/home.html')
 
     def test_display_published_post_from_proper_category(self):
         category_peanut_butter = self.category.slug
-        response = self.client.get(reverse('app_reviews:category', kwargs={'category_name': category_peanut_butter}))
-        
+        response = self.client.get(
+            reverse('app_reviews:category', kwargs={'category_name': category_peanut_butter})
+        )
+
         expected_posts = [self.post2]
         self.assertQuerysetEqual(
             response.context['posts'],

@@ -10,13 +10,13 @@ class UserModelExistenceTestCase(TestCase):
         users = User.objects.all()
         self.assertEqual(users.count(), 0)
 
-        
+
 class UserModelTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create(
-            username='test_user', 
+            username='test_user',
             password='test_password',
             bio='test_bio'
         )
@@ -34,3 +34,4 @@ class UserModelTestCase(TestCase):
     def test_is_author_field_exists(self):
         self.assertTrue(hasattr(self.user, 'is_author'))
         self.assertEqual(self.user._meta.get_field('is_author').verbose_name, 'author status')
+        

@@ -56,7 +56,7 @@ class UserAdmin(BaseUserAdmin):
     @admin_attr_decorator
     def display_user(self, obj: AccountsUser) -> str:
         return obj.username
-    
+
     @admin_attr_decorator
     def display_groups(self, obj: AccountsUser) -> str:
         user_groups = [group.name for group in obj.groups.all()]

@@ -14,7 +14,7 @@ class UserAdminModelTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create(
-            username='test_user', 
+            username='test_user',
             password='test_password',
             bio='something about the user'
         )

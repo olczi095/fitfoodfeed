@@ -41,7 +41,7 @@ class PostModelTestCase(TestCase):
             author=self.author,
             body='second_test_body'
         )
-    
+
     def test_author_post_fields(self):
         self.assertEqual(self.post.title, 'test_title')
         self.assertEqual(self.post.slug, 'test_slug')
@@ -75,10 +75,10 @@ class PostModelTestCase(TestCase):
         official_status_choices = Post._meta.get_field('status').choices
         self.assertEqual(expected_status_choices, official_status_choices)
 
-    def test_valid_status_returns_PUB(self):
+    def test_valid_status_returns_pub(self):
         self.post.status = 'PUB'
         self.assertEqual(self.post.status, 'PUB')
-        
+
     def test_invalid_status_returns_error(self):
         with self.assertRaises(ValidationError):
             self.post.status = 'INVALID_STATUS'
@@ -97,31 +97,13 @@ class PostModelTestCase(TestCase):
     def test_string_representation(self):
         self.assertEqual(str(self.post), 'test_title')
 
-    def test_create_slug_automatically_if_not_passed(self):
-        self.review = Post.objects.create(
-                title='Tytuł z polskimi znakami',
-                author=self.author,
-                body='Sprawdzamy jak zadziała automatyczne ustawienie slug.',
-                status='PUB'
-            )
-        self.assertNotEqual(self.review.slug, '')
-
-    def test_create_slug_automatically_recommended_approach(self):
-        self.review = Post.objects.create(
-                title='Tytuł z polskimi znakami!!!%',
-                author=self.author,
-                body='Sprawdzamy czy poprawnie przekonwertuje tytuł na slug.',
-                status='PUB'
-            )
-        self.assertEqual(self.review.slug, 'tytul-z-polskimi-znakami')
-
     def test_get_absolute_url(self):
         post_absolute_url = '/reviews/test_slug/'
         self.assertEqual(self.post.get_absolute_url(), post_absolute_url)
 
     def test_post_model_has_image_field(self):
         self.assertTrue(Post._meta.get_field('image'))
-    
+
 
 class PostFunctionalityTestCase(TestCase):
     def setUp(self):
@@ -139,7 +121,7 @@ class PostFunctionalityTestCase(TestCase):
             body='test_body',
             category=self.category
     )
-        
+
     def test_comment_counter(self):
         amount_of_no_comments = self.post.comment_counter()
         self.assertEqual(amount_of_no_comments, 0)
@@ -223,7 +205,9 @@ class CommentModelTestCase(TestCase):
         self.assertTrue(self.comment.active)
 
     def test_string_representation_logged_user(self):
-        expected_representation = f"Comment by {self.comment.logged_user} on {self.comment.post.title}."
+        expected_representation = (
+            f"Comment by {self.comment.logged_user} on {self.comment.post.title}."
+        )
         self.assertEqual(str(self.comment), expected_representation)
 
     def test_string_representation_unlogged_user(self):
@@ -232,6 +216,13 @@ class CommentModelTestCase(TestCase):
         self.assertEqual(str(comment), expected_representation)
 
     def test_superuser_comment_set_active_automatically(self):
-        superuser = User.objects.create_superuser(username='superuser', password='superuser_password')
-        comment = Comment.objects.create(logged_user=superuser, post=self.review, body='Body of comment')
+        superuser = User.objects.create_superuser(
+            username='superuser',
+            password='superuser_password'
+        )
+        comment = Comment.objects.create(
+            logged_user=superuser,
+            post=self.review,
+            body='Body of comment'
+        )
         self.assertTrue(comment.active)

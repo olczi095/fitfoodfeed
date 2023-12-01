@@ -30,7 +30,12 @@ class PostAdminTestCase(TestCase):
             body='This is the body of my test review.',
             category=self.category
         )
-        
+        self.another_review = Post(
+            title='Another Review',
+            author=self.author,
+            body='This is the body of my another review.',
+        )
+
         tag_chocolate = Tag.objects.create(name='chocolate')
         tag_bars = Tag.objects.create(name='bars')
         self.review.tags.add(tag_chocolate, tag_bars)
@@ -39,7 +44,7 @@ class PostAdminTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.post_model_admin = PostAdmin(model=Post, admin_site=AdminSite())
-        
+
     def test_likes_model_with_no_likes(self):
         calculated_review_likes = self.post_model_admin.likes_counter_model(self.review)
         expected_likes = 0
@@ -62,11 +67,6 @@ class PostAdminTestCase(TestCase):
         self.assertEqual(expected_tag_list, tag_list_text)
 
     def test_assign_author_automatically_to_creating_post(self):
-        self.another_review = Post(
-            title='Another Review',
-            author=self.author,
-            body='This is the body of my another review.',
-        )
         request = Mock(user=self.author)
         self.post_model_admin.save_model(request, self.another_review, PostAdmin.form, change=False)
         new_review = Post.objects.get(pk=self.another_review.pk)
@@ -107,9 +107,9 @@ class CategoryAdminTestCase(TestCase):
         )
 
     def test_post_count_for_category(self):
-        categoryModelAdmin = CategoryAdmin(model=Category, admin_site=AdminSite())
-        post_count = categoryModelAdmin.post_count(self.category)
-        expected_post_count = 3 
+        category_model_admin = CategoryAdmin(model=Category, admin_site=AdminSite())
+        post_count = category_model_admin.post_count(self.category)
+        expected_post_count = 3
         self.assertEqual(post_count, expected_post_count)
 
 
@@ -154,12 +154,16 @@ class CommentAdminTestCase(TestCase):
 
     def test_displaying_author_email_with_unlogged_user_without_email(self):
         expected_no_email = None
-        displayed_email_from_comment_without_email = self.comment_model_admin.email(self.random_comment)
+        displayed_email_from_comment_without_email = (
+            self.comment_model_admin.email(self.random_comment)
+        )
         self.assertEqual(expected_no_email, displayed_email_from_comment_without_email)
 
     def test_displaying_author_email_with_unlogged_user_with_email(self):
         expected_email = self.random_comment_with_email.email
-        displayed_email_from_comment_with_email = self.comment_model_admin.email(self.random_comment_with_email)
+        displayed_email_from_comment_with_email = (
+            self.comment_model_admin.email(self.random_comment_with_email)
+        )
         self.assertEqual(expected_email, displayed_email_from_comment_with_email)
 
     def test_displaying_post_title(self):
@@ -172,7 +176,8 @@ class CommentAdminTestCase(TestCase):
         long_comment = Comment.objects.create(
             post=self.review,
             pub_datetime=timezone.now(),
-            body='This is a very long comment, the longest from all comments. This comment contains more than 75 signs.'
+            body='This is a very long comment, the longest from all comments. \
+                This comment contains more than 75 signs.'
         )
         expected_comment = long_comment.body[:75]
         displayed_comment = self.comment_model_admin.comment(long_comment)
@@ -189,19 +194,25 @@ class CommentAdminTestCase(TestCase):
         self.assertEqual(expected_title, displayed_title)
 
     def test_save_comment_with_authenticated_user(self):
-        self.comment_model_admin.save_model(request=None, obj=self.user_comment, form=None, change=False)
+        self.comment_model_admin.save_model(
+            request=None, obj=self.user_comment, form=None, change=False
+        )
         self.assertIsNone(self.user_comment.unlogged_user)
         self.assertEqual(self.user_comment.logged_user, self.user)
 
     def test_unlogged_user_field_exclusion_for_logged_users_in_form(self):
-        self.comment_model_admin.save_model(request=None, obj=self.user_comment, form=None, change=False)
+        self.comment_model_admin.save_model(
+            request=None, obj=self.user_comment, form=None, change=False
+        )
         form = self.comment_model_admin.get_form(request=None, obj=self.user_comment)
 
         self.assertIn('logged_user', form.base_fields.keys())
         self.assertNotIn('unlogged_user', form.base_fields.keys())
 
     def test_no_fields_exclusions_for_unlogged_users_in_form(self):
-        self.comment_model_admin.save_model(request=None, obj=self.user_comment, form=None, change=False)
+        self.comment_model_admin.save_model(
+            request=None, obj=self.user_comment, form=None, change=False
+        )
         form = self.comment_model_admin.get_form(request=None, obj=self.random_comment)
         self.assertIn('logged_user', form.base_fields.keys())
         self.assertIn('unlogged_user', form.base_fields.keys())

@@ -2,7 +2,7 @@ from django import forms
 from django.db.models import Model
 
 from reviews.models import Post, Comment
-    
+
 
 class PostForm(forms.ModelForm[Model]):
 

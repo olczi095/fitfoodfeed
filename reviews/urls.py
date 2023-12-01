@@ -1,14 +1,14 @@
 from django.urls import path
 
 from .views import (
-    PostListView, 
-    PostDetailView, 
-    PostCreateView, 
-    PostUpdateView, 
-    PostDeleteView, 
-    TaggedPostsListView, 
-    TagsListView, 
-    CategoryListView, 
+    PostListView,
+    PostDetailView,
+    PostCreateView,
+    PostUpdateView,
+    PostDeleteView,
+    TaggedPostsListView,
+    TagsListView,
+    CategoryListView,
     PostLikeView,
 )
 
