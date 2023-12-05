@@ -354,7 +354,7 @@
     color: var(--color-middleorange);
 }
 
-.comment-reply-label {
+.comment-reply-button {
     background: none;
     border: none;
     color: var(--color-orange);
@@ -363,19 +363,19 @@
     cursor: pointer;
 }
 
-.comment-reply-label:hover {
+.comment-reply-button:hover {
     color: var(--color-blue);
 }
 
-.comment-reply-label:focus {
+.comment-reply-button:focus {
     outline: none;
 }
 
-.comment-reply-label:active {
+.comment-reply-button:active {
     color: var(--color-blue);
 }
 
-.comment-reply-label-blue {
+.comment-reply-button-blue {
     color: var(--color-blue);
 }
 

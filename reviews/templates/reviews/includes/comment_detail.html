@@ -29,10 +29,7 @@
     {% endif %}
     {{ comment.body }}
     <br />
-    <button type="button" class="comment-reply-label" onclick="
-        toggleCommentFormReply(this);
-        toggleReplyButtonColor(this);
-    ">Reply</button>
+    <button type="button" class="comment-reply-button" id="replyButton" >Reply</button>
 
     <!--form for adding a reply; default doesn't display-->
     <div class="comment-form-reply" style="display: none;">
@@ -47,4 +44,7 @@
     {% if comment.level == 1 and not forloop.last %}
         <hr class="comment-divider">
     {% endif %}  
+
+    <script src="{% static 'reviews/js/comment_reply.js' %}"></script>
+
 </div>
