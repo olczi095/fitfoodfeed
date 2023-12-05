@@ -354,7 +354,7 @@
     color: var(--color-middleorange);
 }
 
-.comment-reply-label {
+.comment-reply-button {
     background: none;
     border: none;
     color: var(--color-orange);
@@ -363,30 +363,30 @@
     cursor: pointer;
 }
 
-.comment-reply-label:hover {
+.comment-reply-button:hover {
     color: var(--color-blue);
 }
 
-.comment-reply-label:focus {
+.comment-reply-button:focus {
     outline: none;
 }
 
-.comment-reply-label:active {
+.comment-reply-button:active {
     color: var(--color-blue);
 }
 
-.comment-reply-label-blue {
+.comment-reply-button-blue {
     color: var(--color-blue);
 }
 
-.comment-form-reply {
+.comment-reply-form {
     margin: 1rem auto 0.5rem 1rem;
     padding: 1rem;
     border-top: 0.1rem dashed var(--color-lightgrey);
     border-bottom: 0.1rem dashed var(--color-lightgrey);
 }
 
-.comment-form-reply .btn-orange {
+.comment-reply-form .btn-orange {
     background-color: var(--color-orange);
     border: none;
     margin-left: auto;
@@ -394,7 +394,7 @@
     font-size: smaller;
 }
 
-.comment-form-reply .btn-orange:hover {
+.comment-reply-form .btn-orange:hover {
     background-color: var(--color-darkorange);
 }
 

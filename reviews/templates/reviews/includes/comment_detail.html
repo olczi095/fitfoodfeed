@@ -29,13 +29,10 @@
     {% endif %}
     {{ comment.body }}
     <br />
-    <button type="button" class="comment-reply-label" onclick="
-        toggleCommentFormReply(this);
-        toggleReplyButtonColor(this);
-    ">Reply</button>
+    <button type="button" class="comment-reply-button">Reply</button>
 
     <!--form for adding a reply; default doesn't display-->
-    <div class="comment-form-reply" style="display: none;">
+    <div class="comment-reply-form" id="commentFormReply" style="display: none;">
         {% include 'reviews/includes/comment_form_reply.html'%}
     </div>
 
