@@ -147,77 +147,6 @@ class PostDetailViewTestCase(TestCase):
         self.assertContains(response, self.post1.body)
         self.assertContains(response, self.post1.title)
 
-    def test_comment_form_displayed(self):
-        url = self.post1.get_absolute_url()
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Comment.objects.count(), 0)
-
-    def test_authenticated_user_can_add_comment(self):
-        self.client.force_login(self.author1)
-        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        url = self.post1.get_absolute_url()
-        response = self.client.post(url, data=valid_comment_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Comment.objects.count(), 1)
-
-    def test_comment_fields_added_correctly_for_authenticated_user(self):
-        self.client.force_login(self.author1)
-        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        self.client.post(self.post1.get_absolute_url(), data=valid_comment_data)
-        new_comment = Comment.objects.last()
-
-        self.assertEqual(new_comment.post, self.post1)
-        self.assertFalse(new_comment.active)
-        self.assertIsNone(new_comment.unlogged_user)
-        self.assertEqual(new_comment.logged_user, self.author1)
-
-    def test_unauthenticated_user_can_add_comment(self):
-        self.client.logout()
-        valid_comment_data = {
-            'body': 'This is a random comment written by an unauthenticated user.'
-        }
-        response = self.client.post(
-            self.post1.get_absolute_url(),
-            data=valid_comment_data
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Comment.objects.count(), 1)
-
-    def test_comment_fields_added_correctly_for_unauthenticated_user(self):
-        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        self.client.post(self.post1.get_absolute_url(), data=valid_comment_data)
-        new_comment = Comment.objects.last()
-
-        self.assertEqual(new_comment.post, self.post1)
-        self.assertFalse(new_comment.active)
-        self.assertIsNone(new_comment.logged_user)
-        self.assertEqual(new_comment.unlogged_user, 'guest')
-
-    def test_display_success_message_after_comment_addition(self):
-        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        response = self.client.post(
-            self.post1.get_absolute_url(),
-            data=valid_comment_data,
-            follow=True
-        )
-        expected_success_message_excerpt = 'comment successfully submitted'
-        messages = [str(message).lower() for message in response.context['messages']]
-        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
-
-    def test_comment_success_message_for_superuser(self):
-        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
-        self.client.force_login(superuser)
-        valid_comment_data = {'body': 'This is a random comment written by an authenticated user.'}
-        response = self.client.post(
-            self.post1.get_absolute_url(),
-            data=valid_comment_data,
-            follow=True
-        )
-        expected_success_message_excerpt = 'comment successfully added'
-        messages = [str(message).lower() for message in response.context['messages']]
-        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
-
     def test_post_likes_with_zero_likes(self):
         response = self.client.get(self.post1.get_absolute_url())
         post_likes_from_context = response.context['post_likes']
@@ -266,6 +195,128 @@ class PostDetailViewTestCase(TestCase):
         expected_amount_of_related_posts = 3
         self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
 
+
+class PostDetailViewCommentTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create(
+            username='author',
+            password='test_password',
+        )
+        self.post = Post.objects.create(
+            title='Sample Post Review',
+            pub_date = '2020-01-01',
+            author=self.author,
+            body='The body of the Sample Post Review.',
+            status='PUB',
+        )
+        self.comment_data_authenticated_user = {'body': 'This is a random comment written by an authenticated user.'}
+        self.comment_data_unauthenticated_user = {'body': 'This is a random comment written by an unauthenticated user.'}
+
+    def test_comment_form_displayed(self):
+        url = self.post.get_absolute_url()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), 0)
+
+    def test_authenticated_user_can_add_comment(self):
+        self.client.force_login(self.author)
+        response = self.client.post(
+            self.post.get_absolute_url(), 
+            data=self.comment_data_authenticated_user
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_comment_fields_added_correctly_for_authenticated_user(self):
+        self.client.force_login(self.author)
+        self.client.post(self.post.get_absolute_url(), data=self.comment_data_authenticated_user)
+        new_comment = Comment.objects.last()
+
+        self.assertEqual(new_comment.post, self.post)
+        self.assertFalse(new_comment.active)
+        self.assertIsNone(new_comment.unlogged_user)
+        self.assertEqual(new_comment.logged_user, self.author)
+
+    def test_unauthenticated_user_can_add_comment(self):
+        self.client.logout()
+        response = self.client.post(
+            self.post.get_absolute_url(),
+            data=self.comment_data_unauthenticated_user
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_comment_fields_added_correctly_for_unauthenticated_user(self):
+        self.client.logout()
+        self.client.post(self.post.get_absolute_url(), data=self.comment_data_unauthenticated_user)
+        new_comment = Comment.objects.last()
+
+        self.assertEqual(new_comment.post, self.post)
+        self.assertFalse(new_comment.active)
+        self.assertIsNone(new_comment.logged_user)
+        self.assertEqual(new_comment.unlogged_user, 'guest')
+
+    def test_display_success_message_after_comment_addition(self):
+        response = self.client.post(
+            self.post.get_absolute_url(),
+            data=self.comment_data_authenticated_user,
+            follow=True
+        )
+        expected_success_message_excerpt = 'comment successfully submitted'
+        messages = [str(message).lower() for message in response.context['messages']]
+        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+
+    def test_comment_success_message_for_superuser(self):
+        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
+        self.client.force_login(superuser)
+        response = self.client.post(
+            self.post.get_absolute_url(),
+            data=self.comment_data_authenticated_user,
+            follow=True
+        )
+        expected_success_message_excerpt = 'comment successfully added'
+        messages = [str(message).lower() for message in response.context['messages']]
+        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+
+    def test_comment_without_parent_response_to_field(self):
+        comment_without_parent = Comment.objects.create(
+            post=self.post,
+            body=self.comment_data_authenticated_user
+        )
+        self.assertIsNone(comment_without_parent.response_to)
+
+    def test_comment_with_parent_response_to_field(self):
+        self.client.force_login(self.author)
+        parent_comment = Comment.objects.create(
+            post=self.post,
+            body="Parent comment body",
+            logged_user=self.author,
+            active=True
+        )
+        child_comment_data = {
+            'body': 'Child comment body',
+            'comment_parent_id': parent_comment.id
+        }
+        response = self.client.post(
+            self.post.get_absolute_url(),
+            data=child_comment_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        child_comment = Comment.objects.all()[0]
+        self.assertEqual(child_comment.response_to, parent_comment)
+
+    def test_invalid_comment_form(self):
+        self.client.force_login(self.author)
+        invalid_comment_data = {'body': ''}
+        response = self.client.post(
+            self.post.get_absolute_url(),
+            data=invalid_comment_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), 0)
 
 class PostCreateTestCase(TestCase):
     def setUp(self):
