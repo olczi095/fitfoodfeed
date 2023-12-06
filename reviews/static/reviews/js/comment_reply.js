@@ -1,12 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.comment-reply-button').forEach(commentReplyButton => {
-            commentReplyButton.addEventListener('click', function() {
-                toggleCommentFormReply(this);
-                toggleReplyButtonColor(this);
-        });
-    });
-});
-
 function toggleCommentFormReply(replyButton) {
     let replyForm = replyButton.nextElementSibling;
 
@@ -26,3 +17,10 @@ function toggleReplyButtonColor(replyButton) {
         }
     }
 }
+
+document.querySelectorAll('.comment-reply-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        toggleCommentFormReply(this);
+        toggleReplyButtonColor(this);
+    });
+});
