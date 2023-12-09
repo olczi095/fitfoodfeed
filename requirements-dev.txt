@@ -3,3 +3,4 @@ factory-boy==3.3.0
 Faker==19.2.0
 mypy==1.5.1
 mypy-extensions==1.0.0
+pylint-django==2.5.5
