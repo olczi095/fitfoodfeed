@@ -28,6 +28,12 @@
     border-style: ridge;
 }
 
+.reset-password-container {
+    display: block;
+    text-align: center;
+    margin: auto 2rem;
+}
+
 .form-register {
     height: 100%;
     width: 100%;
