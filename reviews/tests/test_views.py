@@ -27,7 +27,7 @@ class LikePostTestCase(TestCase):
     def test_like_post_authenticated_user(self):
         self.client.force_login(self.user)
         response = self.client.post(
-            reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk})
+            reverse('app_reviews:like_post', kwargs={'pk': self.review.pk})
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user, self.review.likes.all())
@@ -37,13 +37,13 @@ class LikePostTestCase(TestCase):
 
         # Like the review
         self.client.post(
-            reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk})
+            reverse('app_reviews:like_post', kwargs={'pk': self.review.pk})
         ) # For like
         self.assertEqual(self.review.likes.count(), 1)
         self.assertIn(self.user, self.review.likes.all())
 
         # Unlike the review
-        self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.review.pk}))
+        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
         self.assertEqual(self.review.likes.count(), 0)
         self.assertNotIn(self.user, self.review.likes.all())
 
@@ -155,7 +155,7 @@ class PostDetailViewTestCase(TestCase):
 
     def test_post_likes_with_one_like(self):
         self.client.force_login(self.author1)
-        self.client.post(reverse('app_reviews:like_post_redirect', kwargs={'pk': self.post1.pk}))
+        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.post1.pk}))
         response = self.client.get(self.post1.get_absolute_url())
         post_likes_from_context = response.context['post_likes']
         expected_post_likes = '1 Like'
