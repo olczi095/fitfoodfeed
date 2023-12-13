@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
@@ -37,7 +37,7 @@ class RegisterTestCase(TestCase):
 
     def test_redirect_login_page_after_successful_registration(self):
         response = self.client.post(self.register_url, self.valid_data, follow=True)
-        self.assertRedirects(response, reverse_lazy(settings.LOGIN_URL))
+        self.assertRedirects(response, reverse(settings.LOGIN_URL))
 
 class LoginTestCase(TestCase):
     @classmethod
