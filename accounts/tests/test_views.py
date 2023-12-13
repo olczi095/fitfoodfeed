@@ -2,6 +2,9 @@ from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from accounts.forms import CustomUserCreationForm
 
@@ -95,4 +98,53 @@ class LoginTestCase(TestCase):
         )
         error_message = "Invalid username or password."
         self.assertContains(response, error_message)
-        
+
+
+class PasswordResetViewTestCase(TestCase):
+    def setUp(self):
+        self.user_email = 'test_email@mail.com'
+        self.user = User.objects.create_user(
+            username='user',
+            password='test_password',
+            email=self.user_email
+        )
+        self.password_reset_url = reverse('app_accounts:password_reset')
+
+    def test_render_password_reset_page(self):
+        response = self.client.get(self.password_reset_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_reset/password_reset.html')
+
+    def test_submit_password_reset_form(self):
+        response = self.client.post(
+            self.password_reset_url,
+            {'email': self.user_email}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTemplateUsed(response, 'password_reset/password_reset_email.html')
+        self.assertRedirects(response, reverse('app_accounts:password_reset_done'))
+
+    def test_complete_password_reset_process(self):
+        # Initialize password reset data
+        uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
+        token = default_token_generator.make_token(self.user)
+        reset_url = reverse(
+            'app_accounts:password_reset_confirm', 
+            kwargs={'token': token, 'uidb64': uidb64}
+        )
+        response = self.client.get(reset_url)
+        self.assertEqual(response.status_code, 302)
+
+        # Redirect to password change form
+        redirect_url = response.url
+        response = self.client.post(
+            redirect_url,
+            {'new_password1': 'changed_password', 'new_password2': 'changed_password'},
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_reset/password_reset_complete.html')
+
+        # Check password change
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('changed_password'))
