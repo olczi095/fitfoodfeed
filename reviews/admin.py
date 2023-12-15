@@ -118,6 +118,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         'email', 
         'datetime'
     ]
+    list_editable = ['active']
     list_display_links = ['comment']
     ordering = ['active', 'pub_datetime']
 
