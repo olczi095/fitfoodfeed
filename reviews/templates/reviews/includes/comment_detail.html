@@ -2,7 +2,7 @@
 
 <div class="comment" style="--level: {{ comment.level }}" data-level="{{ comment.level }}">
 
-    {% if comment.logged_user and comment.logged_user.username == 'admin'%}
+    {% if comment.logged_user and comment.logged_user.is_staff %}
         <div class="author-admin">
             {{ comment.logged_user}}
         </div>
