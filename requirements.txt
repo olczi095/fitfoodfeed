@@ -5,6 +5,7 @@ django-crispy-forms==2.0
 django-resized==1.0.2
 django-stubs-ext==4.2.2
 django-taggit==4.0.0
+htmx==0.0.0
 Pillow==10.0.0
 python-dotenv==1.0.0
 python-magic==0.4.27; sys_platform != 'win32'
