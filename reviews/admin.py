@@ -116,7 +116,8 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         'active', 
         'post_title', 
         'email', 
-        'datetime'
+        'datetime',
+        'pk'
     ]
     list_editable = ['active']
     list_display_links = ['comment']

@@ -181,7 +181,7 @@ class Comment(models.Model):
         if self.logged_user:
             self.email = self.logged_user.email
 
-            if self.logged_user.is_superuser:
+            if self.logged_user.is_staff:
                 self.active = True
 
         if self.response_to:

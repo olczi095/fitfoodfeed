@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
@@ -23,7 +23,7 @@ from django.http import (
     HttpRequest,
     HttpResponse,
     JsonResponse,
-    Http404
+    Http404,
 )
 from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
@@ -48,7 +48,7 @@ class PostListView(ListView[Model]):
     context_object_name = 'posts'
     paginate_by = 3
     queryset = Post.objects.filter(status='PUB').order_by('-pub_date')
-    
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         posts_with_comment_counters = {}
@@ -157,7 +157,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
 
             self.success_message = (
                 "Comment successfully added." 
-                if self.request.user.is_superuser
+                if self.request.user.is_staff
                 else
                     "Comment successfully submitted. "
                     "It will be published after moderation and validation."
@@ -286,3 +286,13 @@ class CategoryListView(ListView[Model]):
         category = get_object_or_404(Category, slug=category_name)
         queryset = Post.objects.filter(status='PUB', category=category)
         return queryset
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def test_func(self) -> bool | None:
+        return self.request.user.is_staff
+
+    def delete(self, request: HttpRequest, pk: int) -> HttpResponse:
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.delete()
+        return HttpResponse(status=303)

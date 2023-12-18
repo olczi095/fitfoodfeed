@@ -354,6 +354,42 @@
     color: var(--color-middleorange);
 }
 
+.modify-comment-buttons {
+    display: flex;
+    gap: 0.1rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.modify-comment-button {
+    display: block;
+    border: 0.1rem solid var(--color-white);
+    padding: 0.1rem 0.4rem;
+    text-decoration: none;
+}
+
+.modify-comment-button:hover {
+    text-decoration: none;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.edit-comment-button {
+    color: var(--color-green-alert);
+}
+
+.edit-comment-button:hover {
+    background-color: var(--color-green-alert);
+}
+
+.delete-comment-button {
+    color: var(--color-red-alert);
+}
+
+.delete-comment-button:hover {
+    background-color: var(--color-red-alert);
+}
+
 .comment-reply-button {
     background: none;
     border: none;
