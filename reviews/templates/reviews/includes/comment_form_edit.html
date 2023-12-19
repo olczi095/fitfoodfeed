@@ -1,0 +1,9 @@
+{% load static %}
+    <form method="post">
+        {% csrf_token %}  
+        <div class="form-group">
+            <textarea name="body">{{ comment.body }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-orange">Submit</button>
+        <input type="hidden" name="comment_id" value="{{ comment.id }}">  
+    </form>

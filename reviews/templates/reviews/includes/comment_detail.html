@@ -33,9 +33,16 @@
     {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
             <div class="modify-comment-buttons">
+
+                <!-- button and form for editing a comment; default doesn't display -->
                 <button type="submit" class="modify-comment-button edit-comment-button">
                     <ion-icon name="create-outline"></ion-icon>
                 </button>
+                <div class="comment-edit-form" id="commentFormEdit" style="display:none;">
+                    {% include 'reviews/includes/comment_form_edit.html' %}
+                </div>
+
+                <!-- delete comment button -->
                 <button type="submit" 
                         class="modify-comment-button delete-comment-button"
                         hx-delete="{% url 'app_reviews:delete_comment' comment.pk %}"
@@ -46,13 +53,22 @@
                 >
                     <ion-icon name="trash-outline"></ion-icon>
                 </button>
+
             </div>
+
         {% elif request.user.is_staff %}
             {% if not comment.logged_user.is_staff and not comment.logged_user.is_superuser or comment.logged_user == request.user %}
                 <div class="modify-comment-buttons">
+
+                    <!-- button and form for editing a comment; default doesn't display -->
                     <button type="submit" class="modify-comment-button edit-comment-button">
                         <ion-icon name="create-outline"></ion-icon>
                     </button>
+                    <div class="comment-edit-form" id="commentFormEdit" style="display:none;">
+                        {% include 'reviews/includes/comment_form_edit.html' %}
+                    </div>
+
+                    <!-- delete comment button -->
                     <button type="submit" 
                             class="modify-comment-button delete-comment-button"
                             hx-delete="{% url 'app_reviews:delete_comment' comment.pk %}"
@@ -65,6 +81,7 @@
                     </button>
                 </div>
             {% endif %}
+            
         {% endif %}
     {% endif %}
 

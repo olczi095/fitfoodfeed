@@ -382,6 +382,31 @@
     background-color: var(--color-green-alert);
 }
 
+.comment-container-kupa {
+    display: flex;
+    flex-direction: column;
+    /* Dodaj dodatkowe style według potrzeb */
+}
+
+.comment-edit-form {
+    margin: 1rem auto 0.5rem 1rem;
+    padding: 1rem;
+    border-top: 0.1rem dashed var(--color-lightgrey);
+    border-bottom: 0.1rem dashed var(--color-lightgrey);
+}
+
+.comment-edit-form .btn-orange {
+    background-color: var(--color-orange);
+    border: none;
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: smaller;
+}
+
+.comment-edit-form .btn-orange:hover {
+    background-color: var(--color-darkorange);
+}
+
 .delete-comment-button {
     color: var(--color-red-alert);
 }
