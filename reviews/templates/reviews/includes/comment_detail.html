@@ -32,15 +32,15 @@
 
     {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
-            <div class="modify-comment-buttons">
 
+            <div class="modify-comment-buttons">
                 <!-- button and form for editing a comment; default doesn't display -->
-                <button type="submit" class="modify-comment-button edit-comment-button">
+                <button type="button" 
+                        class="modify-comment-button edit-comment-button" 
+                        data-comment-id="{{ comment.id }}"
+                >
                     <ion-icon name="create-outline"></ion-icon>
                 </button>
-                <div class="comment-edit-form" id="commentFormEdit" style="display:none;">
-                    {% include 'reviews/includes/comment_form_edit.html' %}
-                </div>
 
                 <!-- delete comment button -->
                 <button type="submit" 
@@ -53,20 +53,24 @@
                 >
                     <ion-icon name="trash-outline"></ion-icon>
                 </button>
+            </div>
 
+            <!-- form for editing a comment; default doesn't display -->
+            <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
+                {% include 'reviews/includes/comment_form_edit.html' %}
             </div>
 
         {% elif request.user.is_staff %}
             {% if not comment.logged_user.is_staff and not comment.logged_user.is_superuser or comment.logged_user == request.user %}
+                
                 <div class="modify-comment-buttons">
-
-                    <!-- button and form for editing a comment; default doesn't display -->
-                    <button type="submit" class="modify-comment-button edit-comment-button">
+                    <!-- edit comment button -->
+                    <button type="button" 
+                            class="modify-comment-button edit-comment-button" 
+                            data-comment-id="{{ comment.id }}"
+                    >
                         <ion-icon name="create-outline"></ion-icon>
                     </button>
-                    <div class="comment-edit-form" id="commentFormEdit" style="display:none;">
-                        {% include 'reviews/includes/comment_form_edit.html' %}
-                    </div>
 
                     <!-- delete comment button -->
                     <button type="submit" 
@@ -80,6 +84,12 @@
                         <ion-icon name="trash-outline"></ion-icon>
                     </button>
                 </div>
+                
+                <!-- form for editing a comment; default doesn't display -->
+                <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
+                    {% include 'reviews/includes/comment_form_edit.html' %}
+                </div>
+                
             {% endif %}
             
         {% endif %}

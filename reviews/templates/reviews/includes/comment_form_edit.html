@@ -1,9 +1,13 @@
 {% load static %}
     <form method="post">
         {% csrf_token %}  
+
+        <!-- Hidden field to store the ID of the comment being edited -->
+        <input type="hidden" name="editing_comment_id" value="{{ comment.id }}">
+
         <div class="form-group">
             <textarea name="body">{{ comment.body }}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-orange">Submit</button>
-        <input type="hidden" name="comment_id" value="{{ comment.id }}">  
+        
+        <button type="submit" class="btn btn-primary btn-orange">Update</button>
     </form>

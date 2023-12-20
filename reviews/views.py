@@ -131,37 +131,40 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
              ) -> HttpResponse:
         self.object = self.get_object()
         form = self.get_form()
+        editing_comment_id: str | None = request.POST.get('editing_comment_id')
 
         if form.is_valid():
-            return self.form_valid(form)
+            return self.form_valid(form, editing_comment_id)
         return self.form_invalid(form)
 
-    def form_valid(self, form: BaseForm) -> HttpResponse:
-        if isinstance(form, CommentForm):
+    def form_valid(self, form: BaseForm, editing_comment_id: str) -> HttpResponse:
+        comment_parent_id = self.request.POST.get('comment_parent_id')
+        comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
+
+        if editing_comment_id:
+            # Edit the existing comment if editing_comment_id field exists
+            editing_comment = Comment.objects.get(pk=editing_comment_id)
+            editing_comment.body = form.cleaned_data['body']
+            editing_comment.save()
+
+            self.success_message = "Comment successfully <strong>edited</strong>."
+        else:
+            # Add a new comment
             new_comment = form.save(commit=False)
 
-            # Set the response_to comment field if comment parent exists
-            comment_parent_id = self.request.POST.get(
-                'comment_parent_id'
-            )  # id from comment_form_reply template
-            comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
-
-            if comment_parent and isinstance(new_comment, Comment):
+            if comment_parent:
                 new_comment.response_to = comment_parent
 
-            if isinstance(self.request.user, User) and \
-                    self.request.user.is_authenticated and \
-                    isinstance(new_comment, Comment):
+            if isinstance(self.request.user, User) and self.request.user.is_authenticated:
                 new_comment.logged_user = self.request.user
                 new_comment.unlogged_user = None
 
             self.success_message = (
-                "Comment successfully added." 
-                if self.request.user.is_staff
-                else
-                    "Comment successfully submitted. "
-                    "It will be published after moderation and validation."
+                "Comment successfully <strong>added</strong>." if self.request.user.is_staff
+                else "Comment successfully <strong>submitted</strong>. \
+                    It will be published after moderation and validation."
             )
+
             if isinstance(new_comment, Comment) and isinstance(self.object, Post):
                 new_comment.post = self.object
                 new_comment.save()

@@ -363,7 +363,8 @@
 
 .modify-comment-button {
     display: block;
-    border: 0.1rem solid var(--color-white);
+    border: 0.1rem solid var(--color-lightgrey);
+    background-color: var(--color-white);
     padding: 0.1rem 0.4rem;
     text-decoration: none;
 }
@@ -382,17 +383,19 @@
     background-color: var(--color-green-alert);
 }
 
-.comment-container-kupa {
-    display: flex;
-    flex-direction: column;
-    /* Dodaj dodatkowe style według potrzeb */
+.edit-comment-button:focus {
+    outline: none;
+}
+
+.edit-comment-button.active {
+    background-color: var(--color-green-alert);
+    color: white;
 }
 
 .comment-edit-form {
-    margin: 1rem auto 0.5rem 1rem;
+    display: none;
+    margin: 0.5rem auto;
     padding: 1rem;
-    border-top: 0.1rem dashed var(--color-lightgrey);
-    border-bottom: 0.1rem dashed var(--color-lightgrey);
 }
 
 .comment-edit-form .btn-orange {
@@ -413,6 +416,15 @@
 
 .delete-comment-button:hover {
     background-color: var(--color-red-alert);
+}
+
+.delete-comment-button:focus {
+    outline: none;
+}
+
+.edit-comment-button.active {
+    background-color: var(--color-green-alert);
+    color: white;
 }
 
 .comment-reply-button {
