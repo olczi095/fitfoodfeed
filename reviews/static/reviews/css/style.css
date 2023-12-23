@@ -363,7 +363,7 @@
 
 .modify-comment-button {
     display: block;
-    border: 0.1rem solid var(--color-lightgrey);
+    /* border: 0.1rem solid var(--color-lightgrey); */
     background-color: var(--color-white);
     padding: 0.1rem 0.4rem;
     text-decoration: none;
@@ -377,10 +377,12 @@
 
 .edit-comment-button {
     color: var(--color-green-alert);
+    border: 0.1rem solid var(--color-lightgrey);
 }
 
 .edit-comment-button:hover {
     background-color: var(--color-green-alert);
+    border-color: var(--color-green-alert);
 }
 
 .edit-comment-button:focus {
@@ -390,6 +392,7 @@
 .edit-comment-button.active {
     background-color: var(--color-green-alert);
     color: white;
+    border-color: var(--color-green-alert);
 }
 
 .comment-edit-form {
@@ -412,19 +415,16 @@
 
 .delete-comment-button {
     color: var(--color-red-alert);
+    border: 0.1rem solid var(--color-lightgrey);
 }
 
 .delete-comment-button:hover {
     background-color: var(--color-red-alert);
+    border-color: var(--color-red-alert);
 }
 
 .delete-comment-button:focus {
     outline: none;
-}
-
-.edit-comment-button.active {
-    background-color: var(--color-green-alert);
-    color: white;
 }
 
 .comment-reply-button {
