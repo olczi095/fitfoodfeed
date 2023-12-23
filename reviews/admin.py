@@ -121,7 +121,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
     ]
     list_editable = ['active']
     list_display_links = ['comment']
-    ordering = ['active', 'pub_datetime']
+    ordering = ['-pub_datetime', 'active']
 
     def author(self, obj: Comment) -> str | None:
         """
