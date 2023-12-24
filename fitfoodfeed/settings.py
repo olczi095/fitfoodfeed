@@ -134,11 +134,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# # Pass your e-mail address
-# EMAIL_HOST_USER = 'your_email@mail.com'
-# # Pass your e-mail password
-# EMAIL_HOST_PASSWORD = 'yourpassword'
-
 # Pass your e-mail address
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 # Pass your e-mail password
