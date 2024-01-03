@@ -262,7 +262,7 @@ class PostDetailViewCommentTestCase(TestCase):
             data=self.comment_data_authenticated_user,
             follow=True
         )
-        expected_success_message_excerpt = 'comment successfully submitted'
+        expected_success_message_excerpt = 'comment successfully <strong>submitted</strong>'
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
@@ -274,7 +274,7 @@ class PostDetailViewCommentTestCase(TestCase):
             data=self.comment_data_authenticated_user,
             follow=True
         )
-        expected_success_message_excerpt = 'comment successfully added'
+        expected_success_message_excerpt = 'comment successfully <strong>added</strong>'
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
