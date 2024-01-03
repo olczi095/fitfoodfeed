@@ -12,8 +12,8 @@ class User(AbstractUser):
     avatar = models.ImageField(
         upload_to='avatars/',
         blank=True,
+        null=True,
         validators=[validate_avatar_type, validate_avatar_dimensions],
-        default='avatars/default-avatar.png'
     )
     is_author = models.BooleanField(
         default=False,

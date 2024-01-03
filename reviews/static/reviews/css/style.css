@@ -330,9 +330,20 @@
     margin-left: calc(4.0rem - (0.4rem * var(--level)));
 }
 
-.comment .author {
-    color: var(--color-black);
+.comment .author,
+.comment .author-admin {
+    display: flex;
+    align-items: center;
+    color: var(--color-blue);
     font-weight: bolder;
+}
+
+.comment .author img,
+.comment .author-admin img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin-right: 0.625rem;
 }
 
 .comment .datetime {
@@ -473,11 +484,6 @@
 
 .comments .info {
     color: var(--color-lightgrey);
-}
-
-.comment .author-admin {
-    color: var(--color-blue);
-    font-weight: bolder;
 }
 
 .sidebar-widget {
