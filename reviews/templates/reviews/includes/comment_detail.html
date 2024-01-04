@@ -5,7 +5,7 @@
 
     {% if comment.logged_user and comment.logged_user.is_staff %}
         <div class="author-admin">
-            {% if comment.logged_user.avatar.url|file_exists %}
+            {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
                 <img src="{% static 'reviews/images/default-avatar.png' %}" alt="Avatar">
@@ -18,7 +18,7 @@
 
     {% elif comment.logged_user %}
         <div class="author">
-            {% if comment.logged_user.avatar.url|file_exists %}
+            {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
                 <img src="{% static 'reviews/images/default-avatar.png' %}" alt="Avatar">

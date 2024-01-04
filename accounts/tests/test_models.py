@@ -27,9 +27,8 @@ class UserModelTestCase(TestCase):
     def test_user_string_is_correct(self):
         self.assertEqual(str(self.user), 'test_user')
 
-    def test_image_field_has_default_image(self):
-        self.assertIsNotNone(self.user.avatar)
-        self.assertEqual(self.user.avatar.name, 'avatars/default-avatar.png')
+    def test_image_field_has_none_default_image(self):
+        self.assertEqual(self.user.avatar.name, None)
 
     def test_is_author_field_exists(self):
         self.assertTrue(hasattr(self.user, 'is_author'))
