@@ -4,6 +4,7 @@ from django.http import Http404
 from django.contrib.auth import get_user_model
 from taggit.models import Tag
 
+from reviews.forms import CommentForm
 from reviews.models import Post, Category, Comment
 from reviews.views import PostDetailView
 
@@ -209,8 +210,12 @@ class PostDetailViewCommentTestCase(TestCase):
             body='The body of the Sample Post Review.',
             status='PUB',
         )
-        self.comment_data_authenticated_user = {'body': 'This is a random comment written by an authenticated user.'}
-        self.comment_data_unauthenticated_user = {'body': 'This is a random comment written by an unauthenticated user.'}
+        self.comment_data_authenticated_user = {
+            'body': 'This is a random comment written by an authenticated user.'
+        }
+        self.comment_data_unauthenticated_user = {
+            'body': 'This is a random comment written by an unauthenticated user.'
+        }
 
     def test_comment_form_displayed(self):
         url = self.post.get_absolute_url()
@@ -221,7 +226,7 @@ class PostDetailViewCommentTestCase(TestCase):
     def test_authenticated_user_can_add_comment(self):
         self.client.force_login(self.author)
         response = self.client.post(
-            self.post.get_absolute_url(), 
+            self.post.get_absolute_url(),
             data=self.comment_data_authenticated_user
         )
         self.assertEqual(response.status_code, 302)
@@ -317,6 +322,59 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Comment.objects.count(), 0)
+
+    def test_edit_comment_successfully(self):
+        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
+        self.client.force_login(superuser)
+        comment = Comment.objects.create(
+            logged_user=superuser,
+            post=self.post,
+            body=self.comment_data_authenticated_user,
+            active=True
+        )
+        self.assertTrue(Comment.objects.filter(pk=comment.id).exists())
+
+        comment_form_data = {
+            'body': 'Edited comment body.',
+            'editing_comment_id': comment.id
+        }
+        comment_form = CommentForm(data=comment_form_data)
+        self.assertTrue(comment_form.is_valid())
+
+        self.client.post(
+            self.post.get_absolute_url(),
+            comment_form_data,
+            follow=True
+        )
+        edited_comment = Comment.objects.get(pk=comment.id)
+        self.assertEqual(edited_comment.body, comment_form_data['body'])
+
+
+class CommentDeleteViewTestCase(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_superuser(
+            username='admin',
+            password='admin_password',
+        )
+        self.post = Post.objects.create(
+            title='Sample Post Review',
+            author=self.admin,
+            body='The body of the Sample Post Review.',
+            status='PUB',
+        )
+        self.comment_to_delete = Comment.objects.create(
+            post=self.post,
+            body='Body comment',
+            active=True
+        )
+    
+    def test_comment_delete_view(self):
+        self.client.force_login(self.admin)
+        delete_url = reverse('app_reviews:delete_comment', kwargs={'pk': self.comment_to_delete.id})
+        response = self.client.delete(delete_url)
+        self.assertEqual(response.status_code, 303)
+        self.assertRaises(Comment.DoesNotExist, Comment.objects.get, pk=self.comment_to_delete.id)
+
 
 class PostCreateTestCase(TestCase):
     def setUp(self):
