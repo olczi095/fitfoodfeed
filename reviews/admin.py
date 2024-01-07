@@ -123,6 +123,19 @@ class CommentAdmin(admin.ModelAdmin[Model]):
     list_display_links = ['comment']
     ordering = ['-pub_datetime', 'active']
 
+    def get_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
+        if obj and isinstance(obj, Comment) and obj.logged_user:
+            return ['logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
+        elif obj and isinstance(obj, Comment) and obj.unlogged_user:
+            return ['unlogged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
+        else:
+            return ['unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
+    
+    def get_readonly_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
+        if obj and isinstance(obj, Comment):
+            return ['logged_user', 'unlogged_user', 'response_to', 'level']
+        return ['level']
+    
     def author(self, obj: Comment) -> str | None:
         """
         Allows to redirect to the "user change" admin panel 
@@ -164,20 +177,6 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         if isinstance(obj, Comment) and obj.logged_user:
             obj.unlogged_user = None
         return super().save_model(request, obj, form, change)
-
-    def get_form(
-            self,
-            request: HttpRequest,
-            obj: Model | None = None,
-            change: bool = False,
-            **kwargs: Any
-        ) -> type[ModelForm[Model]]:
-        if isinstance(obj, Comment):
-            if obj.logged_user is not None:
-                self.readonly_fields = ('unlogged_user',)
-            else:
-                self.readonly_fields = ()
-        return super().get_form(request, obj, **kwargs)
 
     def get_changeform_initial_data(
             self,
