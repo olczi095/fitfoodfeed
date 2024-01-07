@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -12,7 +12,6 @@ from reviews.admin import PostAdmin, CategoryAdmin, CommentAdmin
 
 
 User = get_user_model()
-
 
 class PostAdminTestCase(TestCase):
     def setUp(self):
@@ -135,7 +134,7 @@ class CommentAdminTestCase(TestCase):
             email='random@mail.com'
         )
         self.comment_model_admin = CommentAdmin(model=Comment, admin_site=AdminSite())
-        
+
     def test_displaying_author_with_logged_user(self):
         expected_author = self.user.username
         displayed_author = self.comment_model_admin.author(self.user_comment)
@@ -200,23 +199,50 @@ class CommentAdminTestCase(TestCase):
         self.assertIsNone(self.user_comment.unlogged_user)
         self.assertEqual(self.user_comment.logged_user, self.user)
 
-    def test_unlogged_user_field_exclusion_for_logged_users_in_form(self):
-        self.comment_model_admin.save_model(
-            request=None, obj=self.user_comment, form=None, change=False
+    def test_get_fields_new_empty_form(self):
+        base_fields = [
+            'unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
+        ]
+        self.assertEqual(
+            list(self.comment_model_admin.get_fields(request=None)),
+            base_fields
         )
-        form = self.comment_model_admin.get_form(request=None, obj=self.user_comment)
-
-        self.assertIn('logged_user', form.base_fields.keys())
-        self.assertNotIn('unlogged_user', form.base_fields.keys())
-
-    def test_no_fields_exclusions_for_unlogged_users_in_form(self):
-        self.comment_model_admin.save_model(
-            request=None, obj=self.user_comment, form=None, change=False
+        editable_fields = [
+            'unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active'
+        ]
+        self.assertEqual(
+            list(self.comment_model_admin.get_form(request=None).base_fields),
+            editable_fields
         )
-        form = self.comment_model_admin.get_form(request=None, obj=self.random_comment)
-        self.assertIn('logged_user', form.base_fields.keys())
-        self.assertIn('unlogged_user', form.base_fields.keys())
 
+    def test_get_fields_for_logged_user_comment(self):
+        expected_fields = [
+            'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
+        ]
+        actual_fields = self.comment_model_admin.get_fields(request=None, obj=self.user_comment)
+        self.assertEqual(actual_fields, expected_fields)
+
+    def test_get_fields_for_unlogged_user_comment(self):
+        expected_fields = [
+            'unlogged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
+        ]
+        actual_fields = self.comment_model_admin.get_fields(request=None, obj=self.random_comment)
+        self.assertEqual(actual_fields, expected_fields)
+
+    def test_get_readonly_fields_for_logged_user_comment(self):
+        expected_readonly_fields = [
+            'logged_user', 'unlogged_user', 'response_to', 'level'
+        ]
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=self.user_comment)
+        self.assertEqual(actual_readonly_fields, expected_readonly_fields)
+
+    def test_get_readonly_fields_for_unlogged_user_comment(self):
+        expected_readonly_fields = [
+            'logged_user', 'unlogged_user', 'response_to', 'level'
+        ]
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=self.random_comment)
+        self.assertEqual(actual_readonly_fields, expected_readonly_fields)
+        
     def test_get_changeform_initial_data(self):
         initial_data = self.comment_model_admin.get_changeform_initial_data(request=None)
         self.assertEqual(initial_data, {'unlogged_user': ''})
