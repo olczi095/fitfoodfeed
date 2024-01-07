@@ -53,7 +53,7 @@ class PostListView(ListView[Model]):
         context = super().get_context_data(**kwargs)
         posts_with_comment_counters = {}
         recent_comments_qs: QuerySet[Comment] = Comment.objects.filter(active=True) \
-            .order_by('pub_datetime')[:3]
+            .order_by('-pub_datetime')[:3]
         recent_comments: list[Comment] = list(recent_comments_qs)
 
         for post in Post.objects.filter(status='PUB'):
