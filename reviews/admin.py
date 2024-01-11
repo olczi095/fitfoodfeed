@@ -133,7 +133,10 @@ class CommentAdmin(admin.ModelAdmin[Model]):
     
     def get_readonly_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
         if obj and isinstance(obj, Comment):
-            return ['logged_user', 'unlogged_user', 'response_to', 'level']
+            fields = ['logged_user', 'unlogged_user', 'response_to', 'post', 'level']
+            if obj.response_to is None:
+                    fields.remove('post')
+            return fields
         return ['level']
     
     def author(self, obj: Comment) -> str | None:

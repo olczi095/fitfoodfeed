@@ -6,6 +6,7 @@ from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
@@ -186,6 +187,9 @@ class Comment(models.Model):
 
         if self.response_to:
             self.level = self.response_to.level + 1
+            
+        if self.response_to and self.response_to.post != self.post:
+                raise ValidationError('Fields response_to and post must be associated with the same post.')
 
         return super().save(*args, **kwargs)
     

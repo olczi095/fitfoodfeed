@@ -246,3 +246,15 @@ class CommentAdminTestCase(TestCase):
     def test_get_changeform_initial_data(self):
         initial_data = self.comment_model_admin.get_changeform_initial_data(request=None)
         self.assertEqual(initial_data, {'unlogged_user': ''})
+
+    def test_get_readonly_fields_for_responsed_comment(self):
+        responsed_comment = Comment.objects.create(
+            response_to=self.user_comment,
+            post=self.review,
+            body='The body of the responsed comment.'
+        )
+        expected_fields = [
+            'logged_user', 'unlogged_user', 'response_to', 'post', 'level'
+        ]
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=responsed_comment)
+        self.assertEqual(expected_fields, actual_readonly_fields)
