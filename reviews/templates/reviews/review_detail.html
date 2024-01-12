@@ -67,13 +67,16 @@
         </div>
 
     </div>
-    
-    <!-- External scripts -->
-    <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.js"></script>
+{% endblock body %}
 
-    <!-- Internal scripts -->
+{% block scripts %}
+    {{ block.super }}
+
+    <!-- Additional scripts for specific subtemplate -->
+    <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.js"></script>
     <script src="{% static 'reviews/js/like_review.js' %}"></script>
     <script src="{% static 'reviews/js/comment_reply.js' %}"></script>
     <script src="{% static 'reviews/js/comment_edit.js' %}"></script>
     <script src="{% static 'reviews/js/comment_counter_update.js' %}"></script>
-{% endblock body %}
+    
+{% endblock scripts %}
