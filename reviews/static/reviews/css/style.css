@@ -569,7 +569,7 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.like:not(.disabled):hover {
+.like:hover {
     color: var(--color-white);
     background-color: var(--color-green-alert);
     cursor: pointer;
@@ -582,6 +582,11 @@
 
 .unlike:hover {
     background-color: var(--color-red-alert);
+}
+
+.like:focus,
+.unlike:focus {
+    outline: none;
 }
 
 .happy-icon {

@@ -2,7 +2,10 @@
 <form action="{% url 'app_reviews:like_post' post.id %}" method="POST" class="like-form">
     {% csrf_token %}
         <div class="likes-button">
-            <button type="submit" name="like-btn" value="{{ post.pk }}" class="like"><ion-icon name="heart-circle-outline">Like</ion-icon></button>
+            <button type="submit" name="like-btn" value="{{ post.pk }}" class="like {% if user in post.likes.all %} unlike {% endif %}">
+                <ion-icon name="heart-circle-outline">
+                Like</ion-icon>
+            </button>
             <h5>{{ likes_counter|default:post_likes }}</h5>
         </div>
 
