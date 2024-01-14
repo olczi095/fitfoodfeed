@@ -28,13 +28,15 @@
     border-style: ridge;
 }
 
-.reset-password-container {
-    display: block;
-    text-align: center;
-    margin: auto 2rem;
+.form-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    margin: auto auto auto 0;
 }
 
-.form-register {
+.form-login {
     height: 100%;
     width: 100%;
     padding: 2rem;
@@ -44,12 +46,44 @@
     justify-content: space-between;
 }
 
-.form-image {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    margin: auto auto auto 0;
+@media screen and (min-width: 600px) and (max-width: 992px) {
+    .container {
+        margin: 2rem auto;
+    }
+
+    .form-register-container {
+        width: 100%;
+        height: 100%
+    }
+
+    .form-register {
+        padding: 4rem;
+    }
+
+    .form-image-register {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        margin: 0rem auto;
+    }
+
+    .form-container {
+        background-color: transparent;
+        border-style: none;
+    }
+
+    .form-image {
+        display: none;
+    }
+}
+
+.reset-password-container {
+    display: block;
+    text-align: center;
+    margin: auto 2rem;
 }
 
 .form-field {
