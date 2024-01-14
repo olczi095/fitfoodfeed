@@ -24,6 +24,10 @@
             Need an account? → 
             <a href="{% url 'app_accounts:register' %}">Join us!</a>
         </p>  
+        <p class="account-link">
+            Need to reset you password? → 
+            <a href={% url 'app_accounts:password_reset' %}>Reset it here!</a>
+        </p>
         </form>
     </section>
 {% endblock form %}

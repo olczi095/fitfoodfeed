@@ -36,7 +36,11 @@
         <p class="account-link">
             Do you already have an account? → 
             <a href="{% url 'app_accounts:login' %}">Login!</a>
-        </p>    
+        </p>
+        <p class="account-link">
+            Do you need to reset your password? → 
+            <a href="{% url 'app_accounts:password_reset' %}">Reset!</a>
+        </p>
         </form> 
     </section>
 {% endblock form %}
