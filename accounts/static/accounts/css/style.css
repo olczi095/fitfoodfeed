@@ -1,6 +1,7 @@
 /* Variables */
 :root {
     --color-beige: #fee9cc;
+    --color-light-grey: #939393;
     --color-dark-grey: #3d3f41;
     --color-red-alert: #D0342C;
 }
@@ -80,7 +81,8 @@
     }
 }
 
-.reset-password-container {
+.reset-password-container,
+.change-password-container {
     display: block;
     text-align: center;
     margin: auto 2rem;
@@ -132,4 +134,10 @@
 
 .account-link {
     margin-bottom: 0 !important;
+}
+
+.change-password-comment {
+    color: var(--color-light-grey);
+    font-size: 0.8rem;
+    margin-top: 1rem;
 }
