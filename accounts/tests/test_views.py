@@ -148,3 +148,60 @@ class PasswordResetViewTestCase(TestCase):
         # Check password change
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('changed_password'))
+
+
+class PasswordChangeViewTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="test_password"
+        )
+        self.client.login(username='test_user', password='test_password')
+
+    def test_password_change_page_unauth(self):
+        self.client.logout()
+        response = self.client.get(reverse('app_accounts:password_change'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_password_change_page_auth(self):
+        response = self.client.get(reverse('app_accounts:password_change'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_change/password_change_form.html')
+
+    def test_complete_password_change_process(self):
+        data = {
+            'old_password': 'test_password',
+            'new_password1': 'new_test_password',
+            'new_password2': 'new_test_password'
+        }
+        response = self.client.post(reverse('app_accounts:password_change'), data=data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_change/password_change_done.html')
+        self.assertRedirects(
+            response,
+            reverse('app_accounts:password_change_done'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_incorrect_old_password(self):
+        data = {
+            'old_password': 'incorrect_password',
+            'new_password1': 'new_test_password',
+            'new_password2': 'new_test_password'
+        }
+        response = self.client.post(reverse('app_accounts:password_change'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_change/password_change_form.html')
+        self.assertContains(response, "Your old password was entered incorrectly.")
+
+    def test_mismatched_new_password(self):
+        data = {
+            'old_password': 'test_password',
+            'new_password1': 'new_test_password',
+            'new_password2': 'mismatched_password'
+        }
+        response = self.client.post(reverse('app_accounts:password_change'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'password_change/password_change_form.html')
+        self.assertContains(response, "The two password fields didn’t match.")
