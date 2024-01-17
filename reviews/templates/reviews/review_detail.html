@@ -23,6 +23,18 @@
     {% endif %}
 
     <div class="post-detail-content">
+
+        <div class="post-icons">
+            {% if user == post.author or user.is_staff or user.is_superuser %}
+                <a href="{% url 'app_reviews:update_review' post.pk %}">
+                    <ion-icon name="create-outline"></ion-icon>
+                </a>
+                <a href="{% url 'app_reviews:delete_review' post.pk %}">
+                    <ion-icon name="trash-outline" style="color:red;"></ion-icon>
+                </a>
+            {% endif %}
+        </div>
+        
         <h1 class="post-title">{{ post.title }}</h1>
         {% if post.image %}
             <span class="post-image">
