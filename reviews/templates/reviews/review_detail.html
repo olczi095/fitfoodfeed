@@ -42,7 +42,7 @@
             </span>
         {% endif %}
         <h4><span class="post-tags">DESCRIPTION  |  PRICE  |  AVAILABILITY  |  INGREDIENTS  |  TASTE TEST</span></h4>
-        <span class="post-typo">{{ post.body | safe }}</span>
+        <span class="post-typo post-detail-body">{{ post.body | safe }}</span>
         <br /><br />
             {% for tag in post.tags.all %}
                 <a href="{% url 'app_reviews:tag' tag_name=tag %}" class="badge badge-secondary">
