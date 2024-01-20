@@ -37,7 +37,6 @@ document.getElementById('style-mode-toggle').addEventListener('click', function(
 
 document.addEventListener('DOMContentLoaded', function() {
     const storedMode = localStorage.getItem('style-mode');
-    console.log(storedMode);
     if (storedMode && storedMode === 'dark') {
         setStyleMode(storedMode);
     }
