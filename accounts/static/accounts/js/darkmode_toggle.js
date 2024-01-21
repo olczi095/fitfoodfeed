@@ -8,22 +8,13 @@ function toggleNavbarClasses(elements, classes) {
 
 function setStyleMode(mode) {
     document.body.classList.toggle('dark-mode');
-    let moonButton = document.getElementById('moon-button');
-    let sunButton = document.getElementById('sun-button');
-    let upperNavbar = document.getElementById('upper-navbar');
-    let lowerNavbar = document.getElementById('lower-navbar');
-    let btnNavbarLogout = document.getElementById('btn-navbar-logout');
-    let btnNavbarSignUp = document.getElementById('btn-navbar-signup');
+    let moonButton = document.getElementById('moon-button-accounts');
+    let sunButton = document.getElementById('sun-button-accounts');
+    let navbarAccounts = document.getElementById('navbar-accounts');
 
-    toggleNavbarClasses([upperNavbar, lowerNavbar], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
+    toggleNavbarClasses([navbarAccounts], ['navbar-dark', 'bg-dark']);
     moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
     sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
-
-    if (btnNavbarSignUp) {
-        toggleNavbarClasses([btnNavbarSignUp], ['btn-outline-dark', 'btn-outline-light']);
-    } else {
-        toggleNavbarClasses([btnNavbarLogout], ['btn-outline-dark', 'btn-outline-light']);
-    }
 
     localStorage.setItem('style-mode', mode);
 }
