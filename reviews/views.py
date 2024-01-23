@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
@@ -41,6 +41,33 @@ def count_post_likes(post: Post) -> str:
     likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
     return likes_counter
 
+def get_popular_posts(amount: int) -> list[Post]:
+    posts_with_comment_counters = {}
+
+    for post in Post.objects.filter(status='PUB'):
+        posts_with_comment_counters[post] = post.comment_counter()
+
+    popular_posts_with_comment_counters = sorted(
+        posts_with_comment_counters.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    # Get just posts without comment counters
+    popular_posts = [
+        popular_post[0] for popular_post
+        in popular_posts_with_comment_counters
+    ][:amount]
+
+    return popular_posts
+
+def get_recent_comments(amount: int) -> list[Comment]:
+    recent_comments_qs: QuerySet[Comment] = Comment.objects.filter(active=True) \
+        .order_by('-pub_datetime')[:3]
+    recent_comments: list[Comment] = list(recent_comments_qs)[:amount]
+
+    return recent_comments
+
 
 class PostListView(ListView[Model]):
     model = Post
@@ -51,25 +78,8 @@ class PostListView(ListView[Model]):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        posts_with_comment_counters = {}
-        recent_comments_qs: QuerySet[Comment] = Comment.objects.filter(active=True) \
-            .order_by('-pub_datetime')[:3]
-        recent_comments: list[Comment] = list(recent_comments_qs)
-
-        for post in Post.objects.filter(status='PUB'):
-            posts_with_comment_counters[post] = post.comment_counter()
-
-        popular_posts_with_comment_counters = sorted(
-            posts_with_comment_counters.items(),
-            key=lambda x: x[1],
-            reverse=True
-        )
-        popular_posts = [
-            popular_post[0] for popular_post
-            in popular_posts_with_comment_counters
-        ]  # Get just posts without comment counters
-        context['popular_posts'] = popular_posts[:5]
-        context['recent_comments'] = recent_comments
+        context['popular_posts'] = get_popular_posts(5)
+        context['recent_comments'] = get_recent_comments(3)
         return context
 
 
@@ -78,6 +88,12 @@ class TaggedPostsListView(ListView[Post]):
     template_name = 'reviews/home.html'
     context_object_name = 'posts'
     paginate_by = 3
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['popular_posts'] = get_popular_posts(5)
+        context['recent_comments'] = get_recent_comments(3)
+        return context
 
     def get_queryset(self) -> QuerySet[Post]:
         tag_name = self.kwargs['tag_name']
@@ -283,6 +299,12 @@ class CategoryListView(ListView[Model]):
     template_name = 'reviews/home.html'
     context_object_name = 'posts'
     paginate_by = 3
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['popular_posts'] = get_popular_posts(5)
+        context['recent_comments'] = get_recent_comments(3)
+        return context
 
     def get_queryset(self) -> QuerySet[Post]:
         category_name = self.kwargs['category_name']
