@@ -593,9 +593,8 @@
     font-weight: bold;
 }
 
-.like {
-    color: var(--color-green-alert);
-    background-color: var(--color-red-alert);
+.like,
+.unlike {
     display: flex;
     font-size: 2.5rem;
     font-weight: bold;
@@ -607,6 +606,11 @@
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+.like {
+    color: var(--color-green-alert);
+    border-color: var(--color-green-alert);
+}
+
 .like:hover {
     color: var(--color-white);
     background-color: var(--color-green-alert);
@@ -616,16 +620,22 @@
 .unlike {
     color: var(--color-red-alert);
     border-color: var(--color-red-alert);
-    background-color: var(--color-red-alert);
+    background-color: var(--color-white-alert);
 }
 
 .unlike:hover {
+    color: var(--color-white);
     background-color: var(--color-red-alert);
+    cursor: pointer;
 }
 
 .like:focus,
 .unlike:focus {
     outline: none;
+}
+
+.like.disabled {
+    pointer-events: none;
 }
 
 .happy-icon {
