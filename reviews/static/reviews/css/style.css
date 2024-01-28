@@ -679,7 +679,7 @@
     align-items: center;
     text-align: center;
     justify-content: center;
-    padding: 0.5rem 5rem;
+    padding: 0.5rem 2rem;
     background-color: var(--color-whitegrey);
     border: 0.1rem solid var(--color-orange);
     border-radius: 0.6rem;
