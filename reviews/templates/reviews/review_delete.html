@@ -18,14 +18,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'reviews/css/style.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <link rel="shortcut icon" href="{% static 'images/search-heart-fill.svg' %}" />
 </head>
 
-<body>
+<body class="body-background">  
     <section class="form-delete-container">
         <form method="post" class="form-delete-review">
-            <p class="form-delete-title"><h3>Deleting a review "{{ post.title }}"</h3></p>
+            <p class="form-delete-title "><h3 class="post-modify-title">Deleting a review "{{ post.title }}"</h3></p>
             {% csrf_token %}
-            <p>Are you sure you want to delete "{{ object }}"?</p>
+            <p class="post-detail-body">Are you sure you want to delete "{{ object }}"?</p>
             {{ form }}
             <button type="submit" class="btn btn-outline-success" value="Confirm">Yes, delete</button>
             <a href="{% url 'app_reviews:detail_review' post.slug %}" class="btn btn-outline-danger">Cancel</a>
@@ -37,6 +39,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+        <!-- Internal scripts -->
+        <script src="{% static 'reviews/js/darkmode_toggle.js' %}"></script>
     {% endblock scripts %}
     
 </body>

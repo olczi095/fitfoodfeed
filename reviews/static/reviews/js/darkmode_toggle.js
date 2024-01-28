@@ -28,16 +28,20 @@ function setStyleMode(mode) {
     localStorage.setItem('style-mode', mode);
 }
 
-document.getElementById('style-mode-toggle').addEventListener('click', function() {
-    const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
-
-    setStyleMode(newMode);
-});
-
 document.addEventListener('DOMContentLoaded', function() {
+    const styleModeToggle = document.getElementById('style-mode-toggle');
     const storedMode = localStorage.getItem('style-mode');
+
+    if (styleModeToggle) {
+        styleModeToggle.addEventListener('click', function() {
+            const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
+
+            setStyleMode(newMode);
+        });
+    }
+
     if (storedMode && storedMode === 'dark') {
         setStyleMode(storedMode);
     }
-});
+})

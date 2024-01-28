@@ -9,10 +9,10 @@
 {% block form %}
     <section class="form-add-container">
         <form method="post" class="form-add-review">
-            <h2>Update Review: <strong>{{ post.title }}</strong></h2>
+            <h2 class="post-modify-title">Update Review: <strong>{{ post.title }}</strong></h2>
             <br />
             {% csrf_token %}
-            <div class="form-add-border">
+            <div class="form-add-border post-detail-body">
                 {{ form|crispy}}
             </div>
             <div class="form-buttons d-flex justify-content-between">
