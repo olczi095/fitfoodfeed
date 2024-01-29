@@ -113,46 +113,52 @@ http://localhost:8000/
 
 ## Screenshots
 
-**<p align="center">MAIN PAGE</p>**
+### **<p align="center">HOMEPAGE</p>**
 
-![main-page](https://github.com/olczi095/fitfoodfeed/assets/114907948/512ba949-1c2c-44ff-81c3-fb8c527b9c4e)
-![main-page2](https://github.com/olczi095/fitfoodfeed/assets/114907948/52a96833-52c7-4aef-bcc0-aa427199e578)
+![homepage](https://github.com/olczi095/fitfoodfeed/assets/114907948/0be93307-f056-4023-acc0-eda1986791b5)
+![homepage2](https://github.com/olczi095/fitfoodfeed/assets/114907948/b1f3e121-67db-4669-beec-bda4b5c84b69)
 <br /><br />
 
-**<p align="center">PAGE WITH CUSTOM REVIEW</p>**
+### **<p align="center">HOMEPAGE IN DARK MODE</p>**
+
+![homepage-darkmode](https://github.com/olczi095/fitfoodfeed/assets/114907948/d5fd3359-dd33-46bb-b40c-212dc538846d)
+![homepage2-darkmode](https://github.com/olczi095/fitfoodfeed/assets/114907948/5b4bb44c-d617-44f5-8412-9e0fcb560235)
+<br /><br />
+
+### **<p align="center">PAGE WITH CUSTOM REVIEW</p>**
    <p align="center">Click on tags to navigate, view related posts, and participate in the comment section.</p>
    
-![review](https://github.com/olczi095/fitfoodfeed/assets/114907948/a2124689-2dbc-4106-8ce7-17e60b458760)
+![review-detail](https://github.com/olczi095/fitfoodfeed/assets/114907948/5def7be2-43fc-4dcc-95c7-b9d48922560c)
 <br /><br />
   <p align="center">Smart multilevel Commenting System (non-superuser comments require approval).</p>
   
-![comment-section](https://github.com/olczi095/bmi-calculator/assets/114907948/7b58dd01-4caf-450e-a328-7bec25837a39)
+![comment-section](https://github.com/olczi095/fitfoodfeed/assets/114907948/a3698ddc-3229-4824-974e-4e40bbf65b2f)
 <br /><br />
 
-**<p align="center">MAIN PAGE FOR AUTHORS</p>**
+### **<p align="center">MAIN PAGE FOR AUTHORS</p>**
    <p align="center">Featuring additional functionalities like edit and delete buttons for reviews.</p>
    
-![page-for-authors](https://github.com/olczi095/bmi-calculator/assets/114907948/2e324cf6-4d03-4a2e-800d-480ec676f07f)
+![homepage-for-authors](https://github.com/olczi095/fitfoodfeed/assets/114907948/56894399-0fdb-4521-8198-88850c11fafd)
 <br /><br />
 
 
-**<p align="center">UPDATE REVIEW FORM</p>**
+### **<p align="center">UPDATE REVIEW FORM</p>**
    <p align="center">One of the available review forms for authors</p>
    
-![edit-review](https://github.com/olczi095/fitfoodfeed/assets/114907948/b01d5676-7437-4b9b-ad8b-de1d5a1f34e0)
+![review-edit-form](https://github.com/olczi095/fitfoodfeed/assets/114907948/beb27b88-4350-4df1-8a22-4754fb5dd0c1)
 <br /><br />
 
 
-**<p align="center">REGISTRATION FORM</p>**
+### **<p align="center">REGISTRATION FORM</p>**
   
-![registration](https://github.com/olczi095/fitfoodfeed/assets/114907948/424212d5-7753-40d3-bba3-9fb233df2ac7)
+![registration-form](https://github.com/olczi095/fitfoodfeed/assets/114907948/82bfa61d-b834-4630-bfc3-e7960cca763a)
 <br /><br />
 
 
-**<p align="center">ADMIN PANEL (POST)</p>**
+### **<p align="center">ADMIN PANEL (POST)</p>**
    <p align="center">Default admin panel page for the Post model with associated, clickable and linked Author, Category and Tags models</p>
    
-![admin-panel](https://github.com/olczi095/fitfoodfeed/assets/114907948/a945c4fa-14a6-47e7-b41b-dabadc74e035)
+![adminpanel](https://github.com/olczi095/fitfoodfeed/assets/114907948/64b186fb-5cd0-4811-b9d3-f18902963fa3)
 <br /><br />
 
 
