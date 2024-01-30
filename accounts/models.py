@@ -19,7 +19,11 @@ class User(AbstractUser):
         default=False,
         verbose_name='author status'
     )
+    email = models.EmailField(
+        unique=True,
+        blank=False,
+        null=False
+    )
 
     def __str__(self) -> str:
         return str(self.username)
-    
