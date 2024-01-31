@@ -4,7 +4,6 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 
 from reviews.models import Post, Category, Comment
 
@@ -219,7 +218,8 @@ class CommentModelTestCase(TestCase):
     def test_superuser_comment_set_active_automatically(self):
         superuser = User.objects.create_superuser(
             username='superuser',
-            password='superuser_password'
+            password='superuser_password',
+            email='superuser@mail.com'
         )
         comment = Comment.objects.create(
             logged_user=superuser,
@@ -227,14 +227,17 @@ class CommentModelTestCase(TestCase):
             body='Body of comment'
         )
         self.assertTrue(comment.active)
-        
+
     def test_comment_with_different_post_response_to_and_post_not_added(self):
         second_review = Post.objects.create(title='Second review', body='The body.')
-        
+
         with self.assertRaises(ValidationError) as context:
             Comment.objects.create(
                 response_to=self.comment,
                 post=second_review,
                 body='Response for the main comment.'
             )
-        self.assertIn('response_to and post must be associated with the same post', str(context.exception))
+        self.assertIn(
+            'response_to and post must be associated with the same post', 
+            str(context.exception)
+        )

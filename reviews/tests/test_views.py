@@ -272,7 +272,11 @@ class PostDetailViewCommentTestCase(TestCase):
         self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
 
     def test_comment_success_message_for_superuser(self):
-        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
+        superuser = User.objects.create_superuser(
+            username='superuser',
+            password='test_superuser',
+            email='superuser@mail.com'
+        )
         self.client.force_login(superuser)
         response = self.client.post(
             self.post.get_absolute_url(),
@@ -324,7 +328,11 @@ class PostDetailViewCommentTestCase(TestCase):
         self.assertEqual(Comment.objects.count(), 0)
 
     def test_edit_comment_successfully(self):
-        superuser = User.objects.create_superuser(username='superuser', password='test_superuser')
+        superuser = User.objects.create_superuser(
+            username='superuser',
+            password='test_superuser',
+            email='superuser@mail.com'
+        )
         self.client.force_login(superuser)
         comment = Comment.objects.create(
             logged_user=superuser,
@@ -367,7 +375,7 @@ class CommentDeleteViewTestCase(TestCase):
             body='Body comment',
             active=True
         )
-    
+
     def test_comment_delete_view(self):
         self.client.force_login(self.admin)
         delete_url = reverse('app_reviews:delete_comment', kwargs={'pk': self.comment_to_delete.id})
@@ -453,16 +461,19 @@ class PostUpdateTestCase(TestCase):
         self.author = User.objects.create_user(
             username='author',
             password='xyz',
+            email='author@mail.com',
             is_author=True
         )
         self.second_author = User.objects.create_user(
             username='second_author',
             password='xyz',
+            email='second_author@mail.com',
             is_author=True
         )
         self.superuser = User.objects.create_superuser(
             username='admin',
-            password='pass'
+            password='pass',
+            email='admin@mail.com'
         )
         self.category = Category.objects.create(
             name='Peanut Butter'
@@ -476,11 +487,13 @@ class PostUpdateTestCase(TestCase):
         self.staff = User.objects.create_user(
             username='staff',
             password='abc',
+            email='staff@mail.com',
             is_staff=True
         )
         self.normal_user = User.objects.create_user(
             username='normal_user',
             password='abc',
+            email='normal_user@mail.com'
         )
 
     def test_author_can_access_update_view(self):
@@ -577,6 +590,7 @@ class PostDeleteTestCase(TestCase):
         User.objects.create_user(
             username='admin',
             password='abc',
+            email='admin@mail.com',
             is_staff=True
         )
         self.client.force_login(self.author)
@@ -592,7 +606,8 @@ class PostDeleteTestCase(TestCase):
     def test_superuser_can_access_delete_view(self):
         superuser = User.objects.create_superuser(
             username='superuser',
-            password='abc'
+            password='abc',
+            email='superuser@mail.com'
         )
         self.client.force_login(superuser)
         response = self.client.get(
@@ -608,6 +623,7 @@ class PostDeleteTestCase(TestCase):
         other_author = User.objects.create_user(
             username='other_author',
             password='xyz',
+            email='other_author@mail.com',
             is_author=True
         )
         self.client.force_login(other_author)
