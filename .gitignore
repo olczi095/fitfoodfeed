@@ -10,7 +10,7 @@ log/
 
 .env
 .idea/
-fff_venv/
+venv/
 
 .coverage
 .pylintrc
