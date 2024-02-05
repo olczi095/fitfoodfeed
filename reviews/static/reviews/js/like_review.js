@@ -14,7 +14,7 @@ $(document).ready(function(){
             },
             success: function(response){
                 const likesCounterElement = $('.likes-button h5');
-                likesCounterElement.text(response.likes_counter);
+                likesCounterElement.text(response.likes_stats_display);
                 console.log(response.liked);
                 if (response.liked) {
                     $('.likes-button .like').addClass('unlike');

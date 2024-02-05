@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -92,24 +92,27 @@ class CategoryAdminTestCase(TestCase):
         self.post1 = Post.objects.create(
             title='Post 1',
             body='The body of Post 1',
-            category=self.category
+            category=self.category,
+            status='PUB'
         )
         self.post2 = Post.objects.create(
             title='Post 2',
             body='The body of Post 2',
-            category=self.category
+            category=self.category,
+            status='PUB'
         )
         self.post3 = Post.objects.create(
             title='Post 3',
             body='The body of Post 3',
-            category=self.category
+            category=self.category,
+            status='PUB'
         )
 
-    def test_post_count_for_category(self):
+    def test_post_amount_for_category(self):
         category_model_admin = CategoryAdmin(model=Category, admin_site=AdminSite())
-        post_count = category_model_admin.post_count(self.category)
-        expected_post_count = 3
-        self.assertEqual(post_count, expected_post_count)
+        post_amount = category_model_admin.post_amount(self.category)
+        expected_post_amount = 3
+        self.assertEqual(post_amount, expected_post_amount)
 
 
 class CommentAdminTestCase(TestCase):
@@ -201,14 +204,16 @@ class CommentAdminTestCase(TestCase):
 
     def test_get_fields_new_empty_form(self):
         base_fields = [
-            'unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
+            'unlogged_user', 'logged_user', 'response_to', 
+            'email', 'post', 'body', 'active', 'level'
         ]
         self.assertEqual(
             list(self.comment_model_admin.get_fields(request=None)),
             base_fields
         )
         editable_fields = [
-            'unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active'
+            'unlogged_user', 'logged_user', 'response_to', 
+            'email', 'post', 'body', 'active'
         ]
         self.assertEqual(
             list(self.comment_model_admin.get_form(request=None).base_fields),
@@ -233,18 +238,26 @@ class CommentAdminTestCase(TestCase):
         expected_readonly_fields = [
             'logged_user', 'unlogged_user', 'response_to', 'level'
         ]
-        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=self.user_comment)
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(
+            request=None,
+            obj=self.user_comment
+        )
         self.assertEqual(actual_readonly_fields, expected_readonly_fields)
 
     def test_get_readonly_fields_for_unlogged_user_comment(self):
         expected_readonly_fields = [
             'logged_user', 'unlogged_user', 'response_to', 'level'
         ]
-        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=self.random_comment)
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(
+            request=None,
+            obj=self.random_comment
+        )
         self.assertEqual(actual_readonly_fields, expected_readonly_fields)
-        
+
     def test_get_changeform_initial_data(self):
-        initial_data = self.comment_model_admin.get_changeform_initial_data(request=None)
+        initial_data = self.comment_model_admin.get_changeform_initial_data(
+            request=None
+        )
         self.assertEqual(initial_data, {'unlogged_user': ''})
 
     def test_get_readonly_fields_for_responsed_comment(self):
@@ -256,5 +269,8 @@ class CommentAdminTestCase(TestCase):
         expected_fields = [
             'logged_user', 'unlogged_user', 'response_to', 'post', 'level'
         ]
-        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(request=None, obj=responsed_comment)
+        actual_readonly_fields = self.comment_model_admin.get_readonly_fields(
+            request=None,
+            obj=responsed_comment
+        )
         self.assertEqual(expected_fields, actual_readonly_fields)

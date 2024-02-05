@@ -36,39 +36,6 @@ from .forms import PostForm, CommentForm
 
 User = get_user_model()
 
-def count_post_likes(post: Post) -> str:
-    likes_count = post.likes_counter()
-    likes_counter = '1 Like' if likes_count == 1 else f'{likes_count} Likes'
-    return likes_counter
-
-def get_popular_posts(amount: int) -> list[Post]:
-    posts_with_comment_counters = {}
-
-    for post in Post.objects.filter(status='PUB'):
-        posts_with_comment_counters[post] = post.comment_counter()
-
-    popular_posts_with_comment_counters = sorted(
-        posts_with_comment_counters.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )
-
-    # Get just posts without comment counters
-    popular_posts = [
-        popular_post[0] for popular_post
-        in popular_posts_with_comment_counters
-    ][:amount]
-
-    return popular_posts
-
-def get_recent_comments(amount: int) -> list[Comment]:
-    recent_comments_qs: QuerySet[Comment] = Comment.objects.filter(active=True) \
-        .order_by('-pub_datetime')[:3]
-    recent_comments: list[Comment] = list(recent_comments_qs)[:amount]
-
-    return recent_comments
-
-
 class PostListView(ListView[Model]):
     model = Post
     template_name = 'reviews/home.html'
@@ -78,8 +45,8 @@ class PostListView(ListView[Model]):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['popular_posts'] = get_popular_posts(5)
-        context['recent_comments'] = get_recent_comments(3)
+        context['popular_posts'] = Post.get_popular_posts(5)
+        context['recent_comments'] = Comment.get_recent_comments(3)
         return context
 
 
@@ -91,15 +58,13 @@ class TaggedPostsListView(ListView[Post]):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['popular_posts'] = get_popular_posts(5)
-        context['recent_comments'] = get_recent_comments(3)
+        context['popular_posts'] = Post.get_popular_posts(5)
+        context['recent_comments'] = Comment.get_recent_comments(3)
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
         tag_name = self.kwargs['tag_name']
-        tag = get_object_or_404(Tag, name=tag_name)
-        queryset = Post.objects.filter(status='PUB').filter(tags=tag)
-        return queryset
+        return Post.get_tagged_posts(tag_name)
 
 
 class TagsListView(ListView[Model]):
@@ -119,28 +84,16 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
             raise Http404("Post not found.")
         return self.object.get_absolute_url()
 
-    def get_related_posts(self) -> list[Post]:
-        """
-        Gets random posts that have the same tag
-        as post in order to propose them to the user.
-        """
-        post_tags = self.object.tags.all() if isinstance(self.object, Post) else None
-        all_related_posts = list(
-            Post.objects.filter(tags__in=post_tags).exclude(pk=self.object.pk).distinct()
-        )
-        return all_related_posts[:3]
-
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
         if isinstance(self.object, Post):
-            top_level_comments = self.object.comments.filter(active=True, response_to=None)
-            context['comments'] = top_level_comments
-            context['post_likes'] = count_post_likes(self.object)
+            context['comments'] = self.object.get_top_level_comments()
+            context['post_likes'] = self.object.display_likes_stats()
 
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
-        context['related_posts'] = self.get_related_posts()
+        context['related_posts'] = self.object.get_related_posts(3)
         return context
 
     def post(self, request: HttpRequest, *args: Any, **kwargs: Any
@@ -193,19 +146,12 @@ class PostLikeView(View):
         pk: int | None = kwargs.get('pk')
         post: Post = get_object_or_404(Post, pk=pk)
         user: AccountsUser | AnonymousUser = self.request.user
-        liked: bool = False
-
-        if post.likes.filter(pk=str(user.pk)).exists() and isinstance(user, User):
-            post.likes.remove(user)
-            liked = False
-        elif isinstance(user, User):
-            post.likes.add(user)
-            liked = True
+        liked: bool = post.toggle_like(user)
 
         data = {
             'url': post.get_absolute_url(),
             'liked': liked,
-            'likes_counter': count_post_likes(post)
+            'likes_stats_display': post.display_likes_stats()
         }
         return JsonResponse(data)
 
@@ -302,15 +248,14 @@ class CategoryListView(ListView[Model]):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['popular_posts'] = get_popular_posts(5)
-        context['recent_comments'] = get_recent_comments(3)
+        context['popular_posts'] = Post.get_popular_posts(5)
+        context['recent_comments'] = Comment.get_recent_comments(3)
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
         category_name = self.kwargs['category_name']
         category = get_object_or_404(Category, slug=category_name)
-        queryset = Post.objects.filter(status='PUB', category=category)
-        return queryset
+        return category.get_posts()
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):

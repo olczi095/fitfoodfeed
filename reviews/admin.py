@@ -51,7 +51,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
 
     @admin_attr_decorator
     def likes_counter_model(self, obj: Post) -> Any:
-        return obj.likes_counter()
+        return obj.likes_stats
 
     @admin_attr_decorator
     def category_model(self, obj: Post) -> str:
@@ -100,12 +100,12 @@ class PostAdmin(admin.ModelAdmin[Model]):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin[Model]):
-    list_display = ['name', 'slug', 'post_count']
+    list_display = ['name', 'slug', 'post_amount']
     list_filter = ['name']
     search_fields = ['name']
 
-    def post_count(self, obj: Category) -> int:
-        return obj.post_set.count()
+    def post_amount(self, obj: Category) -> int:
+        return obj.get_posts_amount()
 
 
 @admin.register(Comment)
@@ -130,7 +130,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
             return ['unlogged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
         else:
             return ['unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
-    
+
     def get_readonly_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
         if obj and isinstance(obj, Comment):
             fields = ['logged_user', 'unlogged_user', 'response_to', 'post', 'level']
@@ -138,7 +138,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
                     fields.remove('post')
             return fields
         return ['level']
-    
+
     def author(self, obj: Comment) -> str | None:
         """
         Allows to redirect to the "user change" admin panel 

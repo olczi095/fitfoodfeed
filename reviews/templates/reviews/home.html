@@ -40,10 +40,10 @@
                         <h1><a href="{{ post.get_absolute_url }}" class="post-title">{{ post.title }}</a></h1>
                         <a href="{{ post.category.get_absolute_url }}" class="category-name">{{ post.category.name|upper }}</a>
                         <span class="post-info">{{ post.author }} / {{ post.pub_date }} 
-                            {% if post.comment_counter == 1 %}
-                                / {{ post.comment_counter }} comment
+                            {% if post.comment_stats == 1 %}
+                                / {{ post.comment_stats }} comment
                             {% else %}
-                                / {{ post.comment_counter }} comments
+                                / {{ post.comment_stats }} comments
                             {% endif %}
                         </span> 
 

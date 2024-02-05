@@ -1,6 +1,7 @@
 from typing import Any
 
 from django_resized import ResizedImageField
+from django.contrib.auth.models import AnonymousUser
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -11,6 +12,7 @@ from django.core.validators import MaxValueValidator
 from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 
+from accounts.models import User as AccountsUser  # Importing User directly for type hints
 from accounts.validators import validate_avatar_type
 
 
@@ -33,6 +35,7 @@ def convert_to_slug(text: str) -> str:
         'ż': 'z'
     }
     text_without_polish_signs = ''
+
     for sign in text:
         if sign in polish_signs_conversion:
             text_without_polish_signs += polish_signs_conversion[sign]
@@ -57,6 +60,17 @@ class Category(models.Model):
 
     def get_absolute_url(self) -> str:
         return reverse("app_reviews:category", kwargs={"category_name": self.slug})
+
+    def get_posts(self) -> QuerySet['Post']:
+        return self.posts.filter(status='PUB')
+
+    def get_posts_amount(self) -> int:
+        return self.get_posts().count()
+
+
+class TaggedPostsManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(status='PUB')
 
 
 class Post(models.Model):
@@ -90,7 +104,8 @@ class Post(models.Model):
         on_delete=models.SET_DEFAULT,
         default=None,
         null=True,
-        blank=True
+        blank=True,
+        related_name='posts'
     )
     meta_description = models.CharField(max_length=150, blank=True)
     body = models.TextField()
@@ -104,15 +119,14 @@ class Post(models.Model):
         help_text="A comma-separated list of tags (case-insensitive)."
     )
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    objects = models.Manager()
+    tagged_posts = TaggedPostsManager()
 
     class Meta:
         ordering = ['-pub_date']
 
     def __str__(self) -> str:
         return self.title
-
-    def get_absolute_url(self) -> str:
-        return reverse("app_reviews:detail_review", args=[str(self.slug)])
 
     def save(self, *args: Any, **kwargs: Any) -> None:
         if not self.slug:
@@ -122,11 +136,80 @@ class Post(models.Model):
             self.category = default_category
         super().save(*args, **kwargs)
 
-    def comment_counter(self) -> int:
+    def get_absolute_url(self) -> str:
+        return reverse("app_reviews:detail_review", args=[str(self.slug)])
+
+    @property
+    def comment_stats(self) -> int:
         return self.comments.filter(active=True).count()
 
-    def likes_counter(self) -> int:
+    @property
+    def likes_stats(self) -> int:
         return self.likes.count()
+
+    def display_likes_stats(self) -> str:
+        likes_stats = self.likes_stats
+        likes_stats_display = '1 Like' if likes_stats == 1 else f'{likes_stats} Likes'
+        return likes_stats_display
+
+    @classmethod
+    def get_tagged_posts(cls, tag_name: str) -> QuerySet['Post']:
+        return cls.tagged_posts.all().filter(tags__name=tag_name)
+
+    @classmethod
+    def get_popular_posts(cls, amount: int) -> list['Post']:
+        posts_with_comment_counters = {}
+
+        for post in cls.objects.filter(status='PUB'):
+            posts_with_comment_counters[post] = post.comment_stats
+
+        popular_posts_with_comment_counters = sorted(
+            posts_with_comment_counters.items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        # Get just posts without comment counters
+        popular_posts = [
+            popular_post[0] for popular_post
+            in popular_posts_with_comment_counters
+        ][:amount]
+
+        return popular_posts
+
+    def get_related_posts(self, amount: int) -> list['Post']:
+        """
+        Gets random posts that have the same tag
+        as post in order to propose them to the user.
+        """
+        post_tags = self.tags.all()
+        all_related_posts = list(
+            Post.objects.filter(tags__in=post_tags).exclude(pk=self.pk).distinct()
+        )
+        return all_related_posts[:amount]
+
+    def get_top_level_comments(self) -> QuerySet['Comment']:
+        """
+        Gets top level comments for the current post.
+        """
+        return self.comments.filter(active=True).filter(response_to=None)
+
+    def toggle_like(self, user: AccountsUser | AnonymousUser) -> None:
+        """
+        Toggle like for the given user.
+        """
+
+        if self.likes.filter(pk=user.pk).exists():
+            self.likes.remove(user)
+            return False
+        self.likes.add(user)
+        return True
+
+
+class CommentManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(active=True) \
+            .order_by('-pub_datetime')
 
 
 class Comment(models.Model):
@@ -161,10 +244,8 @@ class Comment(models.Model):
     body = models.TextField()
     active = models.BooleanField(default=False)
     level = models.PositiveIntegerField(default=1, validators=[MaxValueValidator(8)])
-
-    @property
-    def active_replies(self) -> QuerySet['Comment']:
-        return self.replies.filter(active=True)
+    objects = models.Manager()
+    recent_comments = CommentManager()
 
     class Meta:
         ordering = ['-pub_datetime']
@@ -187,9 +268,18 @@ class Comment(models.Model):
 
         if self.response_to:
             self.level = self.response_to.level + 1
-            
+
         if self.response_to and self.response_to.post != self.post:
-                raise ValidationError('Fields response_to and post must be associated with the same post.')
+                raise ValidationError(
+                    'Fields response_to and post must be associated with the same post.'
+                )
 
         return super().save(*args, **kwargs)
-    
+
+    @property
+    def active_replies(self) -> QuerySet['Comment']:
+        return self.replies.filter(active=True)
+
+    @classmethod
+    def get_recent_comments(cls, amount: int) -> list['Comment']:
+        return list(cls.recent_comments.all())[:amount]
