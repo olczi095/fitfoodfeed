@@ -11,6 +11,7 @@ def validate_avatar_type(image: Any) -> None:
     if file_mime_type not in allowed_image_types:
         raise ValidationError("Invalid image type.")
 
+
 def validate_avatar_dimensions(image: Any) -> None:
     """Validates if the avatar's image dimensions are in the allowed range."""
     min_width, max_width = 100, 500

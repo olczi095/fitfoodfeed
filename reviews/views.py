@@ -1,40 +1,28 @@
 from typing import Any, Dict
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin,
+                                        UserPassesTestMixin)
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.mixins import (
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    UserPassesTestMixin
-)
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    View
-)
-from django.views.generic.edit import FormMixin
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-    JsonResponse,
-    Http404,
-)
 from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView, View)
+from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
-from accounts.models import User as AccountsUser  # Importing User directly for type hints
-from .models import Post, Category, Comment
-from .forms import PostForm, CommentForm
+from accounts.models import \
+    User as AccountsUser  # Importing User directly for type hints
 
+from .forms import CommentForm, PostForm
+from .models import Category, Comment, Post
 
 User = get_user_model()
+
 
 class PostListView(ListView[Model]):
     model = Post
@@ -124,14 +112,18 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
             if comment_parent:
                 new_comment.response_to = comment_parent
 
-            if isinstance(self.request.user, User) and self.request.user.is_authenticated:
+            if (
+                isinstance(self.request.user, User)
+                and self.request.user.is_authenticated
+            ):
                 new_comment.logged_user = self.request.user
                 new_comment.unlogged_user = None
 
             self.success_message = (
-                "Comment successfully <strong>added</strong>." if self.request.user.is_staff
-                else "Comment successfully <strong>submitted</strong>. \
-                    It will be published after moderation and validation."
+                "Comment successfully <strong>added</strong>."
+                if self.request.user.is_staff
+                else "Comment successfully <strong>submitted</strong>."
+                "It will be published after moderation and validation."
             )
 
             if isinstance(new_comment, Comment) and isinstance(self.object, Post):
@@ -142,7 +134,9 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
 
 
 class PostLikeView(View):
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+    def post(
+        self, request: HttpRequest, *args: Any, **kwargs: Any
+    ) -> JsonResponse:
         pk: int | None = kwargs.get('pk')
         post: Post = get_object_or_404(Post, pk=pk)
         user: AccountsUser | AnonymousUser = self.request.user
@@ -171,9 +165,11 @@ class PostCreateView(
     success_message = "Post <strong>%(title)s</strong> added successfully."
 
     def form_valid(self, form: BaseForm) -> HttpResponse:
-        if isinstance(form, PostForm) and \
-            isinstance(form.instance, Post) and \
-            isinstance(self.request.user, User):
+        if (
+            isinstance(form, PostForm) and
+            isinstance(form.instance, Post) and
+            isinstance(self.request.user, User)
+        ):
             form.instance.author = self.request.user
         return super().form_valid(form)
 

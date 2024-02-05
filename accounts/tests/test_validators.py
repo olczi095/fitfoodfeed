@@ -1,11 +1,11 @@
 import io
-from PIL import Image
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.forms import ValidationError
 from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 
-from accounts.validators import (validate_avatar_type, validate_avatar_dimensions)
+from accounts.validators import validate_avatar_dimensions, validate_avatar_type
 
 
 class AvatarTypeValidatorTestCase(TestCase):
@@ -16,7 +16,7 @@ class AvatarTypeValidatorTestCase(TestCase):
     def test_image_with_invalid_data_returns_error(self):
         image_with_invalid_data = SimpleUploadedFile(
             "test_image.jpg",
-            b"invalid_image_data", 
+            b"invalid_image_data",
             content_type="image/jpeg"
         )
         with self.assertRaises(ValidationError):
@@ -26,7 +26,7 @@ class AvatarTypeValidatorTestCase(TestCase):
         self.image.save(self.image_buffer, "JPEG")
         image_data = self.image_buffer.getvalue()
         image_with_valid_type = SimpleUploadedFile(
-            "test_image.jpg", 
+            "test_image.jpg",
             image_data,
             content_type="image/jpeg"
         )
@@ -36,7 +36,7 @@ class AvatarTypeValidatorTestCase(TestCase):
         self.image.save(self.image_buffer, "PDF")
         image_data = self.image_buffer.getvalue()
         image_with_invalid_type = SimpleUploadedFile(
-            "test_image.pdf", 
+            "test_image.pdf",
             image_data,
             content_type="document/pdf"
         )
@@ -47,7 +47,7 @@ class AvatarTypeValidatorTestCase(TestCase):
         self.image.save(self.image_buffer, "GIF")
         image_data = self.image_buffer.getvalue()
         image_with_invalid_type = SimpleUploadedFile(
-            "test_image.gif", 
+            "test_image.gif",
             image_data,
             content_type="image/gif"
         )

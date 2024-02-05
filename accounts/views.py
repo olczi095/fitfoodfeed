@@ -1,19 +1,19 @@
 from typing import Type
 
 from django.conf import settings
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
-from django.http import HttpResponse
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import BaseForm
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
 
 from .forms import CustomUserCreationForm
 
 
-class RegisterView(SuccessMessageMixin, CreateView): # type: ignore
+class RegisterView(SuccessMessageMixin, CreateView):  # type: ignore
     template_name: str = 'registration/register.html'
     form_class: Type[CustomUserCreationForm] = CustomUserCreationForm
     success_url: str = reverse_lazy(settings.LOGIN_URL)

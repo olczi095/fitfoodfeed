@@ -1,12 +1,11 @@
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 from django.forms import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 
-from reviews.models import Post, Category, Comment
-
+from reviews.models import Category, Comment, Post
 
 User = get_user_model()
 
@@ -120,13 +119,17 @@ class PostFunctionalityTestCase(TestCase):
             author=self.author,
             body='test_body',
             category=self.category
-    )
+        )
 
     def test_comment_counter(self):
         amount_of_no_comments = self.post.comment_stats
         self.assertEqual(amount_of_no_comments, 0)
 
-        comment = Comment.objects.create(post=self.post, body='Test comment.', active=True)
+        comment = Comment.objects.create(
+            post=self.post,
+            body='Test comment.',
+            active=True
+        )
         comment.save()
         self.post.save()
         amount_of_comments = self.post.comment_stats
@@ -171,13 +174,17 @@ class CategoryModelTestCase(TestCase):
 
     def test_get_absolute_url(self):
         expected_category_absolute_url = '/reviews/category/' + self.category.slug + '/'
-        self.assertEqual(self.category.get_absolute_url(), expected_category_absolute_url)
+        self.assertEqual(
+            self.category.get_absolute_url(),
+            expected_category_absolute_url
+        )
 
 
 class CommentModelExistenceTestCase(TestCase):
     def test_comment_model_exists(self):
         comments = Comment.objects.all()
         self.assertEqual(comments.count(), 0)
+
 
 class CommentModelTestCase(TestCase):
     def setUp(self):
@@ -212,7 +219,8 @@ class CommentModelTestCase(TestCase):
 
     def test_string_representation_unlogged_user(self):
         comment = Comment.objects.create(post=self.review, body='Body of comment.')
-        expected_representation = f"Comment by {comment.unlogged_user} on {comment.post.title}."
+        expected_representation = f"Comment by {comment.unlogged_user}" \
+            "on {comment.post.title}."
         self.assertEqual(str(comment), expected_representation)
 
     def test_superuser_comment_set_active_automatically(self):
@@ -238,6 +246,6 @@ class CommentModelTestCase(TestCase):
                 body='Response for the main comment.'
             )
         self.assertIn(
-            'response_to and post must be associated with the same post', 
+            'response_to and post must be associated with the same post',
             str(context.exception)
         )

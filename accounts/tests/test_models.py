@@ -1,6 +1,5 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
-
+from django.test import TestCase
 
 User = get_user_model()
 
@@ -32,5 +31,7 @@ class UserModelTestCase(TestCase):
 
     def test_is_author_field_exists(self):
         self.assertTrue(hasattr(self.user, 'is_author'))
-        self.assertEqual(self.user._meta.get_field('is_author').verbose_name, 'author status')
-        
+        self.assertEqual(
+            self.user._meta.get_field('is_author').verbose_name,
+            'author status'
+        )

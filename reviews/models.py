@@ -1,22 +1,23 @@
 from typing import Any
 
-from django_resized import ResizedImageField
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator
-from django.contrib.auth import get_user_model
+from django_resized import ResizedImageField
 from taggit.managers import TaggableManager
 
-from accounts.models import User as AccountsUser  # Importing User directly for type hints
+from accounts.models import \
+    User as AccountsUser  # Importing User directly for type hints
 from accounts.validators import validate_avatar_type
 
-
 User = get_user_model()
+
 
 def convert_to_slug(text: str) -> str:
     """
@@ -79,7 +80,6 @@ class Post(models.Model):
         DRAFT = 'DRAFT', 'Draft'
         PREPARED_TO_PUBLISH = 'TO_PUB', 'Prepared to publish'
         PUBLISHED = 'PUB', 'Published'
-
 
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
@@ -270,9 +270,9 @@ class Comment(models.Model):
             self.level = self.response_to.level + 1
 
         if self.response_to and self.response_to.post != self.post:
-                raise ValidationError(
-                    'Fields response_to and post must be associated with the same post.'
-                )
+            raise ValidationError(
+                'Fields response_to and post must be associated with the same post.'
+            )
 
         return super().save(*args, **kwargs)
 

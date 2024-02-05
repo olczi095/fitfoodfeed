@@ -2,20 +2,20 @@ from typing import Any, Protocol
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.utils.html import format_html
-from django.http import HttpRequest
 from django.db.models import Model, QuerySet
 from django.forms import ModelForm
+from django.http import HttpRequest
+from django.urls import reverse
+from django.utils.html import format_html
 
-from .models import Post, Category, Comment
-
+from .models import Category, Comment, Post
 
 User = get_user_model()
 
 
 class AdminAttributes(Protocol):
     short_description: str
+
 
 def admin_attr_decorator(func: Any) -> Any:
     """A decorator for admin attributes. (type hints)"""
@@ -25,13 +25,13 @@ def admin_attr_decorator(func: Any) -> Any:
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin[Model]):
     list_display = [
-        'pk', 
-        'title', 
-        'author_model', 
-        'likes_counter_model', 
-        'category_model', 
-        'tag_list', 
-        'pub_date', 
+        'pk',
+        'title',
+        'author_model',
+        'likes_counter_model',
+        'category_model',
+        'tag_list',
+        'pub_date',
         'status'
     ]
     list_display_links = ['title']
@@ -44,7 +44,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
         """Allows to redirect to the "user change" admin panel."""
         if obj.author:
             author_change_url = reverse(
-                'admin:accounts_user_change', 
+                'admin:accounts_user_change',
                 args=[obj.author.pk]
             )
         return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
@@ -58,7 +58,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
         """Allows to redirect to the "category change" admin panel. """
         if obj.category:
             category_change_url = reverse(
-                'admin:reviews_category_change', 
+                'admin:reviews_category_change',
                 args=[obj.category.pk]
             )
         return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
@@ -84,11 +84,13 @@ class PostAdmin(admin.ModelAdmin[Model]):
             request: HttpRequest,
             obj: Model,
             form: ModelForm[Model],
-            change: bool
-        ) -> None:
+            change: bool) -> None:
 
-        if isinstance(obj, Post) and obj.author is None and \
-            isinstance(request.user, User):
+        if (
+            isinstance(obj, Post)
+            and obj.author is None
+            and isinstance(request.user, User)
+        ):
             obj.author = request.user
         return super().save_model(request, obj, form, change)
 
@@ -111,11 +113,11 @@ class CategoryAdmin(admin.ModelAdmin[Model]):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin[Model]):
     list_display = [
-        'author', 
-        'comment', 
-        'active', 
-        'post_title', 
-        'email', 
+        'author',
+        'comment',
+        'active',
+        'post_title',
+        'email',
         'datetime',
         'pk'
     ]
@@ -125,31 +127,44 @@ class CommentAdmin(admin.ModelAdmin[Model]):
 
     def get_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
         if obj and isinstance(obj, Comment) and obj.logged_user:
-            return ['logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
-        elif obj and isinstance(obj, Comment) and obj.unlogged_user:
-            return ['unlogged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
+            return [
+                'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
+                ]
+        elif obj and isinstance(obj, Comment) and \
+                obj.unlogged_user:
+            return [
+                'unlogged_user', 'response_to', 'email',
+                'post', 'body', 'active', 'level'
+            ]
         else:
-            return ['unlogged_user', 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level']
+            return [
+                'unlogged_user', 'logged_user', 'response_to',
+                'email', 'post', 'body', 'active', 'level'
+            ]
 
-    def get_readonly_fields(self, request: HttpRequest, obj: Model | None = None) -> list:
+    def get_readonly_fields(
+        self, request: HttpRequest, obj: Model | None = None
+    ) -> list:
         if obj and isinstance(obj, Comment):
             fields = ['logged_user', 'unlogged_user', 'response_to', 'post', 'level']
             if obj.response_to is None:
-                    fields.remove('post')
+                fields.remove('post')
             return fields
         return ['level']
 
     def author(self, obj: Comment) -> str | None:
         """
-        Allows to redirect to the "user change" admin panel 
+        Allows to redirect to the "user change" admin panel
         if the author is a registered user.
         """
         if obj.logged_user:
             logged_user_change_url = reverse(
-                'admin:accounts_user_change', 
+                'admin:accounts_user_change',
                 args=[obj.logged_user.pk]
             )
-            return format_html(f'<a href="{logged_user_change_url}">{obj.logged_user}</a>')
+            return format_html(
+                f'<a href="{logged_user_change_url}">{obj.logged_user}</a>'
+            )
         return obj.unlogged_user
 
     def comment(self, obj: Comment) -> str:
@@ -171,20 +186,15 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     def save_model(
-            self,
-            request: HttpRequest,
-            obj: Model,
-            form: ModelForm[Comment],
-            change: bool
-        ) -> None:
+        self, request: HttpRequest, obj: Model, form: ModelForm[Comment], change: bool
+    ) -> None:
         if isinstance(obj, Comment) and obj.logged_user:
             obj.unlogged_user = None
         return super().save_model(request, obj, form, change)
 
     def get_changeform_initial_data(
-            self,
-            request: HttpRequest
-        ) -> dict[str, str | list[str]]:
+        self, request: HttpRequest
+    ) -> dict[str, str | list[str]]:
         return {'unlogged_user': ''}
 
     datetime.short_description = "DATE / TIME"

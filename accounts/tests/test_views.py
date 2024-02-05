@@ -1,13 +1,12 @@
-from django.test import TestCase
-from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
+from django.test import TestCase
+from django.urls import reverse
 from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from accounts.forms import CustomUserCreationForm
-
 
 User = get_user_model()
 
@@ -39,6 +38,7 @@ class RegisterTestCase(TestCase):
         response = self.client.post(self.register_url, self.valid_data, follow=True)
         self.assertRedirects(response, reverse(settings.LOGIN_URL))
 
+
 class LoginTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -58,7 +58,7 @@ class LoginTestCase(TestCase):
     def test_login_redirect_home(self):
         response = self.client.post(
             self.login_url,
-            {'username':'admin', 'password':'asdf1234'},
+            {'username': 'admin', 'password': 'asdf1234'},
             follow=True
         )
         self.assertRedirects(response, self.home_url)
@@ -66,7 +66,7 @@ class LoginTestCase(TestCase):
     def test_valid_login_display_success_message(self):
         response = self.client.post(
             self.login_url,
-            {'username':'admin', 'password':'asdf1234'},
+            {'username': 'admin', 'password': 'asdf1234'},
             follow=True
         )
         success_message = "Hello, <strong>admin</strong>!"
@@ -75,7 +75,7 @@ class LoginTestCase(TestCase):
     def test_invalid_login_stay_on_page(self):
         response = self.client.post(
             self.login_url,
-            {'username':'incorrect_username', 'password':'incorrect_password'},
+            {'username': 'incorrect_username', 'password': 'incorrect_password'},
             follow=True
         )
         self.assertTrue(response.status_code, 200)
@@ -84,7 +84,7 @@ class LoginTestCase(TestCase):
     def test_invalid_username_display_error_message(self):
         response = self.client.post(
             self.login_url,
-            {'username':'incorrect_username', 'password':'asdf1234'},
+            {'username': 'incorrect_username', 'password': 'asdf1234'},
             follow=True
         )
         error_message = "Invalid username or password."
@@ -93,7 +93,7 @@ class LoginTestCase(TestCase):
     def test_invalid_password_display_error_message(self):
         response = self.client.post(
             self.login_url,
-            {'username':'admin', 'password':'incorrect_password'},
+            {'username': 'admin', 'password': 'incorrect_password'},
             follow=True
         )
         error_message = "Invalid username or password."
@@ -129,7 +129,7 @@ class PasswordResetViewTestCase(TestCase):
         uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
         token = default_token_generator.make_token(self.user)
         reset_url = reverse(
-            'app_accounts:password_reset_confirm', 
+            'app_accounts:password_reset_confirm',
             kwargs={'token': token, 'uidb64': uidb64}
         )
         response = self.client.get(reset_url)
@@ -174,7 +174,11 @@ class PasswordChangeViewTestCase(TestCase):
             'new_password1': 'new_test_password',
             'new_password2': 'new_test_password'
         }
-        response = self.client.post(reverse('app_accounts:password_change'), data=data, follow=True)
+        response = self.client.post(
+            reverse('app_accounts:password_change'),
+            data=data,
+            follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'password_change/password_change_done.html')
         self.assertRedirects(

@@ -1,13 +1,13 @@
 from typing import Any, Protocol
 
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import User as AccountsUser  # Importing User directly for type hints
 
-
 User = get_user_model()
+
 
 def admin_attr_decorator(func: Any) -> Any:
     return func
@@ -20,17 +20,17 @@ class AdminAttributes(Protocol):
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     list_display: list[Any] = [
-        'display_user', 
-        'display_groups', 
-        'email', 
-        'is_author', 
+        'display_user',
+        'display_groups',
+        'email',
+        'is_author',
         'is_staff',
     ]
     fieldsets: list[Any] = [
         (
             'Identification Data',
             {
-                'fields': ['username', 'password', 'first_name', 'last_name', 'email'] 
+                'fields': ['username', 'password', 'first_name', 'last_name', 'email']
             }
         ),
         (

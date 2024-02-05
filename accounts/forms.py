@@ -6,7 +6,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .models import User as AccountsUser  # Importing User directly for type hints
 
-
 User = get_user_model()
 
 
@@ -17,10 +16,10 @@ class CustomUserCreationForm(UserCreationForm):  # type: ignore
     class Meta:
         model: Type[AccountsUser] = User
         fields: tuple[str, ...] = (
-            'username', 
-            'password1', 
-            'password2', 
-            'first_name', 
+            'username',
+            'password1',
+            'password2',
+            'first_name',
             'last_name',
             'email'
         )

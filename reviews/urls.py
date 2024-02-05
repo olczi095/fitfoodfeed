@@ -1,23 +1,14 @@
 from django.urls import path
 
-from .views import (
-    PostListView,
-    PostDetailView,
-    PostCreateView,
-    PostUpdateView,
-    PostDeleteView,
-    TaggedPostsListView,
-    TagsListView,
-    CategoryListView,
-    PostLikeView,
-    CommentDeleteView
-)
+from .views import (CategoryListView, CommentDeleteView, PostCreateView, PostDeleteView,
+                    PostDetailView, PostLikeView, PostListView, PostUpdateView,
+                    TaggedPostsListView, TagsListView)
 
 app_name = 'app_reviews'
 
 urlpatterns = [
     path('', PostListView.as_view(), name='home'),
-    path('tags/', TagsListView.as_view(),name='tags'),
+    path('tags/', TagsListView.as_view(), name='tags'),
     path('create-review/', PostCreateView.as_view(), name='create_review'),
     path('update-review/<int:pk>/', PostUpdateView.as_view(), name='update_review'),
     path('delete-review/<int:pk>/', PostDeleteView.as_view(), name='delete_review'),
@@ -25,5 +16,6 @@ urlpatterns = [
     path('tag/<str:tag_name>/', TaggedPostsListView.as_view(), name='tag'),
     path('<slug:slug>/', PostDetailView.as_view(), name='detail_review'),
     path('like/<int:pk>/', PostLikeView.as_view(), name='like_post'),
-    path('comment/delete/<int:pk>/', CommentDeleteView.as_view(), name='delete_comment'),
+    path('comment/delete/<int:pk>/', CommentDeleteView.as_view(),
+         name='delete_comment'),
 ]

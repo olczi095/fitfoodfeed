@@ -1,9 +1,8 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.admin.sites import AdminSite
+from django.contrib.auth import get_user_model
+from django.test import TestCase
 
 from accounts.admin import UserAdmin
-
 
 User = get_user_model()
 

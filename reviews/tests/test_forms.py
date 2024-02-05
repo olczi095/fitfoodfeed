@@ -7,11 +7,12 @@ class PostFormTestCase(TestCase):
     def test_post_form_valid(self):
         valid_data = {
             'title': 'Lorem Ipsum',
-            'body': 
-                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. \
-                Lorem Ipsum has been the industry\'s standard dummy text \
-                ever since the 1500s, when an unknown printer took a galley of type \
-                and scrambled it to make a type specimen book.',
+            'body':
+                'Lorem Ipsum is simply dummy text of the printing '
+                'and typesetting industry. '
+                'Lorem Ipsum has been the industry\'s standard dummy text '
+                'ever since the 1500s, when an unknown printer took a galley of type '
+                'and scrambled it to make a type specimen book.',
             'status': 'DRAFT'
         }
         post_form = PostForm(valid_data)
@@ -20,12 +21,13 @@ class PostFormTestCase(TestCase):
 
     def test_post_form_invalid(self):
         invalid_data_without_title = {
-                'body':
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. \
-                    Lorem Ipsum has been the industry\'s standard dummy text \
-                    ever since the 1500s, when an unknown printer took a galley of type \
-                    and scrambled it to make a type specimen book.',
-                }
+            'body':
+                'Lorem Ipsum is simply dummy text of the printing '
+                'and typesetting industry. '
+                'Lorem Ipsum has been the industry\'s standard dummy text '
+                'ever since the 1500s, when an unknown printer took a galley '
+                'of type and scrambled it to make a type specimen book.',
+        }
         invalid_data_without_body = {
                 'title': 'Lorem Ipsum'
             }

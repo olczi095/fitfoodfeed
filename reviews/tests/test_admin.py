@@ -1,17 +1,17 @@
 from unittest.mock import Mock
 
-from django.test import TestCase
 from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 from django.utils import timezone
 from django.utils.html import strip_tags
 from taggit.models import Tag
 
-from reviews.models import Post, Category, Comment
-from reviews.admin import PostAdmin, CategoryAdmin, CommentAdmin
-
+from reviews.admin import CategoryAdmin, CommentAdmin, PostAdmin
+from reviews.models import Category, Comment, Post
 
 User = get_user_model()
+
 
 class PostAdminTestCase(TestCase):
     def setUp(self):
@@ -67,7 +67,11 @@ class PostAdminTestCase(TestCase):
 
     def test_assign_author_automatically_to_creating_post(self):
         request = Mock(user=self.author)
-        self.post_model_admin.save_model(request, self.another_review, PostAdmin.form, change=False)
+        self.post_model_admin.save_model(
+            request, self.another_review,
+            PostAdmin.form,
+            change=False
+        )
         new_review = Post.objects.get(pk=self.another_review.pk)
         self.assertEqual(new_review.author, self.author)
 
@@ -117,7 +121,11 @@ class CategoryAdminTestCase(TestCase):
 
 class CommentAdminTestCase(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='user', password='xyz', email='user@mail.com')
+        self.user = User.objects.create_user(
+            username='user',
+            password='xyz',
+            email='user@mail.com'
+        )
         self.review = Post.objects.create(title='New review', body='The body.')
         self.user_comment = Comment.objects.create(
             logged_user=self.user,
@@ -204,7 +212,7 @@ class CommentAdminTestCase(TestCase):
 
     def test_get_fields_new_empty_form(self):
         base_fields = [
-            'unlogged_user', 'logged_user', 'response_to', 
+            'unlogged_user', 'logged_user', 'response_to',
             'email', 'post', 'body', 'active', 'level'
         ]
         self.assertEqual(
@@ -212,7 +220,7 @@ class CommentAdminTestCase(TestCase):
             base_fields
         )
         editable_fields = [
-            'unlogged_user', 'logged_user', 'response_to', 
+            'unlogged_user', 'logged_user', 'response_to',
             'email', 'post', 'body', 'active'
         ]
         self.assertEqual(
@@ -224,14 +232,20 @@ class CommentAdminTestCase(TestCase):
         expected_fields = [
             'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
         ]
-        actual_fields = self.comment_model_admin.get_fields(request=None, obj=self.user_comment)
+        actual_fields = self.comment_model_admin.get_fields(
+            request=None,
+            obj=self.user_comment
+        )
         self.assertEqual(actual_fields, expected_fields)
 
     def test_get_fields_for_unlogged_user_comment(self):
         expected_fields = [
             'unlogged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
         ]
-        actual_fields = self.comment_model_admin.get_fields(request=None, obj=self.random_comment)
+        actual_fields = self.comment_model_admin.get_fields(
+            request=None,
+            obj=self.random_comment
+        )
         self.assertEqual(actual_fields, expected_fields)
 
     def test_get_readonly_fields_for_logged_user_comment(self):

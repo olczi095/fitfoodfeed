@@ -1,13 +1,12 @@
+from django.contrib.auth import get_user_model
+from django.http import Http404
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
-from django.http import Http404
-from django.contrib.auth import get_user_model
 from taggit.models import Tag
 
 from reviews.forms import CommentForm
-from reviews.models import Post, Category, Comment
+from reviews.models import Category, Comment, Post
 from reviews.views import PostDetailView
-
 
 User = get_user_model()
 
@@ -39,12 +38,15 @@ class LikePostTestCase(TestCase):
         # Like the review
         self.client.post(
             reverse('app_reviews:like_post', kwargs={'pk': self.review.pk})
-        ) # For like
+        )  # For like
         self.assertEqual(self.review.likes.count(), 1)
         self.assertIn(self.user, self.review.likes.all())
 
         # Unlike the review
-        self.client.post(reverse('app_reviews:like_post', kwargs={'pk': self.review.pk}))
+        self.client.post(
+            reverse('app_reviews:like_post',
+                    kwargs={'pk': self.review.pk})
+        )
         self.assertEqual(self.review.likes.count(), 0)
         self.assertNotIn(self.user, self.review.likes.all())
 
@@ -60,7 +62,7 @@ class ReviewsPageTestCase(TestCase):
         self.post1 = Post.objects.create(
             title='Sample Post Review',
             slug='sample-post-review',
-            pub_date = '2020-01-01',
+            pub_date='2020-01-01',
             author=self.author1,
             body='The body of the sample post review',
             status='PUB'
@@ -68,7 +70,7 @@ class ReviewsPageTestCase(TestCase):
         self.post2 = Post.objects.create(
             title='Another Sample Post Review',
             slug='another-post-review',
-            pub_date = '2021-01-01',
+            pub_date='2021-01-01',
             author=self.author1,
             body='The body of the another sample post review.',
             status='PUB'
@@ -76,7 +78,7 @@ class ReviewsPageTestCase(TestCase):
         self.post3 = Post.objects.create(
             title='Again Another Sample Post Review',
             slug='once-more-post-review',
-            pub_date = '2021-08-01',
+            pub_date='2021-08-01',
             author=self.author1,
             body='The body of the third sample post review',
             status='PUB'
@@ -84,7 +86,7 @@ class ReviewsPageTestCase(TestCase):
         self.post4 = Post.objects.create(
             title='The last one',
             slug='the-last-test-post',
-            pub_date = '2023-01-01',
+            pub_date='2023-01-01',
             author=self.author1,
             body='The body of the fourth sample post review.',
             status='PUB'
@@ -116,7 +118,7 @@ class PostDetailViewTestCase(TestCase):
         self.post1 = Post.objects.create(
             title='Sample Post Review',
             slug='sample-post-review',
-            pub_date = '2020-01-01',
+            pub_date='2020-01-01',
             author=self.author1,
             body='The body of the Sample Post Review.',
             status='PUB',
@@ -167,23 +169,44 @@ class PostDetailViewTestCase(TestCase):
         related_posts_of_post_1 = response.context['related_posts']
         amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
         expected_amount_of_related_posts = 0
-        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
+        self.assertEqual(
+            amount_of_related_posts_for_post1,
+            expected_amount_of_related_posts
+        )
 
     def test_get_related_posts_with_one_related_post(self):
-        related_post1 = Post.objects.create(title='Related Post 1', body='Body of Related Post 1')
+        related_post1 = Post.objects.create(
+            title='Related Post 1',
+            body='Body of Related Post 1'
+        )
         related_post1.tags.add(self.tag1)
 
         response = self.client.get(self.post1.get_absolute_url())
         related_posts_of_post_1 = response.context['related_posts']
         amount_of_related_posts_for_post1 = len(related_posts_of_post_1)
         expected_amount_of_related_posts = 1
-        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
+        self.assertEqual(
+            amount_of_related_posts_for_post1,
+            expected_amount_of_related_posts
+        )
 
     def test_get_related_posts_with_four_related_posts(self):
-        related_post1 = Post.objects.create(title='Related Post 1', body='Body of Related Post 1')
-        related_post2 = Post.objects.create(title='Related Post 2', body='Body of Related Post 2')
-        related_post3 = Post.objects.create(title='Related Post 3', body='Body of Related Post 3')
-        related_post4 = Post.objects.create(title='Related Post 4', body='Body of Related Post 4')
+        related_post1 = Post.objects.create(
+            title='Related Post 1',
+            body='Body of Related Post 1'
+        )
+        related_post2 = Post.objects.create(
+            title='Related Post 2',
+            body='Body of Related Post 2'
+        )
+        related_post3 = Post.objects.create(
+            title='Related Post 3',
+            body='Body of Related Post 3'
+        )
+        related_post4 = Post.objects.create(
+            title='Related Post 4',
+            body='Body of Related Post 4'
+        )
         related_post1.tags.add(self.tag1)
         related_post2.tags.add(self.tag2)
         related_post3.tags.add(self.tag1)
@@ -194,7 +217,10 @@ class PostDetailViewTestCase(TestCase):
         related_posts_of_post1 = list(response.context['related_posts'])
         amount_of_related_posts_for_post1 = len(related_posts_of_post1)
         expected_amount_of_related_posts = 3
-        self.assertEqual(amount_of_related_posts_for_post1, expected_amount_of_related_posts)
+        self.assertEqual(
+            amount_of_related_posts_for_post1,
+            expected_amount_of_related_posts
+        )
 
 
 class PostDetailViewCommentTestCase(TestCase):
@@ -205,7 +231,7 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         self.post = Post.objects.create(
             title='Sample Post Review',
-            pub_date = '2020-01-01',
+            pub_date='2020-01-01',
             author=self.author,
             body='The body of the Sample Post Review.',
             status='PUB',
@@ -234,7 +260,10 @@ class PostDetailViewCommentTestCase(TestCase):
 
     def test_comment_fields_added_correctly_for_authenticated_user(self):
         self.client.force_login(self.author)
-        self.client.post(self.post.get_absolute_url(), data=self.comment_data_authenticated_user)
+        self.client.post(
+            self.post.get_absolute_url(),
+            data=self.comment_data_authenticated_user
+        )
         new_comment = Comment.objects.last()
 
         self.assertEqual(new_comment.post, self.post)
@@ -253,7 +282,10 @@ class PostDetailViewCommentTestCase(TestCase):
 
     def test_comment_fields_added_correctly_for_unauthenticated_user(self):
         self.client.logout()
-        self.client.post(self.post.get_absolute_url(), data=self.comment_data_unauthenticated_user)
+        self.client.post(
+            self.post.get_absolute_url(),
+            data=self.comment_data_unauthenticated_user
+        )
         new_comment = Comment.objects.last()
 
         self.assertEqual(new_comment.post, self.post)
@@ -267,9 +299,12 @@ class PostDetailViewCommentTestCase(TestCase):
             data=self.comment_data_authenticated_user,
             follow=True
         )
-        expected_success_message_excerpt = 'comment successfully <strong>submitted</strong>'
+        expected_success_message_excerpt = 'comment successfully' \
+            '<strong>submitted</strong>'
         messages = [str(message).lower() for message in response.context['messages']]
-        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+        self.assertTrue(
+            any(expected_success_message_excerpt in message for message in messages)
+        )
 
     def test_comment_success_message_for_superuser(self):
         superuser = User.objects.create_superuser(
@@ -285,7 +320,9 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         expected_success_message_excerpt = 'comment successfully <strong>added</strong>'
         messages = [str(message).lower() for message in response.context['messages']]
-        self.assertTrue(any(expected_success_message_excerpt in message for message in messages))
+        self.assertTrue(
+            any(expected_success_message_excerpt in message for message in messages)
+        )
 
     def test_comment_without_parent_response_to_field(self):
         comment_without_parent = Comment.objects.create(
@@ -378,10 +415,16 @@ class CommentDeleteViewTestCase(TestCase):
 
     def test_comment_delete_view(self):
         self.client.force_login(self.admin)
-        delete_url = reverse('app_reviews:delete_comment', kwargs={'pk': self.comment_to_delete.id})
+        delete_url = reverse(
+            'app_reviews:delete_comment', kwargs={'pk': self.comment_to_delete.id}
+        )
         response = self.client.delete(delete_url)
         self.assertEqual(response.status_code, 303)
-        self.assertRaises(Comment.DoesNotExist, Comment.objects.get, pk=self.comment_to_delete.id)
+        self.assertRaises(
+            Comment.DoesNotExist,
+            Comment.objects.get,
+            pk=self.comment_to_delete.id
+        )
 
 
 class PostCreateTestCase(TestCase):
@@ -401,7 +444,6 @@ class PostCreateTestCase(TestCase):
             reverse('app_reviews:create_review')
         )
         self.assertRedirects(response, expected_url)
-
 
     def test_logged_user_without_permission_returns_403_page(self):
         self.client.force_login(self.test_user)
@@ -434,7 +476,7 @@ class PostCreateWithPermissionTestCase(TestCase):
             reverse_lazy('app_reviews:create_review'),
             data=self.first_review
         )
-        expected_url_after_post = '/reviews/new-review/'  #slug created automatically
+        expected_url_after_post = '/reviews/new-review/'  # slug created automatically
         self.assertRedirects(response, expected_url_after_post)
 
     def test_successful_post_adding_to_database(self):
@@ -444,8 +486,12 @@ class PostCreateWithPermissionTestCase(TestCase):
             'status': 'PUB'
 
         }
-        self.client.post(reverse_lazy('app_reviews:create_review'), data=self.first_review)
-        self.client.post(reverse_lazy('app_reviews:create_review'), data=second_review)
+        self.client.post(
+            reverse_lazy('app_reviews:create_review'), data=self.first_review
+        )
+        self.client.post(
+            reverse_lazy('app_reviews:create_review'), data=second_review
+        )
 
         posts_amount = Post.objects.count()
         self.assertEqual(posts_amount, 2)
@@ -500,7 +546,7 @@ class PostUpdateTestCase(TestCase):
         self.client.force_login(self.author)
         response = self.client.get(
             reverse(
-                'app_reviews:update_review', 
+                'app_reviews:update_review',
                 kwargs={'pk': self.review.pk}
             )
         )
@@ -511,7 +557,7 @@ class PostUpdateTestCase(TestCase):
         self.client.force_login(self.superuser)
         response = self.client.get(
             reverse(
-                'app_reviews:update_review', 
+                'app_reviews:update_review',
                 kwargs={'pk': self.review.pk}
             )
         )
@@ -522,7 +568,7 @@ class PostUpdateTestCase(TestCase):
         self.client.force_login(self.staff)
         response = self.client.get(
             reverse(
-                'app_reviews:update_review', 
+                'app_reviews:update_review',
                 kwargs={'pk': self.review.pk}
             )
         )
@@ -532,10 +578,7 @@ class PostUpdateTestCase(TestCase):
     def test_normal_user_cannot_access_update_view(self):
         self.client.force_login(self.normal_user)
         response = self.client.get(
-            reverse(
-                'app_reviews:update_review', 
-                kwargs={'pk': self.review.pk}
-            )
+            reverse('app_reviews:update_review', kwargs={'pk': self.review.pk})
         )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
@@ -543,10 +586,7 @@ class PostUpdateTestCase(TestCase):
     def test_other_author_cannot_update_post(self):
         self.client.force_login(self.second_author)
         response = self.client.get(
-            reverse(
-                'app_reviews:update_review', 
-                kwargs={'pk': self.review.pk}
-            )
+            reverse('app_reviews:update_review', kwargs={'pk': self.review.pk})
         )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
@@ -554,11 +594,9 @@ class PostUpdateTestCase(TestCase):
     def test_not_logged_user_redirect_login_page(self):
         self.client.logout()
         response = self.client.get(
-            reverse(
-                'app_reviews:update_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:update_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertTemplateUsed(response, 'registration/login.html')
 
 
@@ -578,11 +616,9 @@ class PostDeleteTestCase(TestCase):
     def test_author_can_access_delete_view(self):
         self.client.force_login(self.author)
         response = self.client.get(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -595,11 +631,9 @@ class PostDeleteTestCase(TestCase):
         )
         self.client.force_login(self.author)
         response = self.client.get(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -611,11 +645,9 @@ class PostDeleteTestCase(TestCase):
         )
         self.client.force_login(superuser)
         response = self.client.get(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed('reviews/review_delete.html')
 
@@ -628,36 +660,31 @@ class PostDeleteTestCase(TestCase):
         )
         self.client.force_login(other_author)
         response = self.client.get(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, '403.html')
 
     def test_random_user_redirect_login_page(self):
         self.client.logout()
         response = self.client.get(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertTemplateUsed(response, 'registration/login.html')
 
     def test_get_success_message(self):
         self.client.force_login(self.author)
         response = self.client.post(
-            reverse(
-                'app_reviews:delete_review', 
-                kwargs={'pk': self.review.pk}),
-                follow=True
-            )
+            reverse('app_reviews:delete_review', kwargs={'pk': self.review.pk}),
+            follow=True
+        )
         self.assertTemplateUsed(response, 'reviews/home.html')
 
         success_messages = [str(message) for message in response.context['messages']]
-        expected_message = f"Post <strong>{self.review.title}</strong> deleted successfully."
+        expected_message = f"Post <strong>{self.review.title}</strong>" \
+            "deleted successfully."
         self.assertEqual(success_messages[0], expected_message)
 
 
@@ -683,12 +710,10 @@ class PostStatusTestCase(TestCase):
             reverse('app_reviews:create_review'),
             data={'title': title, 'body': body, 'status': status}
         )
-        self.assertRedirects(response, '/reviews/') # Redirect to the homepage, not post_detail
+        self.assertRedirects(response, '/reviews/')
         response = self.client.get(
-            reverse(
-                'app_reviews:detail_review', 
-                kwargs={'slug': slug}
-            ))
+            reverse('app_reviews:detail_review', kwargs={'slug': slug})
+        )
         self.assertEqual(response.status_code, 404)
 
     def check_post_create_and_save(self, title, body, status):
@@ -728,6 +753,7 @@ class PostStatusTestCase(TestCase):
             status='PUB',
             should_appear=True
         )
+
     def test_post_published_should_be_published(self):
         post_data = {
             'title': 'The new review',
@@ -849,8 +875,10 @@ class TaggedPostsListTestCase(TestCase):
     def test_filtering_tagged_posts(self):
         tag_name = self.tag_bars.name
 
-        response = self.client.get(reverse('app_reviews:tag', kwargs={'tag_name': tag_name}))
-        filtered_tagged_posts = [self.post1, self.post5] # Posts with PUB status and BARS tag
+        response = self.client.get(
+            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+        )
+        filtered_tagged_posts = [self.post1, self.post5]
 
         self.assertQuerysetEqual(
             response.context['posts'],
@@ -883,16 +911,20 @@ class CategoryViewsTestCase(TestCase):
 
     def test_successfull_category_page_load(self):
         response = self.client.get(
-            reverse('app_reviews:category', kwargs={'category_name': self.category.slug})
-        )
+            reverse(
+                'app_reviews:category',
+                kwargs={'category_name': self.category.slug}
+            ))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/home.html')
 
     def test_display_published_post_from_proper_category(self):
         category_peanut_butter = self.category.slug
         response = self.client.get(
-            reverse('app_reviews:category', kwargs={'category_name': category_peanut_butter})
-        )
+            reverse(
+                'app_reviews:category',
+                kwargs={'category_name': category_peanut_butter}
+                ))
 
         expected_posts = [self.post2]
         self.assertQuerysetEqual(
