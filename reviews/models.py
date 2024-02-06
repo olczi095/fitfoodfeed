@@ -24,6 +24,7 @@ def convert_to_slug(text: str) -> str:
     Converts polish signs into their ASCII substitutes,
     creates a valid slug from the input text.
     """
+    text = text.lower()
     polish_signs_conversion = {
         'ą': 'a',
         'ć': 'c',
