@@ -220,7 +220,7 @@ class CommentModelTestCase(TestCase):
     def test_string_representation_unlogged_user(self):
         comment = Comment.objects.create(post=self.review, body='Body of comment.')
         expected_representation = f"Comment by {comment.unlogged_user}" \
-            "on {comment.post.title}."
+            f" on {comment.post.title}."
         self.assertEqual(str(comment), expected_representation)
 
     def test_superuser_comment_set_active_automatically(self):

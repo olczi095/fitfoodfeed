@@ -300,7 +300,7 @@ class PostDetailViewCommentTestCase(TestCase):
             follow=True
         )
         expected_success_message_excerpt = 'comment successfully' \
-            '<strong>submitted</strong>'
+            ' <strong>submitted</strong>'
         messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(
             any(expected_success_message_excerpt in message for message in messages)
@@ -684,7 +684,7 @@ class PostDeleteTestCase(TestCase):
 
         success_messages = [str(message) for message in response.context['messages']]
         expected_message = f"Post <strong>{self.review.title}</strong>" \
-            "deleted successfully."
+            " deleted successfully."
         self.assertEqual(success_messages[0], expected_message)
 
 
