@@ -154,8 +154,8 @@ class Post(models.Model):
         return likes_stats_display
 
     @classmethod
-    def get_tagged_posts(cls, tag_name: str) -> QuerySet['Post']:
-        return cls.tagged_posts.all().filter(tags__name=tag_name)
+    def get_tagged_posts(cls, tag_slug: str) -> QuerySet['Post']:
+        return cls.tagged_posts.all().filter(tags__slug=tag_slug)
 
     @classmethod
     def get_popular_posts(cls, amount: int) -> list['Post']:

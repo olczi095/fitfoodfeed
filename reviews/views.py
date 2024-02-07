@@ -51,8 +51,8 @@ class TaggedPostsListView(ListView[Post]):
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
-        tag_name = self.kwargs['tag_name']
-        return Post.get_tagged_posts(tag_name)
+        tag_slug = self.kwargs['slug']
+        return Post.get_tagged_posts(tag_slug)
 
 
 class TagsListView(ListView[Model]):

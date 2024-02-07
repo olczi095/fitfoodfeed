@@ -54,7 +54,7 @@
                         <div class="small-space"></div>
 
                         {% for tag in post.tags.all %}
-                            <a href="{% url 'app_reviews:tag' tag_name=tag %}" class="badge badge-secondary">
+                            <a href="{% url 'app_reviews:tag' slug=tag.slug %}" class="badge badge-secondary">
                                 {{ tag|upper }}
                             </a>
                                 {% if not forloop.last %}|{% endif %}

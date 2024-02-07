@@ -859,24 +859,24 @@ class TaggedPostsListTestCase(TestCase):
         self.post4.tags.add(self.tag_drinks)
 
     def test_tag_page_success(self):
-        tag_name = self.tag_bars.name
+        tag_slug = self.tag_bars.slug
         response = self.client.get(
-            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+            reverse('app_reviews:tag', kwargs={'slug': tag_slug})
         )
         self.assertEqual(response.status_code, 200)
 
     def test_tag_page_uses_home_template(self):
-        tag_name = self.tag_bars.name
+        tag_slug = self.tag_bars.slug
         self.client.get(
-            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+            reverse('app_reviews:tag', kwargs={'slug': tag_slug})
         )
         self.assertTemplateUsed('reviews/home.html')
 
     def test_filtering_tagged_posts(self):
-        tag_name = self.tag_bars.name
+        tag_slug = self.tag_bars.slug
 
         response = self.client.get(
-            reverse('app_reviews:tag', kwargs={'tag_name': tag_name})
+            reverse('app_reviews:tag', kwargs={'slug': tag_slug})
         )
         filtered_tagged_posts = [self.post1, self.post5]
 

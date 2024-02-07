@@ -15,7 +15,7 @@
 {% block body %}
     <h1><div class="tags-content">
         {% for tag in tags %}
-        <a href="{% url 'app_reviews:tag' tag_name=tag %}" class="badge badge-secondary">
+        <a href="{% url 'app_reviews:tag' slug=tag.slug %}" class="badge badge-secondary">
             {{ tag|upper }}
         </a>
         {% endfor %}
