@@ -8,8 +8,8 @@ from . import settings
 urlpatterns = [
     path('adminpanel/', admin.site.urls),
     path('', RedirectView.as_view(url='reviews/')),
-    path('reviews/', include('reviews.urls')),
-    path('accounts/', include('accounts.urls'), name='accounts')
+    path('reviews/', include('reviews.urls', namespace='reviews')),
+    path('accounts/', include('accounts.urls', namespace='accounts'))
 ]
 
 urlpatterns += static(
