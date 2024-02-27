@@ -1,8 +1,15 @@
-document.querySelector('.delete-comment-container').addEventListener('click', function() {
-    let commentCounter = document.querySelector('.comment-counter');
-    if (parseInt(commentCounter.innerHTML) >= 1) {
-        commentCounter.innerHTML = parseInt(commentCounter.innerHTML, 10) - 1;
+function updateCommentCounter(commentCounterElement) {
+    let commentCounter = parseInt(commentCounterElement.textContent);
+    if (commentCounter > 0) {
+        commentCounterElement.textContent = commentCounter - 1;
     } else {
-        commentCounter.innerHTML = 0;
+        commentCounterElement.textContent = 0;
     }
+}
+
+document.querySelectorAll('.delete-comment-button').forEach(function(deleteBtn) {
+    deleteBtn.addEventListener('click', function() {
+        let commentCounterElement = document.querySelector('.comment-counter');
+        updateCommentCounter(commentCounterElement);
+    });
 });
