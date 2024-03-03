@@ -1,34 +1,39 @@
-$(document).ready(function(){
-    $('.like-form').submit(function(e){
+document.addEventListener('DOMContentLoaded', function() {
+    const likeForm = document.querySelector('.like-form');
+    likeForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const review_id = $(this).find('button[name="like-btn"], button[name="unlike-btn"]').val();
-        const token = $('input[name=csrfmiddlewaretoken').val();
-        const url = $(this).attr('action');
+        const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value; 
+        const reviewId = document.querySelector('button[name="like-btn"]').value;
+        const url = this.getAttribute('action'); 
+        const data = JSON.stringify({'reviewId': reviewId});
 
-        $.ajax({
-            method: "POST",
-            url: url,
-            headers: {'X-CSRFToken': token},
-            data: {
-                'review_id': review_id
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': token
             },
-            success: function(response){
-                const likesCounterElement = $('.likes-button h5');
-                likesCounterElement.text(response.likes_stats_display);
-                console.log(response.liked);
-                if (response.liked) {
-                    $('.likes-button .like').addClass('unlike');
-                    console.log(response.liked);
-
-                } else {
-                    $('.likes-button .like').removeClass('unlike');
-                    console.log(response.liked);
-
-                }
-            },
-            error: function(response){
-                console.log("Failed ", response)
-            },
+            body: data
         })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Response was not ok.', error)
+            } else {
+                return response.json();
+            }
+        })
+        .then(function(data) {
+            const likeStatsDisplay = document.querySelector('.likes-button h5');
+            const likeBtn = document.querySelector('button[name="like-btn"]');
+            likeStatsDisplay.textContent = data.likes_stats_display;
+            if (data.liked) {
+                likeBtn.classList.add('unlike');
+            } else {
+                likeBtn.classList.remove('unlike');
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
     });
-})
+});
