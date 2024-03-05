@@ -46,7 +46,7 @@
         {% if request.user.is_superuser %}
 
             <div class="modify-comment-buttons">
-                <!-- button and form for editing a comment; default doesn't display -->
+                <!-- edit comment button -->
                 <button type="button" 
                         class="modify-comment-button edit-comment-button" 
                         data-comment-id="{{ comment.id }}"
@@ -58,11 +58,8 @@
                 <div class="delete-comment-container" hx-trigger="click">
                     <button type="submit" 
                             class="modify-comment-button delete-comment-button"
-                            hx-delete="{% url 'app_reviews:delete_comment' comment.pk %}"
-                            hx-swap="outerHTML"
-                            hx-target="#comment-{{ comment.id }}"
-                            hx-confirm="Are you sure you want to delete this comment?"
-                            hx-trigger="click"
+                            data-comment-id="{{ comment.id }}"
+                            data-href="{% url 'app_reviews:delete_comment' comment.pk %}"
                     >
                         <ion-icon name="trash-outline"></ion-icon>
                     </button>
@@ -85,18 +82,17 @@
                     >
                         <ion-icon name="create-outline"></ion-icon>
                     </button>
-
+                    
                     <!-- delete comment button -->
-                    <button type="submit" 
-                            class="modify-comment-button delete-comment-button"
-                            hx-delete="{% url 'app_reviews:delete_comment' comment.pk %}"
-                            hx-swap="outerHTML"
-                            hx-target="#comment-{{ comment.id }}"
-                            hx-confirm="Are you sure you want to delete this comment?"
-                            hx-trigger="click"
-                    >
-                        <ion-icon name="trash-outline"></ion-icon>
-                    </button>
+                    <div class="delete-comment-container" hx-trigger="click">
+                        <button type="submit" 
+                                class="modify-comment-button delete-comment-button"
+                                data-comment-id="{{ comment.id }}"
+                                data-href="{% url 'app_reviews:delete_comment' comment.pk %}"
+                        >
+                            <ion-icon name="trash-outline"></ion-icon>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- form for editing a comment; default doesn't display -->
