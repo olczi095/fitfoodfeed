@@ -10,7 +10,7 @@
                 </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 {% for tag in navbar_tags %}
-                    <a class="dropdown-item" href="{% url 'app_reviews:tag' tag %}">{{ tag }}</a>
+                    <a class="dropdown-item" href="{% url 'blog:tag' tag %}">{{ tag }}</a>
                 {% endfor %}
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>

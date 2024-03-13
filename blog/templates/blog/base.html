@@ -26,11 +26,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="upperNavbar">
-            <span class="home-image"><a href="{% url 'app_reviews:home' %}">🏠</a></span>
+            <span class="home-image"><a href="{% url 'blog:home' %}">🏠</a></span>
             <ul class="navbar-nav ml-auto">
                 {% for category in categories %}
                     <li class="nav-item">
-                        <a class="nav-link nav-item-light" href="{% url 'app_reviews:category' category.slug %}">
+                        <a class="nav-link nav-item-light" href="{% url 'blog:category' category.slug %}">
                             {{ category.name|upper }}
                         </a>
                     </li>

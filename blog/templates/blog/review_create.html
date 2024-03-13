@@ -28,11 +28,11 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <span class="home-image"><a href="{% url 'app_reviews:home' %}">🏠</a></span>
+            <span class="home-image"><a href="{% url 'blog:home' %}">🏠</a></span>
             <ul class="navbar-nav ml-auto">
                 {% for category in categories %}
                     <li class="nav-item">
-                        <a class="nav-link nav-item-light" href="{% url 'app_reviews:category' category.slug %}">
+                        <a class="nav-link nav-item-light" href="{% url 'blog:category' category.slug %}">
                             {{ category.name|upper }}
                         </a>
                     </li>
@@ -60,7 +60,7 @@
                     </div>
                     <div>
                         <br />
-                        <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                        <a href="{% url 'blog:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
                     </div>
                 </div>
             </form>

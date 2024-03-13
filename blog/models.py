@@ -61,7 +61,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("app_reviews:category", kwargs={"category_name": self.slug})
+        return reverse("blog:category", kwargs={"category_name": self.slug})
 
     def get_posts(self) -> QuerySet['Post']:
         return self.posts.filter(status='PUB')
@@ -138,7 +138,7 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("app_reviews:detail_review", args=[str(self.slug)])
+        return reverse("blog:detail_review", args=[str(self.slug)])
 
     @property
     def comment_stats(self) -> int:

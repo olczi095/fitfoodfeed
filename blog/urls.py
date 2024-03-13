@@ -4,7 +4,7 @@ from .views import (CategoryListView, CommentDeleteView, PostCreateView, PostDel
                     PostDetailView, PostLikeView, PostListView, PostUpdateView,
                     TaggedPostsListView, TagsListView)
 
-app_name = 'app_reviews'
+app_name = 'blog'
 
 urlpatterns = [
     path('', PostListView.as_view(), name='home'),

@@ -59,7 +59,7 @@
                     <button type="submit" 
                             class="modify-comment-button delete-comment-button"
                             data-comment-id="{{ comment.id }}"
-                            data-href="{% url 'app_reviews:delete_comment' comment.pk %}"
+                            data-href="{% url 'blog:delete_comment' comment.pk %}"
                     >
                         <ion-icon name="trash-outline"></ion-icon>
                     </button>
@@ -88,7 +88,7 @@
                         <button type="submit" 
                                 class="modify-comment-button delete-comment-button"
                                 data-comment-id="{{ comment.id }}"
-                                data-href="{% url 'app_reviews:delete_comment' comment.pk %}"
+                                data-href="{% url 'blog:delete_comment' comment.pk %}"
                         >
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>

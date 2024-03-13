@@ -1,5 +1,5 @@
 {% if user.is_authenticated %}
-<form action="{% url 'app_reviews:like_post' post.id %}" method="POST" class="like-form">
+<form action="{% url 'blog:like_post' post.id %}" method="POST" class="like-form">
     {% csrf_token %}
         <div class="likes-button">
             <button type="submit" name="like-btn" value="{{ post.pk }}" class="like {% if user in post.likes.all %} unlike {% endif %}">

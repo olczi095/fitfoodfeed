@@ -30,7 +30,7 @@
             <p class="post-detail-body">Are you sure you want to delete "{{ object }}"?</p>
             {{ form }}
             <button type="submit" class="btn btn-outline-success" value="Confirm">Yes, delete</button>
-            <a href="{% url 'app_reviews:detail_review' post.slug %}" class="btn btn-outline-danger">Cancel</a>
+            <a href="{% url 'blog:detail_review' post.slug %}" class="btn btn-outline-danger">Cancel</a>
         </form>
     </section>
     

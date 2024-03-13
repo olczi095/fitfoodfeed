@@ -176,7 +176,7 @@ class PostCreateView(
     def get_success_url(self) -> str:
         if isinstance(self.object, Post) and self.object.status == "PUB":
             return super().get_success_url()
-        return reverse('app_reviews:home')
+        return reverse('blog:home')
 
 
 class PostUpdateView(
@@ -222,7 +222,7 @@ class PostDeleteView(
     permission_denied_message = "You don't have permission to access this page. \
                                 Please log in using a valid account"
     template_name = 'blog/review_delete.html'
-    success_url = reverse_lazy('app_reviews:home')
+    success_url = reverse_lazy('blog:home')
 
     def test_func(self) -> bool:
         # Only superusers, staff and the proper post's author can access the delete view
