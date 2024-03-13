@@ -439,7 +439,7 @@ class PostCreateTestCase(TestCase):
         response = self.client.get(reverse('blog:create_review'))
         self.assertEqual(response.status_code, 302)
         expected_url = (
-            reverse('app_accounts:login') +
+            reverse('accounts:login') +
             '?next=' +
             reverse('blog:create_review')
         )

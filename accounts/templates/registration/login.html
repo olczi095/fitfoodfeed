@@ -8,7 +8,7 @@
 {% block form %}
     <section class="form-container">
         <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image" />    
-        <form class="form-login" method="post" action={% url 'app_accounts:login' %}>
+        <form class="form-login" method="post" action={% url 'accounts:login' %}>
             {% csrf_token %}
             <h2>Log In</h2>
             <br />
@@ -22,11 +22,11 @@
             <br />
         <p class="account-link">
             Need an account? → 
-            <a href="{% url 'app_accounts:register' %}">Join us!</a>
+            <a href="{% url 'accounts:register' %}">Join us!</a>
         </p>  
         <p class="account-link">
             Need to reset you password? → 
-            <a href={% url 'app_accounts:password_reset' %}>Reset it here!</a>
+            <a href={% url 'accounts:password_reset' %}>Reset it here!</a>
         </p>
         </form>
     </section>

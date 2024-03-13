@@ -13,7 +13,7 @@ User = get_user_model()
 
 class RegisterTestCase(TestCase):
     def setUp(self):
-        self.register_url = reverse('app_accounts:register')
+        self.register_url = reverse('accounts:register')
         self.valid_data = {
             'username': 'user1',
             'password1': 'user1_password',
@@ -108,7 +108,7 @@ class PasswordResetViewTestCase(TestCase):
             password='test_password',
             email=self.user_email
         )
-        self.password_reset_url = reverse('app_accounts:password_reset')
+        self.password_reset_url = reverse('accounts:password_reset')
 
     def test_render_password_reset_page(self):
         response = self.client.get(self.password_reset_url)
@@ -122,14 +122,14 @@ class PasswordResetViewTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'password_reset/password_reset_email.html')
-        self.assertRedirects(response, reverse('app_accounts:password_reset_done'))
+        self.assertRedirects(response, reverse('accounts:password_reset_done'))
 
     def test_complete_password_reset_process(self):
         # Initialize password reset data
         uidb64 = urlsafe_base64_encode(force_bytes(self.user.pk))
         token = default_token_generator.make_token(self.user)
         reset_url = reverse(
-            'app_accounts:password_reset_confirm',
+            'accounts:password_reset_confirm',
             kwargs={'token': token, 'uidb64': uidb64}
         )
         response = self.client.get(reset_url)
@@ -160,11 +160,11 @@ class PasswordChangeViewTestCase(TestCase):
 
     def test_password_change_page_unauth(self):
         self.client.logout()
-        response = self.client.get(reverse('app_accounts:password_change'))
+        response = self.client.get(reverse('accounts:password_change'))
         self.assertEqual(response.status_code, 302)
 
     def test_password_change_page_auth(self):
-        response = self.client.get(reverse('app_accounts:password_change'))
+        response = self.client.get(reverse('accounts:password_change'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'password_change/password_change_form.html')
 
@@ -175,7 +175,7 @@ class PasswordChangeViewTestCase(TestCase):
             'new_password2': 'new_test_password'
         }
         response = self.client.post(
-            reverse('app_accounts:password_change'),
+            reverse('accounts:password_change'),
             data=data,
             follow=True
         )
@@ -183,7 +183,7 @@ class PasswordChangeViewTestCase(TestCase):
         self.assertTemplateUsed(response, 'password_change/password_change_done.html')
         self.assertRedirects(
             response,
-            reverse('app_accounts:password_change_done'),
+            reverse('accounts:password_change_done'),
             status_code=302,
             target_status_code=200
         )
@@ -194,7 +194,7 @@ class PasswordChangeViewTestCase(TestCase):
             'new_password1': 'new_test_password',
             'new_password2': 'new_test_password'
         }
-        response = self.client.post(reverse('app_accounts:password_change'), data=data)
+        response = self.client.post(reverse('accounts:password_change'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'password_change/password_change_form.html')
         self.assertContains(response, "Your old password was entered incorrectly.")
@@ -205,7 +205,7 @@ class PasswordChangeViewTestCase(TestCase):
             'new_password1': 'new_test_password',
             'new_password2': 'mismatched_password'
         }
-        response = self.client.post(reverse('app_accounts:password_change'), data=data)
+        response = self.client.post(reverse('accounts:password_change'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'password_change/password_change_form.html')
         self.assertContains(response, "The two password fields didn’t match.")
