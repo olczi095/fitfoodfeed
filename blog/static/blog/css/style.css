@@ -1,0 +1,714 @@
+/* Variables */
+:root {
+    /* Fonts */
+    --font-plustjakartasans: 'Plus Jakarta Sans', sanss-serif;
+    /* Colors */
+    --color-middleorange: rgba(242, 145, 19, 0.7);
+    --color-orange: rgb(242, 145, 19);
+    --color-darkorange: rgb(214, 124, 5);
+    --color-lightorange: rgb(239, 195, 138);
+    --color-white: #fff;
+    --color-whitegrey: #f8f9fa;
+    --color-lightgrey: #ccc;
+    --color-dark-grey: #3d3f41;
+    --color-medium-grey: #7a7f83;
+    --color-black: #000;
+    --color-visited-link: #800080;
+    --color-blue: #027bff;
+    --color-red-alert: #d12b22;
+    --color-green-alert: rgb(30, 194, 30);
+    --color-textbody: #000;
+}
+
+/* Colors for Dark Mode */
+.dark-mode {
+    --color-middleorange: rgb(214, 124, 5);
+    --color-orange: rgb(255, 145, 0);
+    --color-darkorange: rgb(36, 35, 32);
+    --color-lightorange: rgb(214, 124, 5);
+    --color-white: #000;
+    --color-whitegrey: #292828;
+    --color-lightgrey: rgba(242, 145, 19, 0.7);
+    --color-dark-grey: #b5b1b1;
+    --color-medium-grey: #7a7f83;
+    --color-black: #fff;
+    --color-visited-link: #6a066a;
+    --color-blue: #027bff;
+    --color-red-alert: #d12b22;
+    --color-green-alert: rgb(30, 194, 30);
+    --color-text-body: #b8bdc2;
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    height: 15rem;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.body-background {
+    background-color: var(--color-white);
+}
+
+/* Typography */
+.header-text-main {
+    padding: 1rem;
+    font: 4rem var(--font-plustjakartasans);
+    font-weight: 900;
+}
+
+.header-text {
+    font: 1.5rem var(--font-plustjakartasans);
+    font-weight: 600;
+    background-color: rgba(255, 188, 101, 0.4);
+    border: 0.1rem solid var(--color-orange);
+    border-radius: 0.6rem;
+    padding: 0.5rem;
+}
+
+.nav-link {
+    font-weight: 700 !important;
+    margin-right: 1rem;
+}
+
+.nav-item-light {
+    font-size: 0.9rem;
+    color: var(--color-lightorange) !important;
+}
+
+.nav-item-light:hover {
+    color: var(--color-orange) !important;
+}
+
+/* Components */
+.home-header {
+    position: relative;
+    width: 100%;
+    height: 30rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/static/blog/images/yoga-head-image.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.home-image {
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: larger;
+}
+
+.home-content {
+    padding: 2rem 10rem;
+    display: flex;
+}
+
+.home-content .post-title {
+    display: inline-block;
+    text-align: center;
+    color: var(--color-black);
+    font-weight: bolder;
+}
+
+.home-content .posts {
+    width: 80%;
+    padding-right: 5rem;
+}
+
+.home-content .post-info {
+    display: block;
+    text-align: center;
+    color: var(--color-lightgrey);
+    font-style: italic;
+}
+
+.home-content .category-name {
+    display: block;
+    text-align: center;
+    font-weight: bolder;
+    color: var(--color-orange);
+    font-size: 1.1rem;
+}
+
+.home-content .posts .post {
+    margin: 3rem auto;
+    border-bottom: 0.2rem solid var(--color-lightgrey);
+    padding-bottom: 1rem;
+}
+
+@media screen and (min-width: 600px) and (max-width: 992px) {
+    .home-content {
+        padding: 2rem;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
+
+    s .home-content .posts {
+        width: 100%;
+        padding-right: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .home-content {
+        padding: 1rem 1rem;
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
+
+    .home-content .posts {
+        width: 100%;
+        padding-right: 0;
+    }
+}
+
+.pagination {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-black);
+}
+
+.pagination .current {
+    text-align: center;
+    font-weight: 500;
+    color: var(--color-black);
+}
+
+.pagination .arrow {
+    color: var(--color-black);
+    font-size: 1.3rem;
+}
+
+.pagination .arrow:hover {
+    color: var(--color-orange);
+}
+
+.home-content .sidebar {
+    max-width: 30%;
+    padding-left: 2rem;
+}
+
+.avatar-style {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.short-description {
+    text-align: justify;
+    background-color: var(--color-orange);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.post-detail-body {
+    color: var(--color-text-body);
+}
+
+.post-detail-content {
+    padding: 3rem 15rem;
+    color: var(--color-black);
+}
+
+@media screen and (min-width: 600px) and (max-width: 992px) {
+    .post-detail-content {
+        padding: 2rem 5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .post-detail-content {
+        padding: 1rem 1rem;
+    }
+}
+
+.post-title {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.post-modify-title {
+    color: var(--color-black);
+}
+
+.post-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    border-top: 0.2rem solid var(--color-lightgrey);
+    border-bottom: 0.2rem solid var(--color-lightgrey);
+    padding: 0.4rem;
+}
+
+.post-tags {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.post-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.post-icons ion-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.form-add-container {
+    margin: 2rem 18rem 3rem 18rem;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+    .form-add-container {
+        margin: 1rem 5rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .form-add-container {
+        margin: 0;
+    }
+}
+
+.form-add-review {
+    margin: 2rem 2rem 0 2rem;
+    padding: 2rem;
+}
+
+.form-add-border {
+    border: 0.1rem solid var(--color-dark-grey);
+    padding: 2rem;
+}
+
+.form-delete-title {
+    display: flex;
+    justify-content: left !important;
+}
+
+.form-delete-container {
+    display: block;
+    text-align: center;
+    margin: 5rem 0;
+}
+
+.form-delete-review {
+    margin: auto;
+    width: 50%;
+    padding: 2rem;
+    border: 0.2rem double var(--color-dark-grey);
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.small-space {
+    margin-bottom: 1rem;
+}
+
+.tags-content {
+    padding: 3rem 15rem;
+}
+
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+    .tags-content {
+        padding: 2rem 7rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .tags-content {
+        padding: 1rem 1rem;
+    }
+}
+
+.comments {
+    margin: 2rem 0 0;
+}
+
+.comments .title {
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0 0rem 0.2rem;
+    border-top: 0.1rem solid var(--color-lightgrey);
+    color: var(--color-black);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: -0.5rem;
+}
+
+.comment {
+    margin-top: 1.2rem;
+    margin-left: calc(4.0rem - (0.4rem * var(--level)));
+}
+
+.comment .author,
+.comment .author-admin {
+    display: flex;
+    align-items: center;
+    color: var(--color-blue);
+    font-weight: bolder;
+}
+
+.comment .author img,
+.comment .author-admin img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin-right: 0.625rem;
+}
+
+.comment .datetime {
+    color: var(--color-lightgrey);
+}
+
+.comment-divider {
+    border: 0.01rem solid var(--color-lightgrey);
+}
+
+.comment-form {
+    margin: -1rem auto 1.5rem 1.5rem;
+    padding: 2rem;
+}
+
+.comment-form-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-middleorange);
+}
+
+.modify-comment-buttons {
+    display: flex;
+    gap: 0.1rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.modify-comment-button {
+    display: block;
+    /* border: 0.1rem solid var(--color-lightgrey); */
+    background-color: var(--color-white);
+    padding: 0.1rem 0.4rem;
+    text-decoration: none;
+}
+
+.modify-comment-button:hover {
+    text-decoration: none;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.edit-comment-button {
+    color: var(--color-green-alert);
+    border: 0.1rem solid var(--color-lightgrey);
+}
+
+.edit-comment-button:hover {
+    background-color: var(--color-green-alert);
+    border-color: var(--color-green-alert);
+}
+
+.edit-comment-button:focus {
+    outline: none;
+}
+
+.edit-comment-button.active {
+    background-color: var(--color-green-alert);
+    color: white;
+    border-color: var(--color-green-alert);
+}
+
+.comment-edit-form {
+    display: none;
+    margin: 0.5rem auto;
+    padding: 1rem;
+}
+
+.comment-edit-form .btn-orange {
+    background-color: var(--color-orange);
+    border: none;
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: smaller;
+}
+
+.comment-edit-form .btn-orange:hover {
+    background-color: var(--color-darkorange);
+}
+
+.delete-comment-button {
+    color: var(--color-red-alert);
+    border: 0.1rem solid var(--color-lightgrey);
+}
+
+.delete-comment-button:hover {
+    background-color: var(--color-red-alert);
+    border-color: var(--color-red-alert);
+}
+
+.delete-comment-button:focus {
+    outline: none;
+}
+
+.comment-reply-button {
+    background: none;
+    border: none;
+    color: var(--color-orange);
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.comment-reply-button:hover {
+    color: var(--color-blue);
+}
+
+.comment-reply-button:focus {
+    outline: none;
+}
+
+.comment-reply-button:active {
+    color: var(--color-blue);
+}
+
+.comment-reply-button-blue {
+    color: var(--color-blue);
+}
+
+.comment-reply-form {
+    margin: 1rem auto 0.5rem 1rem;
+    padding: 1rem;
+    border-top: 0.1rem dashed var(--color-lightgrey);
+    border-bottom: 0.1rem dashed var(--color-lightgrey);
+}
+
+.comment-reply-form .btn-orange {
+    background-color: var(--color-orange);
+    border: none;
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: smaller;
+}
+
+.comment-reply-form .btn-orange:hover {
+    background-color: var(--color-darkorange);
+}
+
+.comments .info {
+    color: var(--color-lightgrey);
+}
+
+.sidebar-widget {
+    padding: 1.5rem 1.5rem 1.0rem 1.5rem;
+    background-color: var(--color-whitegrey);
+}
+
+.sidebar-widget .title {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-bottom: 1rem;
+    color: var(--color-black);
+}
+
+.sidebar-widget .single-post {
+    display: block;
+    text-decoration: none;
+    color: var(--color-dark-grey);
+    font-weight: 400;
+    padding: 0.5rem 1.5rem;
+}
+
+.sidebar-widget .numeric {
+    font-weight: 500;
+}
+
+.sidebar-widget .single-post:visited {
+    color: var(--color-visited-link);
+}
+
+.sidebar-widget .single-post:hover {
+    color: var(--color-orange);
+}
+
+.sidebar-comment {
+    padding: 0.5rem;
+}
+
+.sidebar-comment .link {
+    color: var(--color-orange);
+}
+
+.sidebar-comment .author,
+.sidebar-comment .icon {
+    color: var(--color-black);
+}
+
+.sidebar-widget .single-post:visited {
+    color: var(--color-visited-link);
+}
+
+.sidebar-comment .link:hover {
+    color: var(--color-blue);
+    text-decoration: none;
+}
+
+.sidebar-comment .body {
+    margin-top: 0.5rem;
+    margin-bottom: 0.7rem;
+    color: var(--color-dark-grey);
+}
+
+.likes-button {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0 -1rem 0;
+    vertical-align: middle;
+    font-size: 0.1rem;
+    text-align: center;
+}
+
+.likes-button h5 {
+    margin-left: 0.5rem;
+    padding-left: 0.2rem;
+    font-weight: bold;
+}
+
+.like,
+.unlike {
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border: 0.1rem solid var(--color-green-alert);
+    border-radius: 0.6rem;
+    background-color: transparent;
+    margin: 0;
+    padding: 0.3125rem 0.625rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.like {
+    color: var(--color-green-alert);
+    border-color: var(--color-green-alert);
+}
+
+.like:hover {
+    color: var(--color-white);
+    background-color: var(--color-green-alert);
+    cursor: pointer;
+}
+
+.unlike {
+    color: var(--color-red-alert);
+    border-color: var(--color-red-alert);
+    background-color: var(--color-white-alert);
+}
+
+.unlike:hover {
+    color: var(--color-white);
+    background-color: var(--color-red-alert);
+    cursor: pointer;
+}
+
+.like:focus,
+.unlike:focus {
+    outline: none;
+}
+
+.like.disabled {
+    pointer-events: none;
+}
+
+.happy-icon {
+    display: flex;
+    font-size: 2.5rem;
+    font-weight: bold;
+    background-color: transparent;
+    padding: 0.3125rem 0.625rem;
+}
+
+.related-posts-container {
+    display: block;
+    margin: 5rem 0 3rem 0;
+}
+
+.related-posts-container h6 {
+    background-color: var(--color-orange);
+    font-weight: 600;
+    color: var(--color-whitegrey);
+    padding: 0.1rem;
+    text-align: center;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.related-posts-content {
+    display: inline-flex;
+    max-width: 100%;
+    justify-content: space-evenly;
+    margin-top: 1rem;
+    gap: 2rem;
+}
+
+.related-post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 0.5rem 2rem;
+    background-color: var(--color-whitegrey);
+    border: 0.1rem solid var(--color-orange);
+    border-radius: 0.6rem;
+    width: calc(33.33% - 2rem);
+    margin: 1rem;
+    box-sizing: border-box;
+}
+
+.related-post img {
+    max-width: 100%;
+    max-height: 8rem;
+    margin: 0 auto;
+}
+
+.related-post a {
+    color: var(--color-dark-grey);
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.toggle-moon-button {
+    margin: auto 1.5rem;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.toggle-sun-button {
+    margin: auto 1.5rem;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: var(--color-black);
+}

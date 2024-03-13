@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ block.super }} - tags
+{% endblock title %}
+
+{% block header %}
+    <div class="home-header">
+        <div class="header-text-main">MOCNE ŻARCIE<br /></div>
+        <div class="header-text">all tags</div>
+    </div>  
+{% endblock header %}
+
+{% block body %}
+    <h1><div class="tags-content">
+        {% for tag in tags %}
+        <a href="{% url 'app_reviews:tag' slug=tag.slug %}" class="badge badge-secondary">
+            {{ tag|upper }}
+        </a>
+        {% endfor %}
+    </div></h1>
+{% endblock body %}

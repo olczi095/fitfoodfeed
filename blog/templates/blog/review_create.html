@@ -1,0 +1,81 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}
+            Add Review
+        {% endblock title %}
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <link rel="shortcut icon" href="{% static 'images/search-heart-fill.svg' %}" />
+</head>
+
+<body class="body-background">  
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" id="upper-navbar" style="height:2rem;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <span class="home-image"><a href="{% url 'app_reviews:home' %}">🏠</a></span>
+            <ul class="navbar-nav ml-auto">
+                {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-item-light" href="{% url 'app_reviews:category' category.slug %}">
+                            {{ category.name|upper }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    {% include 'blog/includes/lower_navbar.html' %}
+
+    {% block form %}
+        <section class="form-add-container">
+            <form method="post" class="form-add-review">
+                <h2 class="post-modify-title">Create a new review</h2>
+                <br />
+                {% csrf_token %}
+                <div class="form-add-border post-detail-body">
+                    {{ form|crispy}}
+                </div>
+                <div class="form-buttons d-flex justify-content-between">
+                    <div>
+                        <br />
+                        <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Submit</button>
+                        <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
+                    </div>
+                    <div>
+                        <br />
+                        <a href="{% url 'app_reviews:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
+                    </div>
+                </div>
+            </form>
+        </section>
+    {% endblock form %}
+
+    {% block scripts %}
+        <!-- External scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+        <!-- Internal scripts -->
+        <script src="{% static 'blog/js/darkmode_toggle.js' %}"></script>
+    {% endblock scripts %}
+    
+</body>
+</html>

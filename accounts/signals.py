@@ -6,7 +6,7 @@ from django.db import transaction
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from reviews.models import Post
+from blog.models import Post
 
 from .models import User as AccountsUser  # Importing User directly for type hints
 

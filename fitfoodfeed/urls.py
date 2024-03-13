@@ -7,8 +7,8 @@ from . import settings
 
 urlpatterns = [
     path('adminpanel/', admin.site.urls),
-    path('', RedirectView.as_view(url='reviews/')),
-    path('reviews/', include('reviews.urls', namespace='reviews')),
+    path('', RedirectView.as_view(url='blog/')),
+    path('blog/', include('blog.urls', namespace='blog')),
     path('accounts/', include('accounts.urls', namespace='accounts'))
 ]
 

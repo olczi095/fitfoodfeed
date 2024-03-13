@@ -1,0 +1,11 @@
+{% load static %}
+
+{% if comments %}
+    {% for comment in comments %}
+        {% include 'blog/includes/comment_detail.html' with comment=comment %}
+    {% endfor %}
+{% else %}
+    <div class="info">
+        There are no comments for this post.
+    </div>
+{% endif %}
