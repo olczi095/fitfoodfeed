@@ -4,7 +4,6 @@ from django.db import models
 
 from utils.polish_slug_utils import convert_to_slug
 
-
 # Catalog with products
 
 class Category(models.Model):
@@ -40,7 +39,7 @@ class Product(models.Model):
     full_description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
-    
+
     # Additional information
     category = models.ForeignKey(
         Category,
