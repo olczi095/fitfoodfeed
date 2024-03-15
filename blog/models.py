@@ -8,42 +8,15 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.text import slugify
 from django_resized import ResizedImageField
 from taggit.managers import TaggableManager
 
 from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
 from accounts.validators import validate_avatar_type
+from utils.polish_slug_utils import convert_to_slug
 
 User = get_user_model()
-
-
-def convert_to_slug(text: str) -> str:
-    """
-    Converts polish signs into their ASCII substitutes,
-    creates a valid slug from the input text.
-    """
-    text = text.lower()
-    polish_signs_conversion = {
-        'ą': 'a',
-        'ć': 'c',
-        'ę': 'e',
-        'ł': 'l',
-        'ń': 'n',
-        'ó': 'o',
-        'ś': 's',
-        'ź': 'z',
-        'ż': 'z'
-    }
-    text_without_polish_signs = ''
-
-    for sign in text:
-        if sign in polish_signs_conversion:
-            text_without_polish_signs += polish_signs_conversion[sign]
-        else:
-            text_without_polish_signs += sign
-    return slugify(text_without_polish_signs)
 
 
 class Category(models.Model):
