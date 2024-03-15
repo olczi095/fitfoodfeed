@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django_resized import ResizedImageField
@@ -71,7 +71,8 @@ class Post(models.Model):
         default=None,
         related_name='review_posts',
         null=True,
-        blank=True
+        blank=True,
+        limit_choices_to=Q(is_author=True) | Q(is_superuser=True)
     )
     category = models.ForeignKey(
         Category,
