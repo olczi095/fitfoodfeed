@@ -49,7 +49,10 @@ class Product(models.Model):
         related_name='products'
     )
     brand_name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to='product_images/')
+    image = models.ImageField(
+        upload_to='product_images/',
+        default='static/images/default_product_image.png'
+    )
     available = models.BooleanField(default=True)
     is_on_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
