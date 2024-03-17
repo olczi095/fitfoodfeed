@@ -167,3 +167,8 @@ http://localhost:8000/
 - [@olczi095](https://github.com/olczi095/olczi095)
 
 ✌️ If you have any ideas for improving or modifying my project, feel free to contact me.
+
+
+### Icon Attribution
+
+The icons used in this project were created by [mim_studio](https://www.flaticon.com/authors/mim-studio) from [Flaticon](https://www.flaticon.com/), and are available under the [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/) license.
