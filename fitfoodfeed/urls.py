@@ -9,7 +9,8 @@ urlpatterns = [
     path('adminpanel/', admin.site.urls),
     path('', RedirectView.as_view(url='blog/')),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('accounts/', include('accounts.urls', namespace='accounts'))
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('shop/', include('shop.urls', namespace='shop')),
 ]
 
 urlpatterns += static(
