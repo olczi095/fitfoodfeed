@@ -1,0 +1,17 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lower-navbar-shop" style="height:2rem;">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="lowerNavbar">
+        <ul class="navbar-nav mr-auto">
+            {% for product_category in product_categories %}
+                <li class="nav-item">
+                    <a class="nav-link nav-item-light" href="#">
+                        {{ product_category.name|upper }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
