@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    All Products | {{ block.super }}
+    {{ block.super }}
 {% endblock title %}
 
 {% block header %}
@@ -10,11 +10,63 @@
 {% endblock header %}
 
 {% block body %}
+    <section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+            {% for product in products %}
+                <div class="col mb-5">
+                    <div class="card card-product-body h-100">
+                        <!-- Product image-->
+                        {% if product.image and product.image.url %}
+                            <img class="card-img-top" src="{{ product.image.url }}" alt="Main photo of the product for sale." />
+                        {% else %}
+                            <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of the product for sale." />
+                        {% endif %}
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="fw-bolder card-product-title">{{ product.name }}</h5>
+                                <!-- Product reviews-->
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                <!-- Product price-->
+                                {% if product.is_on_sale %}
+                                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                    <span class="text-muted text-decoration-line-through">{{ product.price }}</span>
+                                    <span class="card-product-price">{{ product.sale_price }} PLN</span>
+                                {% else %}
+                                    <span class="card-product-price">{{ product.price }} PLN</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Product actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="row align-items-center justify-content-center pe-3 ps-3">
+                                <div class="col-md-4 text-end pe-md-2">
+                                    <input class="form-control mb-2 mb-md-0" type="number" min="1" value="1">
+                                </div>
+                                <div class="col-md-8 text-start ps-md-2">
+                                    <button class="btn btn-outline-dark mt-0 mt-md-auto w-100 btn-add-product" href="#">Add to cart</button>
+                                </div>
+                            </div>
+                        </div>                        
+                                             
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </section>
 {% endblock body %}
 
 {% block footer %}
     {{ block.super }}
 {% endblock footer %}
-
-{% block scripts %}
-{% endblock scripts %}

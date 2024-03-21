@@ -51,7 +51,8 @@ class Product(models.Model):
     brand_name = models.CharField(max_length=50)
     image = models.ImageField(
         upload_to='product_images/',
-        default='static/images/default_product_image.png'
+        null=True,
+        blank=True
     )
     available = models.BooleanField(default=True)
     is_on_sale = models.BooleanField(default=False)

@@ -112,3 +112,27 @@
     font-size: 1.3rem;
     color: var(--color-black);
 }
+
+.card-product-price {
+    font-weight: 600;
+    color: var(--color-dark-grey);
+}
+
+.card-product-body {
+    background-color: var(--color-white) !important;
+    border-color: var(--color-medium-grey) !important;
+}
+
+.card-product-title {
+    color: var(--color-black) !important;
+}
+
+.btn-add-product {
+    color: var(--color-black) !important;
+    background-color: var(--color-white) !important;
+    border-color: var(--color-middleorange) !important;
+}
+
+.btn-add-product:hover {
+    background-color: var(--color-middleorange) !important;
+}
