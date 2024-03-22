@@ -2,19 +2,35 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    
     <div class="collapse navbar-collapse" id="lowerNavbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="{% url 'blog:home' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 REVIEWS
                 </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                {% for tag in navbar_tags %}
-                    <a class="dropdown-item" href="{% url 'blog:tag' tag %}">{{ tag }}</a>
-                {% endfor %}
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
-            </div>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'blog:tags' %}"><strong>ALL TAGS</strong></a>
+                    <div class="dropdown-divider"></div>
+                    {% for tag in navbar_tags %}
+                        {% if tag == 'sweets' %}
+                            <a class="dropdown-item" href="{% url 'blog:tag' tag %}">🍫 {{ tag }}</a>
+                        {% elif tag == 'snacks' %}
+                            <a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥨 {{ tag }}</a>
+                        {% elif tag == 'drinks' %}
+                            <a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥤 {{ tag }}</a>
+                        {% elif tag == 'ready-to-eat' %}
+                            <a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥗 {{ tag }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if request.user.is_author or request.user.is_superuser %}
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-item for-authors-item"><strong>FOR AUTHORS</strong></span>
+                        <a class="dropdown-item" href="{% url 'blog:create_review' %}">🖋️ create a review</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">RECIPES</a>

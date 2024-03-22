@@ -136,3 +136,10 @@
 .btn-add-product:hover {
     background-color: var(--color-middleorange) !important;
 }
+
+.for-authors-item {
+    background-color: transparent;
+    color: inherit;
+    cursor: default;
+    pointer-events: none;
+}

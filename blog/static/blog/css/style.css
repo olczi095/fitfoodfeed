@@ -712,3 +712,10 @@
     font-size: 1.3rem;
     color: var(--color-black);
 }
+
+.for-authors-item {
+    background-color: transparent;
+    color: inherit;
+    cursor: default;
+    pointer-events: none;
+}

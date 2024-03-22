@@ -1,22 +1,25 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" id="upper-navbar-shop">
     <div class="home-image"><a href="{% url 'blog:home' %}">🏠</a></div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#shopUpperNavbar" aria-controls="shopUpperNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <div class="collapse navbar-collapse" id="shopUpperNavbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="{% url 'blog:home' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 REVIEWS
                 </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">🍫 SWEETS</a>
-                <a class="dropdown-item" href="#">🥨 SNACKS</a>
-                <a class="dropdown-item" href="#">🥤 DRINKS</a>
-                <a class="dropdown-item" href="#">🥗 READY-TO-EAT</a>
-            <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
-            </div>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'blog:tags' %}"><strong>ALL TAGS</strong></a>
+                    {% if request.user.is_author or request.user.is_superuser %}
+                        <div class="dropdown-divider"></div>
+                        <span class="dropdown-item for-authors-item"><strong>FOR AUTHORS</strong></span>
+                        <a class="dropdown-item" href="{% url 'blog:create_review' %}">🖋️ create a review</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">RECIPES</a>
@@ -28,14 +31,21 @@
                 <a class="nav-link" href="#">CONTACT</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="🔎" aria-label="Search" style="margin-right:2rem !important">
-        </form>
         
-        <!-- Dark/Light change styles toggle -->
-        <div id="style-mode-toggle">
-            <i class="bi bi-moon-fill toggle-moon-button" id="moon-button-shop"></i>
-            <i class="bi bi-brightness-high toggle-sun-button" id="sun-button-shop" style="display:none;"></i>
-        </div>
+        <form class="form-inline my-2 my-lg-0">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:logout' %}" class="btn btn-outline-dark" id="btn-navbar-logout">Log Out</a>
+            {% else %}
+                <a href="{% url 'accounts:register' %}" class="btn btn-outline-dark" id="btn-navbar-signup">Sign Up</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-info">🙋‍♂️ Log In</a>
+            {% endif %}
+            <input class="form-control mr-sm-2" type="search" placeholder="🔎" aria-label="Search">
+
+            <!-- Dark/Light change styles toggle -->
+            <div id="style-mode-toggle">
+                <i class="bi bi-moon-fill toggle-moon-button" id="moon-button-blog"></i>
+                <i class="bi bi-brightness-high toggle-sun-button" id="sun-button-blog" style="display:none;"></i>
+            </div>
+        </form>
     </div>
 </nav>
