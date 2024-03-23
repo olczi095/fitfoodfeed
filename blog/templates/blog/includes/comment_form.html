@@ -7,6 +7,7 @@
 
 <div class="comment-form">
     <hr /><h5><strong>Leave your comment</strong></h5><hr />
+    <!-- Comment form for authenticated user -->
     {% if user.is_authenticated %}
         <form method="post">
             {% csrf_token %}
@@ -17,9 +18,11 @@
             <div class="form-group">
                 {{ form.body }}
             </div>
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     {% else %}
+        <!-- Comment form for unauthenticated user -->
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
@@ -33,6 +36,7 @@
             <div class="form-group">
                 {{ form.body }}
             </div>
+            <!-- Submit button -->
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     {% endif %}

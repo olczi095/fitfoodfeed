@@ -6,6 +6,7 @@
 {% endblock title %}
 
 {% block header %}
+    <!-- Header -->
     <div class="home-header">
         <div class="header-text-main">MOCNE ŻARCIE<br /></div>
         <div class="header-text">all tags</div>
@@ -14,6 +15,7 @@
 
 {% block body %}
     <h1><div class="tags-content">
+        <!-- Loop through the tags -->
         {% for tag in tags %}
         <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge badge-secondary">
             {{ tag|upper }}

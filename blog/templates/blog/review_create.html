@@ -8,28 +8,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create a new post with fit food review on Mocne Żarcie platform." />
+    <meta name="author" content="olczi095" />
     <title>
-        {% block title %}
-            Add Review
-        {% endblock title %}
+        {% block title %}Add Review{% endblock title %}
     </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&display=swap" rel="stylesheet">
+    <!-- Main website icon -->
+    <link rel="shortcut icon" href="{% static 'images/search-heart-fill.svg' %}" />
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <!-- Core theme CSS (includes Bootstrap) -->
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-    <link rel="shortcut icon" href="{% static 'images/search-heart-fill.svg' %}" />
+    <!-- Google font styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500&display=swap">
 </head>
 
-<body class="body-background">  
+<body class="body-background">
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" id="upper-navbar" style="height:2rem;">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Home link -->
             <span class="home-image"><a href="{% url 'blog:home' %}">🏠</a></span>
             <ul class="navbar-nav ml-auto">
+                <!-- Category links -->
                 {% for category in categories %}
                     <li class="nav-item">
                         <a class="nav-link nav-item-light" href="{% url 'blog:category' category.slug %}">
@@ -44,6 +51,7 @@
     {% include 'blog/includes/lower_navbar.html' %}
 
     {% block form %}
+        <!-- Add review form -->
         <section class="form-add-container">
             <form method="post" class="form-add-review">
                 <h2 class="post-modify-title">Create a new review</h2>
@@ -55,11 +63,13 @@
                 <div class="form-buttons d-flex justify-content-between">
                     <div>
                         <br />
+                        <!-- Submit and clear buttons -->
                         <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Submit</button>
                         <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
                     </div>
                     <div>
                         <br />
+                        <!-- Exit button -->
                         <a href="{% url 'blog:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
                     </div>
                 </div>
@@ -72,7 +82,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
         <!-- Internal scripts -->
         <script src="{% static 'blog/js/darkmode_toggle.js' %}"></script>
     {% endblock scripts %}

@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permission Denied | MocneŻarcie</title>
+    <meta name="description" content="Access Forbidden - You do not have permission to access this page on the Mocne Żarcie platform." />
+    <meta name="author" content="olczi095" />
+    <title>Permission Denied | Mocne Żarcie</title>
+    <!-- Bootstrap styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
@@ -13,8 +16,10 @@
     <div class="alert alert-danger" role="alert">
         <h4 class="alert-heading">Forbidden</h4>
         <p>{{ exception }}</p>
+        <!-- Link to login -->
         <a href="{% url 'accounts:login' %}">→ Log in</a>
         <hr>
+        <!-- Home link -->
         <p class="mb-0">Or you can also come back to the <a href="{% url 'blog:home' %}"> homepage 🏠 </a>.</p>
       </div>
 </body>

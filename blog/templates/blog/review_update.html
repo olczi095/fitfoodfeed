@@ -7,22 +7,26 @@
 {% endblock title %}
 
 {% block form %}
+    <!-- Update review form -->
     <section class="form-add-container">
         <form method="post" class="form-add-review">
             <h2 class="post-modify-title">Update Review: <strong>{{ post.title }}</strong></h2>
             <br />
             {% csrf_token %}
+            <!-- Form fields -->
             <div class="form-add-border post-detail-body">
                 {{ form|crispy}}
             </div>
             <div class="form-buttons d-flex justify-content-between">
                 <div>
                     <br />
+                    <!-- Update and clear buttons -->
                     <button type="submit" class="btn btn-success" name="submit_button" value="Submit">Update</button>
                     <button type="reset" class="btn btn-secondary" name="clear_button" value="Clear">Clear</button>
                 </div>
                 <div>
                     <br />
+                    <!-- Exit button -->
                     <a href="{% url 'blog:home' %}" class="btn btn-danger" name="reset_button" type="reset">Exit</a>
                 </div>
             </div>

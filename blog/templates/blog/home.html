@@ -1,9 +1,11 @@
 {% extends 'blog/base.html' %}
 {% load static %}
+
 {% block title %}
     {{ block.super }} - Reviews of Healthy (or Less Healthy) Products
 {% endblock title%}
 
+<!-- Header -->
 {% block header %}
     <div class="home-header">
         <div class="header-text-main">MOCNE ŻARCIE<br /></div>
@@ -12,7 +14,7 @@
 {% endblock header %}
 
 {% block body %}
-
+    <!-- Messages section -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-success" role="alert">
@@ -23,23 +25,30 @@
 
     <div class="home-content">
         <div class="posts">
+            <!-- Loop through all posts -->
             {% for post in posts %}
                     <div class="post">
-
+                        <!-- Modify post buttons for authorized users -->
                         <div class="post-icons">
                             {% if user == post.author or user.is_staff or user.is_superuser %}
+                                <!-- Update post icon -->
                                 <a href="{% url 'blog:update_review' post.pk %}">
                                     <ion-icon name="create-outline"></ion-icon>
                                 </a>
+                                <!-- Delete post icon -->
                                 <a href="{% url 'blog:delete_review' post.pk %}">
                                     <ion-icon name="trash-outline" style="color:red;"></ion-icon>
                                 </a>
                             {% endif %}
                         </div>
                         
+                        <!-- Post title -->
                         <h1><a href="{{ post.get_absolute_url }}" class="post-title">{{ post.title }}</a></h1>
+                        <!-- Category name -->
                         <a href="{{ post.category.get_absolute_url }}" class="category-name">{{ post.category.name|upper }}</a>
+                        <!-- Post info -->
                         <span class="post-info">{{ post.author }} / {{ post.pub_date }} 
+                            <!-- Comment stats -->
                             {% if post.comment_stats == 1 %}
                                 / {{ post.comment_stats }} comment
                             {% else %}
@@ -47,12 +56,14 @@
                             {% endif %}
                         </span> 
 
+                        <!-- Post body -->
                         <div class="small-space"></div>
                         <div class="post-detail-body">
                             {{ post.body | truncatewords:150}}<br /><br />
                         </div>
                         <div class="small-space"></div>
-
+                        
+                        <!-- Post tags -->
                         {% for tag in post.tags.all %}
                             <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge badge-secondary">
                                 {{ tag|upper }}
@@ -63,7 +74,8 @@
                         <div class="small-space"></div>
                     </div>
             {% endfor %}
-
+            
+            <!-- Pagination section -->
             <div class="pagination">
                 <span class="previous">
                     {% if page_obj.has_previous %}
@@ -85,7 +97,9 @@
             </div>
         </div>
 
+        <!-- Sidebar section -->
         <div class="sidebar">
+            <!-- About author -->
             <img src={% static 'blog/images/me-avatar.png' %} class="avatar-style"/><br />
 
             <div class="short-description">
@@ -96,40 +110,39 @@
                 Moreover, "Mocne Żarcie" is more than just a website - it's a big fitness society. It brings together people with similar passions who support each other, independently review many of products, and encourage each other to be active, fit and healthy. 
             </div>
 
+            <!-- Most popular posts -->
             <div class="sidebar-widget">
                 <span class="title">Most popular</span>
                     <ol>
-                        {% for post in popular_posts %}
-                            <a href="{{ post.get_absolute_url }}" class="single-post">
-                                <li>{{ post.title }}</li>
-                            </a>
-                        {% endfor %}
+                    {% for post in popular_posts %}
+                        <a href="{{ post.get_absolute_url }}" class="single-post">
+                            <li>{{ post.title }}</li>
+                        </a>
+                    {% endfor %}
                     </ol>
             </div>
             <br />
+            <!-- Recent comments -->
             <div class="sidebar-widget">
                 <span class="title">Recent comments</span>
                     {% for comment in recent_comments %}
                         <div class="sidebar-comment">
-                                <span class="icon"><ion-icon name='person'></ion-icon></span>
-
-                                {% if comment.logged_user %}
-                                    <span class="author"><strong>{{ comment.logged_user }}</strong> on </span>
-                                    <a href="{{ comment.post.get_absolute_url }}" class="link">
-                                        {{ comment.post }}
-                                    </a>
-                                {% endif %}
-                                
-                                {% if comment.unlogged_user %}
-                                    <span class="author"><strong>{{ comment.unlogged_user }}</strong> on </span>
-                                    <a href="{{ comment.post.get_absolute_url }}" class="link">
-                                        {{ comment.post }}
-                                    </a>
-                                {% endif %}
-
-                                <div class="body">
-                                    {{ comment.body }}
-                                </div>
+                            <span class="icon"><ion-icon name='person'></ion-icon></span>
+                            {% if comment.logged_user %}
+                                <span class="author"><strong>{{ comment.logged_user }}</strong> on </span>
+                                <a href="{{ comment.post.get_absolute_url }}" class="link">
+                                    {{ comment.post }}
+                                </a>
+                            {% endif %}
+                            {% if comment.unlogged_user %}
+                                <span class="author"><strong>{{ comment.unlogged_user }}</strong> on </span>
+                                <a href="{{ comment.post.get_absolute_url }}" class="link">
+                                    {{ comment.post }}
+                                </a>
+                            {% endif %}
+                            <div class="body">
+                                {{ comment.body }}
+                            </div>
                         </div>
                     {% endfor %}
             </div>

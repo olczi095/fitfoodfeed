@@ -6,10 +6,12 @@
     <div class="collapse navbar-collapse" id="lowerNavbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
+                <!-- Home link -->
                 <a class="nav-link dropdown-toggle" href="{% url 'blog:home' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 REVIEWS
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <!-- Tag links section -->
                     <a class="dropdown-item" href="{% url 'blog:tags' %}"><strong>ALL TAGS</strong></a>
                     <div class="dropdown-divider"></div>
                     {% for tag in navbar_tags %}
@@ -23,15 +25,18 @@
                             <a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥗 {{ tag }}</a>
                         {% endif %}
                     {% endfor %}
+                    <!-- Links for authors section -->
                     {% if request.user.is_author or request.user.is_superuser %}
                         <div class="dropdown-divider"></div>
                         <span class="dropdown-item for-authors-item"><strong>FOR AUTHORS</strong></span>
                         <a class="dropdown-item" href="{% url 'blog:create_review' %}">🖋️ create a review</a>
                     {% endif %}
                     <div class="dropdown-divider"></div>
+                    <!-- Submission link -->
                     <a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a>
                 </div>
             </li>
+            <!-- Other links section -->
             <li class="nav-item">
                 <a class="nav-link" href="#">RECIPES</a>
             </li>
@@ -43,6 +48,7 @@
             </li>
         </ul>
         
+        <!-- Account actions links section -->
         <form class="form-inline my-2 my-lg-0">
             {% if user.is_authenticated %}
                 <a href="{% url 'accounts:logout' %}" class="btn btn-outline-dark" id="btn-navbar-logout">Log Out</a>
@@ -50,9 +56,10 @@
                 <a href="{% url 'accounts:register' %}" class="btn btn-outline-dark" id="btn-navbar-signup">Sign Up</a>
                 <a href="{% url 'accounts:login' %}" class="btn btn-info">🙋‍♂️ Log In</a>
             {% endif %}
+            <!-- Search input -->
             <input class="form-control mr-sm-2" type="search" placeholder="🔎" aria-label="Search">
 
-            <!-- Dark/Light change styles toggle -->
+            <!-- Dark/light mode toggle -->
             <div id="style-mode-toggle">
                 <i class="bi bi-moon-fill toggle-moon-button" id="moon-button-blog"></i>
                 <i class="bi bi-brightness-high toggle-sun-button" id="sun-button-blog" style="display:none;"></i>

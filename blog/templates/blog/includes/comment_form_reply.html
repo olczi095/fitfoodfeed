@@ -1,19 +1,23 @@
 {% load static %}
 
 {% if user.is_authenticated %}
+    <!-- Form for authenticated user -->
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
             <label for="{{ form.logged_user.id_for_label }}">{{ form.logged_user.label }}</label> - 
-                <strong>{{ user }}</strong>
+            <strong>{{ user }}</strong>
         </div>
         <div class="form-group">
             {{ form.body }}
         </div>
+        <!-- Submit button -->
         <button type="submit" class="btn btn-primary btn-orange">Submit</button>
+        <!-- Hidden field for comment parent ID -->
         <input type="hidden" name="comment_parent_id" value="{{ comment.id }}">
     </form>
 {% else %}
+    <!-- Form for unauthenticated user -->
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -27,7 +31,9 @@
         <div class="form-group">
             {{ form.body }}
         </div>
+        <!-- Submit button -->
         <button type="submit" class="btn btn-primary btn-orange">Submit</button>
+        <!-- Hidden field for comment parent ID -->
         <input type="hidden" name="comment_parent_id" value="{{ comment.id }}">
     </form>
 {% endif %}

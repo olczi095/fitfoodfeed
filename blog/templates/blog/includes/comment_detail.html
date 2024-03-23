@@ -3,50 +3,64 @@
 
 <div id="comment-{{ comment.id }}" class="comment" style="--level: {{ comment.level }}" data-level="{{ comment.level }}">
 
+    <!-- Displaying author information (staff) -->
     {% if comment.logged_user and comment.logged_user.is_staff %}
         <div class="author-admin">
+            <!-- Author avatar -->
             {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
                 <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
             {% endif %}
+            <!-- Author name -->
             {{ comment.logged_user}}
         </div>
+        <!-- Comment publication datetime -->
         <div class="datetime">
             {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
         </div>
 
+    <!-- Displaying author information (authenticated user) -->
     {% elif comment.logged_user %}
         <div class="author">
+            <!-- Author avatar -->
             {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
                 <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
             {% endif %}
+            <!-- Author name -->
             {{ comment.logged_user}}
         </div>
+        <!-- Comment publication datetime -->
         <div class="datetime">
             {{ comment.pub_datetime|date:"Y-m-d" }} at {{ comment.pub_datetime|date:"H:i:s" }}
         </div>
 
+    <!-- Displaying author information (other) -->
     {% else %}
         <div class="author">
+            <!-- Default avatar -->
             <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
+            <!-- Author name -->
             {{ comment.unlogged_user }}
         </div> 
+        <!-- Comment publication datetime -->
         <div class="datetime">
             {{ comment.pub_datetime|date:"Y-m-d"}} at {{ comment.pub_datetime|date:"H:i:s" }}
         </div>
 
     {% endif %}
+    <!-- Displaying comment body -->
     {{ comment.body }}
     <br />
 
     {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
 
+            <!-- Modify comment buttons for superuser -->
             <div class="modify-comment-buttons">
-                <!-- edit comment button -->
+                <!-- Edit button -->
                 <button type="button" 
                         class="modify-comment-button edit-comment-button" 
                         data-comment-id="{{ comment.id }}"
@@ -54,7 +68,7 @@
                     <ion-icon name="create-outline"></ion-icon>
                 </button>
 
-                <!-- delete comment button -->
+                <!-- Delete button -->
                 <div class="delete-comment-container" hx-trigger="click">
                     <button type="submit" 
                             class="modify-comment-button delete-comment-button"
@@ -66,7 +80,7 @@
                 </div>
             </div>
 
-            <!-- form for editing a comment; default doesn't display -->
+            <!-- Form for editing a comment -->
             <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
                 {% include 'blog/includes/comment_form_edit.html' %}
             </div>
@@ -74,8 +88,9 @@
         {% elif request.user.is_staff %}
             {% if not comment.logged_user.is_staff and not comment.logged_user.is_superuser or comment.logged_user == request.user %}
                 
+                <!-- Modify comment buttons for staff -->
                 <div class="modify-comment-buttons">
-                    <!-- edit comment button -->
+                    <!-- Edit button -->
                     <button type="button" 
                             class="modify-comment-button edit-comment-button" 
                             data-comment-id="{{ comment.id }}"
@@ -83,7 +98,7 @@
                         <ion-icon name="create-outline"></ion-icon>
                     </button>
                     
-                    <!-- delete comment button -->
+                    <!-- Delete button -->
                     <div class="delete-comment-container" hx-trigger="click">
                         <button type="submit" 
                                 class="modify-comment-button delete-comment-button"
@@ -95,7 +110,7 @@
                     </div>
                 </div>
                 
-                <!-- form for editing a comment; default doesn't display -->
+                <!-- Form for editing a comment -->
                 <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
                     {% include 'blog/includes/comment_form_edit.html' %}
                 </div>
@@ -107,12 +122,12 @@
 
     <button type="button" class="comment-reply-button">Reply</button>
 
-    <!--form for adding a reply; default doesn't display-->
+    <!-- Reply button -->
     <div class="comment-reply-form" id="commentFormReply" style="display: none;">
         {% include 'blog/includes/comment_form_reply.html'%}
     </div>
 
-    <!--displaying all replies for a particular comment-->
+    <!-- Displaying replies -->
     {% for reply in comment.active_replies %}
         {% include 'blog/includes/comment_detail.html' with comment=reply %}
     {% endfor %}
