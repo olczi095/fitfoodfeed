@@ -80,6 +80,10 @@
     text-align: center;
 }
 
+.header-category-main {
+    font-size: 3rem;
+}
+
 .nav-link {
     font-weight: 700 !important;
     margin-right: 1rem;
