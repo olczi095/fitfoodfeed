@@ -8,14 +8,22 @@ function toggleNavbarClasses(elements, classes) {
 
 function setStyleMode(mode) {
     document.body.classList.toggle('dark-mode');
-    let moonButton = document.getElementById('moon-button-shop');
-    let sunButton = document.getElementById('sun-button-shop');
+    let moonButton = document.getElementById('moon-button');
+    let sunButton = document.getElementById('sun-button');
     let lowerNavbarShop = document.getElementById('lower-navbar-shop');
     let upperNavbarShop = document.getElementById('upper-navbar-shop');
+    let btnNavbarLogout = document.getElementById('btn-navbar-logout');
+    let btnNavbarSignUp = document.getElementById('btn-navbar-signup');
 
     toggleNavbarClasses([lowerNavbarShop, upperNavbarShop], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
     moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
     sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+
+    if (btnNavbarSignUp) {
+        toggleNavbarClasses([btnNavbarSignUp], ['btn-outline-dark', 'btn-outline-light']);
+    } else {
+        toggleNavbarClasses([btnNavbarLogout], ['btn-outline-dark', 'btn-outline-light']);
+    }
 
     localStorage.setItem('style-mode', mode);
 }

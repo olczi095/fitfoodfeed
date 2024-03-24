@@ -72,7 +72,7 @@
 .header-text {
     font: 1.1rem var(--font-plustjakartasans);
     font-weight: 700;
-    background-color: rgba(255, 188, 101);
+    background-color: rgba(255, 188, 101, 0.8);
     border: 0.1rem solid var(--color-orange);
     border-radius: 0.6rem;
     padding: 1rem;
@@ -134,11 +134,11 @@
 .btn-add-product {
     color: var(--color-black) !important;
     background-color: var(--color-white) !important;
-    border-color: var(--color-middleorange) !important;
+    border-color: var(--color-lightorange) !important;
 }
 
 .btn-add-product:hover {
-    background-color: var(--color-middleorange) !important;
+    background-color: var(--color-lightorange) !important;
 }
 
 .for-authors-item {

@@ -1,15 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar-accounts">
+<div class="container-fluid">
     <!-- Home link -->
     <div class="home-image"><a href="{% url 'blog:home' %}">🏠</a></div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Navigation -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="{% url 'blog:home' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     REVIEWS
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -50,14 +51,14 @@
             </li>
         </ul>
         <!-- Search form -->
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="🔎" aria-label="Search" style="margin-right:2rem !important">
-        </form>
-        
+        <form class="d-flex">
+            <input class="form-control" type="search" placeholder="🔎" aria-label="Search">        
         <!-- Dark/light mode toggle -->
-        <div id="style-mode-toggle">
-            <i class="bi bi-moon-fill toggle-moon-button" id="moon-button-accounts"></i>
-            <i class="bi bi-brightness-high toggle-sun-button" id="sun-button-accounts" style="display:none;"></i>
-        </div>
+            <div id="style-mode-toggle">
+                <i class="bi bi-moon-fill toggle-moon-button" id="moon-button-accounts"></i>
+                <i class="bi bi-brightness-high toggle-sun-button" id="sun-button-accounts" style="display:none;"></i>
+            </div>
+        </form>
     </div>
+</div>
 </nav>

@@ -14,12 +14,12 @@
 {% endblock header %}
 
 {% block body %}
-    <h1><div class="tags-content">
+    <h4><div class="tags-content">
         <!-- Loop through the tags -->
         {% for tag in tags %}
-        <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge badge-secondary">
+        <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge text-bg-secondary">
             {{ tag|upper }}
         </a>
         {% endfor %}
-    </div></h1>
+    </div></h4>
 {% endblock body %}

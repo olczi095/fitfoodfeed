@@ -27,7 +27,14 @@ class PostForm(forms.ModelForm[Model]):
             'status': 'Status'
         }
         widgets: dict[str, forms.Widget] = {
-            'author': forms.HiddenInput()
+            'author': forms.HiddenInput(),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'meta_description': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'body': forms.Textarea(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'image': forms.FileInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'status': forms.Select(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
         }
         help_texts: dict[str, str] = {
             'slug': 'You can leave this field empty. \

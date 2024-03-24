@@ -69,7 +69,7 @@
 
 .header-text {
     font: 1.5rem var(--font-plustjakartasans);
-    font-weight: 600;
+    font-weight: 500;
     background-color: rgba(255, 188, 101, 0.4);
     border: 0.1rem solid var(--color-orange);
     border-radius: 0.6rem;
@@ -331,6 +331,10 @@
 
 .tags-content {
     padding: 3rem 15rem;
+}
+
+.tags-content a {
+    text-decoration: none !important;
 }
 
 @media screen and (min-width: 600px) and (max-width: 1200px) {
