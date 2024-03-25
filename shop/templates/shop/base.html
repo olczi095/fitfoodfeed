@@ -28,14 +28,15 @@
     {% include 'shop/includes/upper_navbar.html' %}
 
     <!-- Header -->
-    <div class="header">
-        <header class="py-5">
-            {% block header %}
+    {% block header %}
+        <div class="header">
+            <header class="py-5">
                 <div class="header-text-main">Shop<br /></div>
                 <div class="header-text">FIT products.<br />Choose what you want, take care of your body and mind.<br /></div>
-            {% endblock header %}
-        </header>
-    </div>  
+            </header>
+        </div>  
+    {% endblock header %}
+
 
     {% include 'shop/includes/lower_navbar.html' %}
 

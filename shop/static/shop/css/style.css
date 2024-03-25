@@ -119,7 +119,7 @@
 
 .card-product-price {
     font-weight: 600;
-    color: var(--color-dark-grey);
+    color: var(--color-black);
 }
 
 .card-product-body {
@@ -146,4 +146,14 @@
     color: inherit;
     cursor: default;
     pointer-events: none;
+}
+
+.custom-product-bg {
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+.old-price {
+    color: rgba(169, 169, 169, 0.7);
+    margin-right: 0.5rem;
 }

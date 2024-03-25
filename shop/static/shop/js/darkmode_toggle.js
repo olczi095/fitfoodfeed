@@ -12,21 +12,17 @@ function setStyleMode(mode) {
     let sunButton = document.getElementById('sun-button');
     let lowerNavbarShop = document.getElementById('lower-navbar-shop');
     let upperNavbarShop = document.getElementById('upper-navbar-shop');
-    let btnNavbarLogout = document.getElementById('btn-navbar-logout');
-    let btnNavbarSignUp = document.getElementById('btn-navbar-signup');
+    let cartButton = document.getElementById('btn-cart');
 
     toggleNavbarClasses([lowerNavbarShop, upperNavbarShop], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
+    toggleNavbarClasses([cartButton,], ['btn-outline-dark', 'btn-outline-light']);
+
     moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
     sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
 
-    if (btnNavbarSignUp) {
-        toggleNavbarClasses([btnNavbarSignUp], ['btn-outline-dark', 'btn-outline-light']);
-    } else {
-        toggleNavbarClasses([btnNavbarLogout], ['btn-outline-dark', 'btn-outline-light']);
-    }
-
     localStorage.setItem('style-mode', mode);
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const styleModeToggle = document.getElementById('style-mode-toggle');
@@ -38,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
 
             setStyleMode(newMode);
+            changeButtonColor();
         });
     }
 
