@@ -2,14 +2,106 @@
 {% load static %}
 
 {% block title %}
-    Product | {{ block.super }}
+    {{ product.name }} | {{ block.super }}
 {% endblock title %}
 
 {% block header %}
-    {{ block.super }}
 {% endblock header %}
 
 {% block body %}
+    <!-- Product section -->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <!-- Product image -->
+                {% if product.image and product.image.url %}
+                    <div class="col-md-6">
+                        <img class="card-img-top mb-5 mb-md-0" src="{{ product.image.url }}" alt="Main photo of the product for sale." />
+                    </div>
+                {% else %}
+                    <div class="col-md-6">
+                        <img class="card-img-top mb-5 mb-md-0" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of the product for sale." />
+                    </div>
+                {% endif %}
+                <!-- Product details -->
+                <div class="col-md-6">
+                    <div class="small mb-1 product-description">ID: {{ product.id }}</div>
+                    <h1 class="fw-bolder post-title">{{ product.name }}</h1>
+                    <div class="fs-5 mb-5">
+                        {% if product.is_on_sale %}
+                            <span class="old-price"><strike>{{ product.price }} PLN</strike></span>
+                            <span class="card-product-price">{{ product.sale_price }} PLN</span>
+                        {% else %}
+                            <span class="card-product-price">{{ product.price }} PLN</span>
+                        {% endif %}
+                    </div>
+                    <p class="product-brief product-description">{{ product.brief_description }}</p>
+                    <button class="btn btn-outline-dark" id="readMoreBtn">Read more</button>
+                    <br /><br/>
+                    <p class="product-description" id="fullDescription" style="display:none;">{{ product.full_description }}</p>
+                    <br />
+                    <div class="d-flex">
+                        <input class="form-control text-center me-3" id="inputQuantity" type="num" min="0" max="{{ product.quantity }}" value="1" style="max-width: 3rem" />
+                        <button class="btn btn-outline-dark flex-shrink-0 btn-add-product" type="button">
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related items section -->
+    <section class="py-3 bg-light related-products-grid" id="related-products-section">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h4 class="fw-bolder mb-4 related-products-title">Related products</h4>
+            <br /><br />
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                <!-- Loop through the related products -->
+                {% for related_product in related_products %}
+                    <div class="col mb-1">
+                        <div class="card h-100">
+                            <!-- Product image -->
+                            {% if related_product.image and related_product.image.url %}
+                                <img class="card-img-top" src="{{ related_product.image.url }}" alt="Main photo of {{ related_product.name }}." />
+                            {% else %}
+                                <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of {{ related_product.name }}." />
+                            {% endif %}
+                            <!-- Product details -->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name -->
+                                    <h5 class="fw-bolder">{{ related_product.name }}</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <!-- Product price -->
+                                    {% if related_product.is_on_sale %}
+                                        <div class="badge text-bg-warning custom-product-bg position-absolute">SALE</div>
+                                        <span class="old-price"><strike>{{ related_product.price }}</strike></span>
+                                        <span class="card-product-price">{{ related_product.sale_price }} PLN</span>
+                                    {% else %}
+                                        <span class="card-product-price">{{ related_product.price }} PLN</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <!-- Product actions -->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ related_product.get_absolute_url }}">View options</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+        </div>
+    </section>
 {% endblock body %}
 
 {% block footer %}
@@ -17,4 +109,6 @@
 {% endblock footer %}
 
 {% block scripts %}
+    <script src="{% static 'shop/js/readmore_toggle.js' %}"></script>
+    {{ block.super }}
 {% endblock scripts %}

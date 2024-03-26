@@ -1,6 +1,8 @@
 from typing import Any
 
 from django.db import models
+from django.db.models import QuerySet
+from django.urls import reverse
 
 from utils.polish_slug_utils import convert_to_slug
 
@@ -70,3 +72,14 @@ class Product(models.Model):
         if not self.slug:
             self.slug = convert_to_slug(self.name)
         return super().save(*args, **kwargs)
+
+    def get_absolute_url(self) -> str:
+        return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
+
+    def related_products_by_category(self) -> QuerySet:
+        if self.category:
+            return Product.objects.filter(category=self.category).exclude(id=self.id)
+        return Product.objects.none()
+
+    def related_products_by_brand(self) -> QuerySet:
+        return Product.objects.filter(brand_name=self.brand_name).exclude(id=self.id)

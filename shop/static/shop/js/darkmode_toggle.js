@@ -13,9 +13,14 @@ function setStyleMode(mode) {
     let lowerNavbarShop = document.getElementById('lower-navbar-shop');
     let upperNavbarShop = document.getElementById('upper-navbar-shop');
     let cartButton = document.getElementById('btn-cart');
+    let readMoreButton = document.getElementById('readMoreBtn');
+    let relatedProductSection = document.getElementById('related-products-section');
+
+    relatedProductSection.classList.toggle('bg-dark');
+    relatedProductSection.classList.toggle('bg-light');
 
     toggleNavbarClasses([lowerNavbarShop, upperNavbarShop], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
-    toggleNavbarClasses([cartButton,], ['btn-outline-dark', 'btn-outline-light']);
+    toggleNavbarClasses([cartButton, readMoreButton], ['btn-outline-dark', 'btn-outline-light']);
 
     moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
     sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';

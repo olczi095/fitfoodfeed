@@ -1,9 +1,9 @@
 from django.contrib import messages
-from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from .models import Category, Product
+from .utils import get_related_products
 
 
 def shop_redirect(request: HttpRequest) -> HttpResponseRedirect:
@@ -35,7 +35,12 @@ def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
         product = Product.objects.get(slug=product_slug)
 
         if product.available is True:
-            return render(request, 'shop/product_detail.html', {'product': product})
+            related_products = get_related_products(product=product, num_products=4)
+            return render(
+                request,
+                'shop/product_detail.html', 
+                {'product': product, 'related_products': related_products}
+            )
 
         if product.category:
             messages.error(

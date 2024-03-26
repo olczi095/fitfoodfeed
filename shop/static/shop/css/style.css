@@ -71,7 +71,7 @@
 
 .header-text {
     font: 1.1rem var(--font-plustjakartasans);
-    font-weight: 700;
+    font-weight: 600;
     background-color: rgba(255, 188, 101, 0.8);
     border: 0.1rem solid var(--color-orange);
     border-radius: 0.6rem;
@@ -156,4 +156,33 @@
 .old-price {
     color: rgba(169, 169, 169, 0.7);
     margin-right: 0.5rem;
+}
+
+.post-title {
+    display: inline-block;
+    color: var(--color-black);
+    font-weight: bolder;
+}
+
+.product-brief {
+    font-size: 1.2rem;
+}
+
+.product-description {
+    color: var(--color-text-body);
+}
+
+.related-products-grid {
+    margin-top: 5rem;
+    margin-bottom: 7rem;
+}
+
+.related-products-title {
+    color: var(--color-whitegrey);
+    background-color: var(--color-lightorange);
+    font-weight: 400;
+    padding: 0.5rem;
+    text-align: center;
+    margin: 0 auto;
+    align-items: center;
 }
