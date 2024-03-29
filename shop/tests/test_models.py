@@ -45,6 +45,9 @@ class ProductModelTest(TestCase):
                 content_type='image/jpeg'
             )
         )
+        self.product2 = None
+        self.product3 = None
+        self.product4 = None
 
     def test_string_representation(self):
         self.assertEqual(str(self.product), 'Test Product')
@@ -67,38 +70,49 @@ class ProductModelTest(TestCase):
             )
         )
         self.assertEqual(polish_product.slug, 'maslo-orzechowe')
-        
+
     def test_get_absolute_url(self):
         product_absolute_url = '/shop/products/' + self.product.slug + '/'
         self.assertEqual(self.product.get_absolute_url(), product_absolute_url)
-        
+
     def test_related_products_by_category(self):
-        self.product2 = Product.objects.create(name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand')
-        self.product3 = Product.objects.create(name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand')
-        self.product4 = Product.objects.create(name='Test Product 4', price=9.99, brand_name='Test Brand')
+        self.product2 = Product.objects.create(
+            name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand'
+        )
+        self.product3 = Product.objects.create(
+            name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand'
+        )
+        self.product4 = Product.objects.create(
+            name='Test Product 4', price=9.99, brand_name='Test Brand'
+        )
 
         related_products = self.product.related_products_by_category()
         self.assertEqual(related_products.count(), 2)
         self.assertIn(self.product2, related_products)
         self.assertIn(self.product3, related_products)
         self.assertNotIn(self.product4, related_products)
-        
+
     def test_no_related_products_by_category(self):
         related_products = self.product.related_products_by_category()
         self.assertEqual(related_products.count(), 0)
-              
+
     def test_related_products_by_brand(self):
-        self.product2 = Product.objects.create(name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand')
-        self.product3 = Product.objects.create(name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand X')
-        self.product4 = Product.objects.create(name='Test Product 4', price=9.99, brand_name='Test Brand Y')
-        
+        self.product2 = Product.objects.create(
+            name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand'
+        )
+        self.product3 = Product.objects.create(
+            name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand X'
+        )
+        self.product4 = Product.objects.create(
+            name='Test Product 4', price=9.99, brand_name='Test Brand Y'
+        )
+
         related_products = self.product.related_products_by_brand()
         self.assertEqual(related_products.count(), 1)
         self.assertIn(self.product2, related_products)
         self.assertNotIn(self.product3, related_products)
         self.assertNotIn(self.product4, related_products)
-        
+
     def test_no_related_products_by_brand(self):
         related_products = self.product.related_products_by_brand()
         self.assertEqual(related_products.count(), 0)
-    
