@@ -7,24 +7,21 @@ function toggleNavbarClasses(elements, classes) {
 }
 
 function setStyleMode(mode) {
-    document.body.classList.toggle('dark-mode');
     let moonButton = document.getElementById('moon-button-blog');
     let sunButton = document.getElementById('sun-button-blog');
     let upperNavbar = document.getElementById('upper-navbar');
     let lowerNavbar = document.getElementById('lower-navbar');
-    let btnNavbarLogout = document.getElementById('btn-navbar-logout');
-    let btnNavbarSignUp = document.getElementById('btn-navbar-signup');
 
-    toggleNavbarClasses([upperNavbar, lowerNavbar], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
-    moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
-    sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
-
-    if (btnNavbarSignUp) {
-        toggleNavbarClasses([btnNavbarSignUp], ['btn-outline-dark', 'btn-outline-light']);
-    } else {
-        toggleNavbarClasses([btnNavbarLogout], ['btn-outline-dark', 'btn-outline-light']);
+    if (upperNavbar && lowerNavbar) {
+        toggleNavbarClasses([upperNavbar, lowerNavbar], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
     }
 
+    if (moonButton && sunButton) {
+        moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
+        sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.body.classList.toggle('dark-mode');
     localStorage.setItem('style-mode', mode);
 }
 

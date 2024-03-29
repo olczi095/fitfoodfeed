@@ -5,6 +5,11 @@
     {{ product.name }} | {{ block.super }}
 {% endblock title %}
 
+{% block scripts %}
+    {{ block.super }}
+    <script defer src="{% static 'shop/js/readmore_toggle.js' %}"></script>
+{% endblock scripts %}
+
 {% block header %}
 {% endblock header %}
 
@@ -107,8 +112,3 @@
 {% block footer %}
     {{ block.super }}
 {% endblock footer %}
-
-{% block scripts %}
-    <script src="{% static 'shop/js/readmore_toggle.js' %}"></script>
-    {{ block.super }}
-{% endblock scripts %}

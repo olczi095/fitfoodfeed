@@ -5,6 +5,17 @@
     {{ post.title }} | {{ block.super}}
 {% endblock title %}
 
+<!-- Scripts -->
+{% block scripts %}
+    {{ block.super }}
+    <!-- Additional scripts for specific subtemplate -->
+    <script defer src="{% static 'blog/js/like_review.js' %}"></script>
+    <script defer src="{% static 'blog/js/comment_reply.js' %}"></script>
+    <script defer src="{% static 'blog/js/comment_edit.js' %}"></script>
+    <script defer src="{% static 'blog/js/comment_delete.js' %}"></script>
+    <script defer src="{% static 'blog/js/comment_counter_update.js' %}"></script>
+{% endblock scripts %}
+
 <!-- Header -->
 {% block header %}
     <div class="home-header">
@@ -86,13 +97,3 @@
 
     </div>
 {% endblock body %}
-
-{% block scripts %}
-    {{ block.super }}
-    <!-- Additional scripts for specific subtemplate -->
-    <script src="{% static 'blog/js/like_review.js' %}"></script>
-    <script src="{% static 'blog/js/comment_reply.js' %}"></script>
-    <script src="{% static 'blog/js/comment_edit.js' %}"></script>
-    <script src="{% static 'blog/js/comment_delete.js' %}"></script>
-    <script src="{% static 'blog/js/comment_counter_update.js' %}"></script>
-{% endblock scripts %}

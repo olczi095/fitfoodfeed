@@ -7,7 +7,6 @@ function toggleNavbarClasses(elements, classes) {
 }
 
 function setStyleMode(mode) {
-    document.body.classList.toggle('dark-mode');
     let moonButton = document.getElementById('moon-button');
     let sunButton = document.getElementById('sun-button');
     let lowerNavbarShop = document.getElementById('lower-navbar-shop');
@@ -16,15 +15,28 @@ function setStyleMode(mode) {
     let readMoreButton = document.getElementById('readMoreBtn');
     let relatedProductSection = document.getElementById('related-products-section');
 
-    relatedProductSection.classList.toggle('bg-dark');
-    relatedProductSection.classList.toggle('bg-light');
+    if (relatedProductSection) {
+        relatedProductSection.classList.toggle('bg-dark');
+        relatedProductSection.classList.toggle('bg-light');
+    }
 
-    toggleNavbarClasses([lowerNavbarShop, upperNavbarShop], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
-    toggleNavbarClasses([cartButton, readMoreButton], ['btn-outline-dark', 'btn-outline-light']);
+    if (lowerNavbarShop && upperNavbarShop) {
+        toggleNavbarClasses([lowerNavbarShop, upperNavbarShop], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
+    }
 
-    moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
-    sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+    if (cartButton) {
+        toggleNavbarClasses([cartButton], ['btn-outline-dark', 'btn-outline-light']);
+    }
+    if (readMoreButton) {
+        toggleNavbarClasses([readMoreButton], ['btn-outline-dark', 'btn-outline-light']);
+    }
 
+    if (moonButton && sunButton) {
+        moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
+        sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.body.classList.toggle('dark-mode');
     localStorage.setItem('style-mode', mode);
 }
 
@@ -39,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
 
             setStyleMode(newMode);
-            changeButtonColor();
         });
     }
 

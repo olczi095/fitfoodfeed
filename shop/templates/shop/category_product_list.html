@@ -3,6 +3,8 @@
 
 {% block title %}{{ category.name }} | {{ block.super }}{% endblock title %}
 
+{% block scripts %}{{ block.super }}{% endblock scripts %}
+
 {% block header %}
     <div class="header">
         <header class="py-5">
@@ -87,7 +89,3 @@
 {% block footer %}
     {{ block.super }}
 {% endblock footer %}
-
-{% block scripts %}
-    {{ block.super }}
-{% endblock scripts %}

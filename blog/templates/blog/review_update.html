@@ -2,9 +2,9 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}
-    Update Review
-{% endblock title %}
+{% block title %}Update Review{% endblock title %}
+
+{% block scripts %}{{ block.super }}{% endblock scripts %}
 
 {% block form %}
     <!-- Update review form -->
@@ -33,7 +33,3 @@
         </form>
     </section>
 {% endblock form %}
-
-{% block scripts %}
-    {{ block.super }}
-{% endblock scripts %}

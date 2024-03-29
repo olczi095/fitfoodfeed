@@ -5,6 +5,8 @@
     Login to {{ block.super }} - {{ block.super }}
 {% endblock title %}
 
+{% block scripts %}{{ block.super }}{% endblock scripts %}
+
 {% block form %}
     <!-- Form container-->
     <section class="form-container">
@@ -36,7 +38,3 @@
         </form>
     </section>
 {% endblock form %}
-
-{% block scripts %}
-    {{ block.super }}
-{% endblock %}

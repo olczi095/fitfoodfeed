@@ -1,9 +1,11 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
-{% block title%}
-    Join {{ block.super }} - {{ block.super}}
+{% block title %}
+    Join {{ block.super }} - {{ block.super }}
 {% endblock %}
+
+{% block scripts %}{{ block.super }}{% endblock scripts %}
 
 {% block form %}
     <!-- Form container -->
@@ -50,7 +52,3 @@
         </form> 
     </section>
 {% endblock form %}
-
-{% block scripts %}
-    {{ block.super }}
-{% endblock %}
