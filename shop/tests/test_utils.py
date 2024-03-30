@@ -20,13 +20,13 @@ class GetRelatedProductsTest(TestCase):
             name='Test Product 4', price=9.99, brand_name='Other Test Brand'
         )
 
-    def get_related_products_returns_correct_related_products(self):
+    def test_get_related_products_returns_correct_related_products(self):
         related_products = get_related_products(product=self.product1, num_products=4)
         self.assertEqual(len(related_products), 2)
         self.assertIn(self.product2, related_products)
         self.assertIn(self.product3, related_products)
 
-    def test_related_products_returns_no_duplicates(self):
+    def test_get_related_products_returns_no_duplicates(self):
         related_products = get_related_products(product=self.product1, num_products=4)
         self.assertEqual(len(related_products), len(set(related_products)))
 
