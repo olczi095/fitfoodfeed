@@ -1,4 +1,4 @@
-from typing import Any, Protocol
+from typing import Any
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -11,15 +11,6 @@ from django.utils.html import format_html
 from .models import Category, Comment, Post
 
 User = get_user_model()
-
-
-class AdminAttributes(Protocol):
-    short_description: str
-
-
-def admin_attr_decorator(func: Any) -> Any:
-    """A decorator for admin attributes. (type hints)"""
-    return func
 
 
 @admin.register(Post)
@@ -39,7 +30,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
     search_fields = ['title', 'meta_description', 'body']
     prepopulated_fields = {'slug': ('title',)}
 
-    @admin_attr_decorator
+    @admin.display(description="author")
     def author_model(self, obj: Post) -> str:
         """Allows to redirect to the "user change" admin panel."""
         if obj.author:
@@ -49,11 +40,11 @@ class PostAdmin(admin.ModelAdmin[Model]):
             )
         return format_html(f'<a href="{author_change_url}">{obj.author}</a>')
 
-    @admin_attr_decorator
+    @admin.display(description="likes")
     def likes_counter_model(self, obj: Post) -> Any:
         return obj.likes_stats
 
-    @admin_attr_decorator
+    @admin.display(description="category")
     def category_model(self, obj: Post) -> str:
         """Allows to redirect to the "category change" admin panel. """
         if obj.category:
@@ -67,7 +58,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
         """Optimizes query performance by prefetching related 'tags' data."""
         return super().get_queryset(request).prefetch_related('tags')
 
-    @admin_attr_decorator
+    @admin.display(description="tags")
     def tag_list(self, obj: Post) -> str:
         """Allows to redirect to the "taggit tag change" admin panel."""
         tags = obj.tags.all()
@@ -93,11 +84,6 @@ class PostAdmin(admin.ModelAdmin[Model]):
         ):
             obj.author = request.user
         return super().save_model(request, obj, form, change)
-
-    author_model.short_description = 'author'
-    likes_counter_model.short_description = 'likes'
-    category_model.short_description = 'category'
-    tag_list.short_description = 'tags'
 
 
 @admin.register(Category)
@@ -170,7 +156,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
     def comment(self, obj: Comment) -> str:
         return obj.body[:75]
 
-    @admin_attr_decorator
+    @admin.display(description="POSTED IN")
     def post_title(self, obj: Comment) -> str:
         """Allows to redirect to the "post change" admin panel."""
         post_change_url = reverse('admin:blog_post_change', args=[obj.post.pk])
@@ -181,7 +167,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
             return obj.logged_user.email
         return obj.email
 
-    @admin_attr_decorator
+    @admin.display(description="DATE / TIME")
     def datetime(self, obj: Comment) -> str:
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -196,6 +182,3 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         self, request: HttpRequest
     ) -> dict[str, str | list[str]]:
         return {'unlogged_user': ''}
-
-    datetime.short_description = "DATE / TIME"
-    post_title.short_description = "POSTED IN"

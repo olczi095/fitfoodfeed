@@ -1,4 +1,4 @@
-from typing import Any, Protocol
+from typing import Any
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -7,14 +7,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User as AccountsUser  # Importing User directly for type hints
 
 User = get_user_model()
-
-
-def admin_attr_decorator(func: Any) -> Any:
-    return func
-
-
-class AdminAttributes(Protocol):
-    short_description: str
 
 
 @admin.register(User)
@@ -62,15 +54,12 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
 
-    @admin_attr_decorator
+    @admin.display(description="User")
     def display_user(self, obj: AccountsUser) -> str:
         return obj.username
 
-    @admin_attr_decorator
+    @admin.display(description="Role")
     def display_groups(self, obj: AccountsUser) -> str:
         user_groups = [group.name for group in obj.groups.all()]
         user_groups.sort()
         return ', '.join(user_groups)
-
-    display_user.short_description = 'User'
-    display_groups.short_description = 'Role'
