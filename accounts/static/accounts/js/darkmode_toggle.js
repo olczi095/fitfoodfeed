@@ -1,34 +1,42 @@
-function toggleNavbarClasses(elements, classes) {
+function toggleNavbarClasses(elements, darkMode) {
+    const darkClasses = ['navbar-dark', 'bg-dark'];
     elements.forEach(element => {
-        classes.forEach(className => {
-            element.classList.toggle(className);
+        darkClasses.forEach(className => {
+            if (darkMode) {
+                element.classList.remove(className);
+            } else {
+                element.classList.add(className);
+            }
         });
     });
 }
 
-function setStyleMode(mode) {
-    document.body.classList.toggle('dark-mode');
-    let moonButton = document.getElementById('moon-button-accounts');
-    let sunButton = document.getElementById('sun-button-accounts');
-    let navbarAccounts = document.getElementById('navbar-accounts');
+function setNewStyleMode(newStyleMode) {
+    const isDarkMode = newStyleMode !== 'dark';
+    const moonButton = document.querySelector('.toggle-moon-button');
+    const sunButton = document.querySelector('.toggle-sun-button');
+    const navbarAccounts = document.getElementById('navbarAccounts');
 
-    toggleNavbarClasses([navbarAccounts], ['navbar-dark', 'bg-dark']);
+    document.body.classList.toggle('dark-mode');
     moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
     sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+    toggleNavbarClasses([navbarAccounts], isDarkMode);
 
-    localStorage.setItem('style-mode', mode);
+    localStorage.setItem('style-mode', newStyleMode);
 }
 
-document.getElementById('style-mode-toggle').addEventListener('click', function() {
-    const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
-
-    setStyleMode(newMode);
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+function setStoredStyleMode() {
     const storedMode = localStorage.getItem('style-mode');
     if (storedMode && storedMode === 'dark') {
         setStyleMode(storedMode);
     }
+};
+
+setStoredStyleMode();
+
+document.getElementById('styleModeToggle').addEventListener('click', function () {
+    const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    const desiredStyleMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
+
+    setNewStyleMode(desiredStyleMode);
 });
