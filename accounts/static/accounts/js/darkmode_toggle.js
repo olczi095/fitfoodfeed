@@ -17,24 +17,31 @@ function setNewStyleMode(newStyleMode) {
     const sunButton = document.querySelector('.toggle-sun-button');
     const navbarAccounts = document.getElementById('navbarAccounts');
 
-    document.body.classList.toggle('dark-mode');
-    moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
-    sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
-    toggleNavbarClasses([navbarAccounts], isDarkMode);
+    if (navbarAccounts) {
+        toggleNavbarClasses([navbarAccounts], isDarkMode);
+    }
 
+    if (moonButton && sunButton) {
+        moonButton.style.display = sunButton.style.display === 'none' ? 'none' : 'block';
+        sunButton.style.display = sunButton.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.body.classList.toggle('dark-mode');
     localStorage.setItem('style-mode', newStyleMode);
 }
 
 function setStoredStyleMode() {
     const storedMode = localStorage.getItem('style-mode');
     if (storedMode && storedMode === 'dark') {
-        setStyleMode(storedMode);
+        setNewStyleMode(storedMode);
     }
 };
 
+const styleModeToggle = document.getElementById('styleModeToggle');
+
 setStoredStyleMode();
 
-document.getElementById('styleModeToggle').addEventListener('click', function () {
+styleModeToggle.addEventListener('click', function () {
     const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
     const desiredStyleMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
 
