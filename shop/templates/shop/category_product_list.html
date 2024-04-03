@@ -32,7 +32,9 @@
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <!-- Product name-->
-                                <h5 class="fw-bolder card-product-title">{{ product.name }}</h5>
+                                <a href="{% url 'shop:product_detail' product.slug %}" class="fw-bolder card-product-title">
+                                    <h5 >{{ product.name }}</h5>
+                                </a>
                                 <!-- Product reviews-->
                                 <div class="d-flex justify-content-center small text-warning mb-2">
                                     <div class="bi-star-fill"></div>

@@ -127,8 +127,14 @@
     border-color: var(--color-medium-grey) !important;
 }
 
-.card-product-title {
+.card-product-title,
+.related-product-title {
     color: var(--color-black) !important;
+    text-decoration: none !important;
+}
+
+.card-product-title:hover {
+    color: var(--color-blue) !important;
 }
 
 .btn-add-product {
