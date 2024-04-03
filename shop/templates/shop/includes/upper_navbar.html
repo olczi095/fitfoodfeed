@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="upper-navbar-shop">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="upperNavbarShop">
 <div class="container-fluid">
     <!-- Home link -->
     <div class="home-image"><a href="{% url 'blog:home' %}">🏠</a></div>
@@ -54,7 +54,7 @@
             {% endif %}
             <!-- Cart btn -->
             <form class="d-flex">
-                <button class="btn btn-outline-dark" id="btn-cart" type="submit">
+                <button class="btn btn-outline-dark" id="btnCart" type="submit">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
                     <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
@@ -63,8 +63,8 @@
 
             <!-- Dark/Light change styles toggle -->
             <div id="style-mode-toggle">
-                <i class="bi bi-moon-fill toggle-moon-button" id="moon-button"></i>
-                <i class="bi bi-brightness-high toggle-sun-button" id="sun-button" style="display:none;"></i>
+                <i class="bi bi-moon-fill toggle-moon-button"></i>
+                <i class="bi bi-brightness-high toggle-sun-button" style="display:none;"></i>
             </div>
         </form>
     </div>
