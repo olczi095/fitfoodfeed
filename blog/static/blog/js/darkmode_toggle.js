@@ -6,11 +6,11 @@ function toggleNavbarClasses(elements, classes) {
     });
 }
 
-function setStyleMode(mode) {
-    let moonButton = document.getElementById('moon-button-blog');
-    let sunButton = document.getElementById('sun-button-blog');
-    let upperNavbar = document.getElementById('upper-navbar');
-    let lowerNavbar = document.getElementById('lower-navbar');
+function setStyleMode(newStyleMode) {
+    const moonButton = document.querySelector('.toggle-moon-button');
+    const sunButton = document.querySelector('.toggle-sun-button');
+    const upperNavbar = document.getElementById('upperNavbar');
+    const lowerNavbar = document.getElementById('lowerNavbar');
 
     if (upperNavbar && lowerNavbar) {
         toggleNavbarClasses([upperNavbar, lowerNavbar], ['navbar-dark', 'navbar-light', 'bg-dark', 'bg-light']);
@@ -22,23 +22,25 @@ function setStyleMode(mode) {
     }
 
     document.body.classList.toggle('dark-mode');
-    localStorage.setItem('style-mode', mode);
+    localStorage.setItem('style-mode', newStyleMode);
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const styleModeToggle = document.getElementById('style-mode-toggle');
+function setStoredStyleMode() {
     const storedMode = localStorage.getItem('style-mode');
-
-    if (styleModeToggle) {
-        styleModeToggle.addEventListener('click', function () {
-            const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-            const newMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
-
-            setStyleMode(newMode);
-        });
-    }
-
     if (storedMode && storedMode === 'dark') {
         setStyleMode(storedMode);
     }
-});
+}
+
+const styleModeToggle = document.getElementById('styleModeToggle');
+
+setStoredStyleMode();
+
+if (styleModeToggle) {
+    styleModeToggle.addEventListener('click', function () {
+        const currentStyleMode = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        const desiredStyleMode = currentStyleMode === 'dark' ? 'light' : 'dark';  // style mode after toggle by the setStyleMode function
+
+        setStyleMode(desiredStyleMode);
+    });
+}
