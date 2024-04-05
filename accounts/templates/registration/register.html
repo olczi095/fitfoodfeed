@@ -9,14 +9,14 @@
 
 {% block form %}
     <!-- Form container -->
-    <section class="form-container form-register-container">
-        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image form-image-register" />    
-        <form class="form-login form-register" method="post" action={% url 'accounts:register' %}>
+    <section class="form-container form-middle-container">
+        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image form-middle-image" />    
+        <form class="form-registration form-middle" method="post" action={% url 'accounts:register' %}>
             {% csrf_token %}
             <h2>Registration</h2>
 
-                <!-- Form fields -->
-                {% for field in form %}
+            <!-- Form fields -->
+            {% for field in form %}
                 <div class="form-field">
                     {% if field.label != 'First name' and field.label != 'Last name' %}
                         {% if field.label == 'Password confirmation' %}
@@ -28,27 +28,27 @@
                         <p class="not-required">{{ field.label }}:</p>{{ field }}
                     {% endif %}
                 </div>
-                {% endfor %}
+            {% endfor %}
 
-                <!-- Error messages -->
-                <br />
-                {% for field, error_message in form.errors.items %}
-                    <div class="form-error-message">{{ error_message }}</div>
-                {% endfor %}
+            <!-- Error messages -->
+            <br />
+            {% for field, error_message in form.errors.items %}
+                <div class="form-error-message">{{ error_message }}</div>
+            {% endfor %}
 
             <!-- Submit button -->
             <button type="submit" class="btn btn-secondary btn-lg btn-block">Sign up!</button>
-        <br />
-        <!-- Link to login -->
-        <p class="account-link">
-            Do you already have an account? → 
-            <a href="{% url 'accounts:login' %}">Login!</a>
-        </p>
-        <!-- Link to password reset-->
-        <p class="account-link">
-            Need to reset your password? → 
-            <a href="{% url 'accounts:password_reset' %}">Reset!</a>
-        </p>
+            <br />
+
+            <!-- Links (login & password reset) -->
+            <p class="account-link">
+                Do you already have an account? → 
+                <a href="{% url 'accounts:login' %}">Login!</a>
+            </p>
+            <p class="account-link">
+                Need to reset your password? → 
+                <a href="{% url 'accounts:password_reset' %}">Reset!</a>
+            </p>
         </form> 
     </section>
 {% endblock form %}

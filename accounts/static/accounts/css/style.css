@@ -30,15 +30,13 @@
 }
 
 .container {
-    margin: 4rem auto;
     display: flex;
     justify-content: center;
 }
 
 .form-container {
-    width: 50rem;
-    height: 70vh;
-    margin: auto auto;
+    margin: 3rem auto;
+    max-height: 100%;
     background-color: var(--color-beige);
     display: flex;
     justify-content: center;
@@ -47,14 +45,12 @@
 }
 
 .form-image {
-    max-width: 100%;
-    max-height: 100%;
+    height: 35rem;
     width: auto;
-    height: auto;
-    margin: auto auto auto 0;
+    margin: auto;
 }
 
-.form-login {
+.form-registration {
     height: 100%;
     width: 100%;
     padding: 2rem;
@@ -69,17 +65,21 @@
         margin: 2rem auto;
     }
 
-    .form-register-container {
+    .form-middle-container {
         width: 100%;
         height: 100%
     }
 
-    .form-register {
+    .form-middle {
         padding: 4rem;
     }
 
-    .form-image-register {
+    .form-middle-image {
         display: none;
+    }
+
+    .btn-middle {
+        margin-top: 1rem;
     }
 }
 

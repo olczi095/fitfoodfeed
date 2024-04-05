@@ -9,32 +9,33 @@
 
 {% block form %}
     <!-- Form container-->
-    <section class="form-container">
-        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image" />    
-        <form class="form-login" method="post" action={% url 'accounts:login' %}>
+    <section class="form-container form-middle-container">
+        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image form-middle-image" />    
+        <form class="form-registration form-middle" method="post" action={% url 'accounts:login' %}>
             {% csrf_token %}
+            <br/><br/>
             <h2>Log In</h2>
-            <br />
-                <!-- Form fields -->
-                {% for field in form %}
+
+            <!-- Form fields -->
+            {% for field in form %}
                 <div class="form-field">
                     <h6><span class="login-label">{{ field.label | upper }}:</span></h6>{{ field }}
                 </div>
-                {% endfor %}
+            {% endfor %}
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-secondary btn-lg btn-block btn-middle">Log In!</button>
             <br />
-            <!-- Login button -->
-            <button type="submit" class="btn btn-secondary btn-lg btn-block">Log In!</button>
-            <br />
-        <!-- Link to registration -->
-        <p class="account-link">
-            Need an account? → 
-            <a href="{% url 'accounts:register' %}">Join us!</a>
-        </p>
-        <!-- Link to password reset -->
-        <p class="account-link">
-            Need to reset you password? → 
-            <a href={% url 'accounts:password_reset' %}>Reset it here!</a>
-        </p>
+
+            <!-- Links (register $ password reset) -->
+            <p class="account-link">
+                Need an account? → 
+                <a href="{% url 'accounts:register' %}">Join us!</a>
+            </p>
+            <p class="account-link">
+                Need to reset you password? → 
+                <a href={% url 'accounts:password_reset' %}>Reset it here!</a>
+            </p>
         </form>
     </section>
 {% endblock form %}
