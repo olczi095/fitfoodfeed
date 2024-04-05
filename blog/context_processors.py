@@ -11,6 +11,20 @@ def categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
     """
     return {'categories': Category.objects.all()}
 
+def main_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
+    """
+    Returns a list contains six main categories that can be added to the template context.
+    """
+    all_categories = Category.objects.all()
+    sorted_categories = sorted(
+        all_categories,
+        key=lambda category: category.get_posts_amount(),
+        reverse=True
+    )
+    return {
+        'main_categories': 
+            all_categories.filter(pk__in=[category.pk for category in sorted_categories[:6]])
+    }
 
 def filter_existing_tags_for_navbar() -> list[str]:
     expected_tags = ['sweets', 'snacks', 'drinks', 'ready-to-eat']
