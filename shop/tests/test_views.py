@@ -164,3 +164,21 @@ class ProductDetailTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual('error', message.tags)
         self.assertIn("product you were looking for not found", message.message)
+
+
+class CategoriesListTest(TestCase):
+    def setUp(self):
+        self.category1 = Category.objects.create(
+            name='Test Category 1'
+        )
+        self.category2 = Category.objects.create(
+            name='Test Category'
+        )
+
+    def test_categories_list_returns_200_response(self):
+        response = self.client.get(reverse('shop:categories_list'))
+        displayed_category_names = [category.name for category in response.context['categories']]
+        expected_category_names = [category.name for category in Category.objects.all()]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(displayed_category_names, expected_category_names)
+        self.assertTemplateUsed(response, 'shop/categories_list.html')

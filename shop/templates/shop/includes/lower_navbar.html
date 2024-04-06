@@ -1,19 +1,27 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lowerNavbarShop" style="height:2rem;">
-<div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="lowerNavbar">
-        <ul class="navbar-nav mr-auto">
-            <!-- Loop through all categories -->
-            {% for product_category in product_categories %}
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lowerNavbarShop" style="height: 2rem;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-center" id="lowerNavbar">
+            <ul class="navbar-nav mx-auto">
+                <!-- Loop through six main categories -->
+                {% for category in main_categories %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' category.slug %}">
+                            {{ category|upper }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <!-- All categories link -->
                 <li class="nav-item">
-                    <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' product_category.slug %}">
-                        {{ product_category.name|upper }}
+                    <a class="nav-link nav-item-light" href="{% url 'shop:categories_list' %}">
+                        ALL
                     </a>
                 </li>
-            {% endfor %}
-        </ul>
+            </ul>
+        </div>
+        
     </div>
-</div>
 </nav>

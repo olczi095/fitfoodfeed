@@ -80,8 +80,22 @@
     text-align: center;
 }
 
+.header-text-additional {
+    font: 20rem;
+    font-weight: 400;
+}
+
 .header-category-main {
     font-size: 3rem;
+}
+
+.header-details {
+    font-size: 2rem;
+}
+
+.all-categories-list {
+    background-color: var(--color-whitegrey) !important;
+    color: var(--color-dark-grey) !important;
 }
 
 .nav-link {

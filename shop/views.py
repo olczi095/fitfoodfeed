@@ -60,3 +60,7 @@ def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
             request, "Unfortunatelly, the product you were looking for not found."
         )
         return redirect('shop:product_list')
+    
+def categories_list(request: HttpRequest) -> HttpResponse:
+    categories = Category.objects.all()
+    return render(request, 'shop/categories_list.html', {'categories': categories})
