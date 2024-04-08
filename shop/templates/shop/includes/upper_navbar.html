@@ -1,72 +1,31 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light" id="upperNavbarShop">
-<div class="container-fluid">
-    <!-- Home link -->
-    <div class="home-image"><a href="{% url 'blog:home' %}">🏠</a></div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#shopUpperNavbar" aria-controls="shopUpperNavbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Upper navbar -->
-    <div class="collapse navbar-collapse justify-content-between" id="shopUpperNavbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    REVIEWS
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lowerNavbarShop" style="height: 2rem;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="lowerNavbar">
+            <span class="navbar-brand" style="margin-right:auto;">
+                <a class="home-image" href="{% url 'blog:home' %}">
+                    🏠
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'blog:tags' %}"><strong>ALL TAGS</strong></a></li>
-                    {% for tag in navbar_tags %}
-                        {% if tag == 'sweets' %}
-                            <li><a class="dropdown-item" href="{% url 'blog:tag' tag %}">🍫 {{ tag }}</a></li>
-                        {% elif tag == 'snacks' %}
-                            <li><a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥨 {{ tag }}</a></li>
-                        {% elif tag == 'drinks' %}
-                            <li><a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥤 {{ tag }}</a></li>
-                        {% elif tag == 'ready-to-eat' %}
-                            <li><a class="dropdown-item" href="{% url 'blog:tag' tag %}">🥗 {{ tag }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if request.user.is_author or request.user.is_superuser %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><span class="dropdown-item for-authors-item"><strong>FOR AUTHORS</strong></span></li>
-                        <li><a class="dropdown-item" href="{% url 'blog:create_review' %}">🖋️ create a review</a></li>
-                    {% endif %}
+            </span>
+            <ul class="navbar-nav mx-auto">
+                <!-- Loop through six main categories -->
+                {% for category in main_categories %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' category.slug %}">
+                            {{ category|upper }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <!-- All categories link -->
+                <li class="nav-item">
+                    <a class="nav-link nav-item-light" href="{% url 'shop:categories_list' %}">
+                        ALL
+                    </a>
                 </li>
             </ul>
-            <li class="nav-item">
-                <a class="nav-link" href="#">RECIPES</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'shop:product_list' %}">SHOP</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">CONTACT</a>
-            </li>
-        </ul>
+        </div>
         
-        <form class="d-flex">
-            <!-- Account actions links section -->
-            {% if user.is_authenticated %}
-                <a href="{% url 'accounts:logout' %}" class="btn btn-secondary me-2 text-nowrap">Log Out</a>
-            {% else %}
-                <a href="{% url 'accounts:register' %}" class="btn btn-success me-2 text-nowrap">Sign Up</a>
-                <a href="{% url 'accounts:login' %}" class="btn btn-primary me-2 text-nowrap">🙋‍♂️ Log In</a>
-            {% endif %}
-            <!-- Cart btn -->
-            <form class="d-flex">
-                <button class="btn btn-outline-dark" id="btnCart" type="submit">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                </button>
-            </form>
-
-            <!-- Dark/Light change styles toggle -->
-            <div id="style-mode-toggle">
-                <i class="bi bi-moon-fill toggle-moon-button"></i>
-                <i class="bi bi-brightness-high toggle-sun-button" style="display:none;"></i>
-            </div>
-        </form>
     </div>
-</div>
 </nav>

@@ -1,27 +1,75 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lowerNavbarShop" style="height: 2rem;">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="upperNavbarShop">
+<div class="container-fluid">
 
-        <div class="collapse navbar-collapse justify-content-center" id="lowerNavbar">
-            <ul class="navbar-nav mx-auto">
-                <!-- Loop through six main categories -->
-                {% for category in main_categories %}
-                    <li class="nav-item">
-                        <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' category.slug %}">
-                            {{ category|upper }}
+    <!-- Lower navbar -->
+    <div class="collapse navbar-collapse justify-content-between" id="shopUpperNavbar">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- Reviews  -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'blog:home' %}">REVIEWS</a>
+            </li>
+            <!-- Recipes -->
+            <li class="nav-item">
+                <a class="nav-link" href="#">RECIPES</a>
+            </li>
+            <!-- Shop dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="{% url 'shop:product_list' %}" id="navbarDropdownShop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    SHOP
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownShop">
+                    <li><a class="dropdown-item" href="{% url 'shop:product_list' %}"><strong>Main</strong></a></li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            Brands <strong>&raquo;</strong>
                         </a>
+                        <ul class="dropdown-menu dropdown-submenu">
+                            <li><a class="dropdown-item" href="#">Brands item 1</a></li>
+                        </ul>
                     </li>
-                {% endfor %}
-                <!-- All categories link -->
-                <li class="nav-item">
-                    <a class="nav-link nav-item-light" href="{% url 'shop:categories_list' %}">
-                        ALL
-                    </a>
-                </li>
-            </ul>
-        </div>
-        
+                    <li><a class="dropdown-item text-primary" href="#"><strong>On sale</strong></a></li>
+                    <li><a class="dropdown-item" href="#">New</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <!-- User Account -->
+                    {% if request.user.is_authenticated %}
+                        <li><a class="dropdown-item" href="#"><strong>ACCOUNT</strong></a></li>
+                    {% else %}
+                        <li><a class="dropdown-item" href="{% url 'accounts:login' %}"><strong>ACCOUNT</strong></a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="#">Basket</a></li>
+                    <li><a class="dropdown-item" href="#">Shipment</a></li>
+                    <li><a class="dropdown-item" href="#">FAQ</a></li>
+                </ul>
+            </li>
+            <!-- Contact -->
+            <li class="nav-item">
+                <a class="nav-link" href="#">CONTACT</a>
+            </li>
+        </ul>
+
+        <form class="d-flex">
+            <!-- Account actions links section -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:logout' %}" class="btn btn-secondary me-2 text-nowrap">Log Out</a>
+            {% else %}
+                <a href="{% url 'accounts:register' %}" class="btn btn-success me-2 text-nowrap">Sign Up</a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary me-2 text-nowrap">🙋‍♂️ Log In</a>
+            {% endif %}
+            <!-- Cart btn -->
+            <form class="d-flex">
+                <button class="btn btn-outline-dark" id="btnCart" type="submit">
+                    <i class="bi-cart-fill me-1"></i>
+                    Cart
+                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                </button>
+            </form>
+
+            <!-- Dark/Light change styles toggle -->
+            <div id="style-mode-toggle">
+                <i class="bi bi-moon-fill toggle-moon-button"></i>
+                <i class="bi bi-brightness-high toggle-sun-button" style="display:none;"></i>
+            </div>
+        </form>
     </div>
+</div>
 </nav>
