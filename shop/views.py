@@ -20,7 +20,7 @@ def category_product_list(request: HttpRequest, category_slug: str) -> HttpRespo
         category = Category.objects.get(slug=category_slug)
         products = category.products.order_by('-available')
         return render(
-            request, 'shop/category_product_list.html', {'category': category, 'products': products}
+            request, 'shop/filtered_product_list.html', {'category': category, 'products': products}
         )
 
     except Category.DoesNotExist:
