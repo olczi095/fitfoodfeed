@@ -1,23 +1,25 @@
 from django.test import TestCase
 
-from shop.models import Category, Product
+from shop.models import Brand, Category, Product
 from shop.utils import get_related_products
 
 
 class GetRelatedProductsTest(TestCase):
     def setUp(self):
         self.category = Category.objects.create(name='Test Category')
+        self.brand_x = Brand.objects.create(name='Brand X')
+        self.brand_y = Brand.objects.create(name='Brand Y')
         self.product1 = Product.objects.create(
-            name='Test Product 1', price=9.99, category=self.category, brand='Test Brand X'
+            name='Test Product 1', price=9.99, category=self.category, brand=self.brand_x
         )
         self.product2 = Product.objects.create(
-            name='Test Product 2', price=9.99, category=self.category, brand='Test Brand Y'
+            name='Test Product 2', price=9.99, category=self.category, brand=self.brand_y
         )
         self.product3 = Product.objects.create(
-            name='Test Product 3', price=9.99, category=self.category, brand='Test Brand Z'
+            name='Test Product 3', price=9.99, category=self.category, brand=self.brand_y
         )
         self.product4 = Product.objects.create(
-            name='Test Product 4', price=9.99, brand='Other Test Brand'
+            name='Test Product 4', price=9.99
         )
 
     def test_get_related_products_returns_correct_related_products(self):

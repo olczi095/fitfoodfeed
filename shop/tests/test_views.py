@@ -2,7 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from shop.models import Category, Product
+from shop.models import Brand, Category, Product
 
 
 class ShopRedirectTest(TestCase):
@@ -27,12 +27,15 @@ class CategoryProductListTest(TestCase):
         self.category = Category.objects.create(
             name='Test Category'
         )
+        self.brand = Brand.objects.create(
+            name='Brand'
+        )
         with open('shop/tests/files/test_image.jpg', 'rb') as f:
             content = f.read(0)
         self.product = Product.objects.create(
             name='Product',
             price=90.00,
-            brand='Brand',
+            brand=self.brand,
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,
@@ -93,10 +96,13 @@ class ProductDetailTest(TestCase):
         self.category = Category.objects.create(
             name='Test Category'
         )
+        self.brand = Brand.objects.create(
+            name='Fake Brand'
+        )
         self.product = Product.objects.create(
             name='Another Fake Product',
             price=19.99,
-            brand='Fake Brand',
+            brand=self.brand,
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,

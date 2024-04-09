@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.utils.html import strip_tags
 
 from shop.admin import CategoryAdmin, ProductAdmin
-from shop.models import Category, Product
+from shop.models import Brand, Category, Product
 
 User = get_user_model()
 
@@ -50,17 +50,18 @@ class ProductAdminTest(TestCase):
     def setUp(self):
         self.product_model_admin = ProductAdmin(model=Product, admin_site=AdminSite())
         self.category = Category.objects.create(name='Test Category')
+        self.brand = Brand.objects.create(name='Test Brand')
 
     def test_display_category_for_product_with_category(self):
         product = Product.objects.create(
-            name='Test Product', category=self.category, price=9.99, brand='Test Brand'
+            name='Test Product', category=self.category, price=9.99, brand=self.brand
         )
         category_model_display = self.product_model_admin.category_model(product)
         self.assertEqual(strip_tags(category_model_display), product.category.name)
 
     def test_display_category_for_product_without_category(self):
         product = Product.objects.create(
-            name='Test Product 4', price=9.99, brand='Test Brand'
+            name='Test Product 4', price=9.99, brand=self.brand
         )
         category_model_display = self.product_model_admin.category_model(product)
         self.assertEqual(category_model_display, None)

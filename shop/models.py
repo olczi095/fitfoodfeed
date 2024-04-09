@@ -32,6 +32,30 @@ class Category(models.Model):
         return self.products.count()
 
 
+class Brand(models.Model):
+    """Model representing a brand or manufacturer of products."""
+
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
+    description = models.TextField(blank=True)
+    logo = models.ImageField(upload_to='brand_images/', null=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self) -> str:
+        return self.name
+
+    def save(self, *args, **kwargs: Any) -> None:
+        if not self.slug:
+            self.slug = convert_to_slug(self.name)
+        return super().save(*args, **kwargs)
+
+    @property
+    def number_of_products(self):
+        return self.products.count()
+
+
 class Product(models.Model):
     """Model representing products in the product catalog."""
 
@@ -50,7 +74,13 @@ class Product(models.Model):
         blank=True,
         related_name='products'
     )
-    brand = models.CharField(max_length=50, null=True, blank=True)
+    brand = models.ForeignKey(
+        Brand,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='products'
+    )
     image = models.ImageField(
         upload_to='product_images/',
         null=True,
