@@ -2,46 +2,17 @@ from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
-from .models import Category, Brand, Product
+from .models import Brand, Category, Product
 from .utils import get_related_products
 
 
 def shop_redirect(request: HttpRequest) -> HttpResponseRedirect:
     return redirect('shop:product_list')
 
-
+# Views related to products
 def product_list(request: HttpRequest) -> HttpResponse:
     products = Product.objects.order_by('-available')
     return render(request, 'shop/product_list.html', {'products': products})
-
-
-def category_product_list(request: HttpRequest, category_slug: str) -> HttpResponse:
-    try:
-        category = Category.objects.get(slug=category_slug)
-        products = category.products.order_by('-available')
-        return render(
-            request, 'shop/filtered_product_list.html', {'category': category, 'products': products}
-        )
-
-    except Category.DoesNotExist:
-        messages.error(
-            request, "Unfortunatelly, the category you were looking for not found."
-        )
-        return redirect('shop:product_list')
-    
-def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
-    try:
-        brand = Brand.objects.get(slug=brand_slug)
-        products = brand.products.order_by('-available')
-        return render(
-            request, 'shop/filtered_product_list.html', {'brand': brand, 'products': products}
-        )
-        
-    except Brand.DoesNotExist:
-        messages.error(
-            request, "Unfortunatelly, the brand you were looking for not found."
-        )
-        return redirect('shop:product_list')
 
 def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
     try:
@@ -74,10 +45,40 @@ def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
         )
         return redirect('shop:product_list')
 
+# Views related to categories
 def categories_list(request: HttpRequest) -> HttpResponse:
     categories = Category.objects.all()
     return render(request, 'shop/categories_list.html', {'categories': categories})
 
+def category_product_list(request: HttpRequest, category_slug: str) -> HttpResponse:
+    try:
+        category = Category.objects.get(slug=category_slug)
+        products = category.products.order_by('-available')
+        return render(
+            request, 'shop/filtered_product_list.html', {'category': category, 'products': products}
+        )
+
+    except Category.DoesNotExist:
+        messages.error(
+            request, "Unfortunatelly, the category you were looking for not found."
+        )
+        return redirect('shop:product_list')
+
+# Views related to brands
 def brand_list(request: HttpRequest) -> HttpResponse:
     brands = Brand.objects.all()
     return render(request, 'shop/brand_list.html', {'brands': brands})
+
+def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
+    try:
+        brand = Brand.objects.get(slug=brand_slug)
+        products = brand.products.order_by('-available')
+        return render(
+            request, 'shop/filtered_product_list.html', {'brand': brand, 'products': products}
+        )
+
+    except Brand.DoesNotExist:
+        messages.error(
+            request, "Unfortunatelly, the brand you were looking for not found."
+        )
+        return redirect('shop:product_list')

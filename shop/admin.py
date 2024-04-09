@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Category, Brand, Product
+from .models import Brand, Category, Product
 
 
 @admin.register(Category)
@@ -35,7 +35,7 @@ class BrandAdmin(admin.ModelAdmin):
     list_display_links = ['name']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
-    
+
     @admin.display(description='brand description')
     def short_description(self, obj: Brand) -> str:
         return f"{obj.description[:150]}..." if len(obj.description) > 150 else f"{obj.description}"

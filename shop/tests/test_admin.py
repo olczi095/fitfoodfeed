@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.html import strip_tags
 
-from shop.admin import CategoryAdmin, BrandAdmin, ProductAdmin
+from shop.admin import BrandAdmin, CategoryAdmin, ProductAdmin
 from shop.models import Brand, Category, Product
 
 User = get_user_model()
@@ -49,7 +49,7 @@ class CategoryAdminTest(TestCase):
 class BrandAdminTest(TestCase):
     def setUp(self):
         self.brand_model_admin = BrandAdmin(model=Brand, admin_site=AdminSite())
-    
+
     def test_display_short_description_with_short_description(self):
         short_description = (
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
@@ -60,7 +60,7 @@ class BrandAdminTest(TestCase):
         self.assertEqual(
             self.brand_model_admin.short_description(brand), short_description
         )
-         
+
     def test_display_short_description_with_long_description(self):
         long_description = (
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
@@ -72,10 +72,10 @@ class BrandAdminTest(TestCase):
             name='Test Brand', description=long_description
         )
         self.assertEqual(
-            self.brand_model_admin.short_description(brand), 
+            self.brand_model_admin.short_description(brand),
             f"{long_description[:150]}..."
         )
-  
+
     def test_display_short_description_without_description(self):
         brand = Brand.objects.create(
             name='Test Brand'

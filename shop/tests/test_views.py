@@ -240,7 +240,7 @@ class BrandListTest(TestCase):
         self.brand2 = Brand.objects.create(
             name='Test Brand 2'
         )
-        
+
     def test_brand_list_returns_200_response(self):
         response = self.client.get(reverse('shop:brand_list'))
         displayed_brand_names = [brand.name for brand in response.context['brands']]

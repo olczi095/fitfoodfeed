@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
-from .models import Category, Brand
+from .models import Brand, Category
 
 
 def product_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
