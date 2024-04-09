@@ -53,14 +53,14 @@ class ProductAdminTest(TestCase):
 
     def test_display_category_for_product_with_category(self):
         product = Product.objects.create(
-            name='Test Product', category=self.category, price=9.99, brand_name='Test Brand'
+            name='Test Product', category=self.category, price=9.99, brand='Test Brand'
         )
         category_model_display = self.product_model_admin.category_model(product)
         self.assertEqual(strip_tags(category_model_display), product.category.name)
 
     def test_display_category_for_product_without_category(self):
         product = Product.objects.create(
-            name='Test Product 4', price=9.99, brand_name='Test Brand'
+            name='Test Product 4', price=9.99, brand='Test Brand'
         )
         category_model_display = self.product_model_admin.category_model(product)
         self.assertEqual(category_model_display, None)

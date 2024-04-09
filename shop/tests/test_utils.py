@@ -8,16 +8,16 @@ class GetRelatedProductsTest(TestCase):
     def setUp(self):
         self.category = Category.objects.create(name='Test Category')
         self.product1 = Product.objects.create(
-            name='Test Product 1', price=9.99, category=self.category, brand_name='Test Brand X'
+            name='Test Product 1', price=9.99, category=self.category, brand='Test Brand X'
         )
         self.product2 = Product.objects.create(
-            name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand Y'
+            name='Test Product 2', price=9.99, category=self.category, brand='Test Brand Y'
         )
         self.product3 = Product.objects.create(
-            name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand Z'
+            name='Test Product 3', price=9.99, category=self.category, brand='Test Brand Z'
         )
         self.product4 = Product.objects.create(
-            name='Test Product 4', price=9.99, brand_name='Other Test Brand'
+            name='Test Product 4', price=9.99, brand='Other Test Brand'
         )
 
     def test_get_related_products_returns_correct_related_products(self):

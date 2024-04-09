@@ -48,7 +48,7 @@ class ProductAdmin(admin.ModelAdmin):
         (
             'Additional Information',
             {
-                'fields': ['category', 'brand_name', 'image']
+                'fields': ['category', 'brand', 'image']
             }
         ),
         (

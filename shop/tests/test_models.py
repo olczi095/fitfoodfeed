@@ -38,7 +38,7 @@ class ProductModelTest(TestCase):
             name='Test Product',
             price=9.99,
             category=self.category,
-            brand_name='Test Brand',
+            brand='Test Brand',
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,
@@ -62,7 +62,7 @@ class ProductModelTest(TestCase):
         polish_product = Product.objects.create(
             name='Masło Orzechowe',
             price=9.99,
-            brand_name='Test Brand',
+            brand='Test Brand',
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,
@@ -77,13 +77,13 @@ class ProductModelTest(TestCase):
 
     def test_related_products_by_category(self):
         self.product2 = Product.objects.create(
-            name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand'
+            name='Test Product 2', price=9.99, category=self.category, brand='Test Brand'
         )
         self.product3 = Product.objects.create(
-            name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand'
+            name='Test Product 3', price=9.99, category=self.category, brand='Test Brand'
         )
         self.product4 = Product.objects.create(
-            name='Test Product 4', price=9.99, brand_name='Test Brand'
+            name='Test Product 4', price=9.99, brand='Test Brand'
         )
 
         related_products = self.product.related_products_by_category()
@@ -98,13 +98,13 @@ class ProductModelTest(TestCase):
 
     def test_related_products_by_brand(self):
         self.product2 = Product.objects.create(
-            name='Test Product 2', price=9.99, category=self.category, brand_name='Test Brand'
+            name='Test Product 2', price=9.99, category=self.category, brand='Test Brand'
         )
         self.product3 = Product.objects.create(
-            name='Test Product 3', price=9.99, category=self.category, brand_name='Test Brand X'
+            name='Test Product 3', price=9.99, category=self.category, brand='Test Brand X'
         )
         self.product4 = Product.objects.create(
-            name='Test Product 4', price=9.99, brand_name='Test Brand Y'
+            name='Test Product 4', price=9.99, brand='Test Brand Y'
         )
 
         related_products = self.product.related_products_by_brand()

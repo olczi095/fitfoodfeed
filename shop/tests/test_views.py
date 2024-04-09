@@ -32,7 +32,7 @@ class CategoryProductListTest(TestCase):
         self.product = Product.objects.create(
             name='Product',
             price=90.00,
-            brand_name='Brand',
+            brand='Brand',
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,
@@ -96,7 +96,7 @@ class ProductDetailTest(TestCase):
         self.product = Product.objects.create(
             name='Another Fake Product',
             price=19.99,
-            brand_name='Fake Brand',
+            brand='Fake Brand',
             image=SimpleUploadedFile(
                 name='test_image.jpg',
                 content=content,

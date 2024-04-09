@@ -50,7 +50,7 @@ class Product(models.Model):
         blank=True,
         related_name='products'
     )
-    brand_name = models.CharField(max_length=50)
+    brand = models.CharField(max_length=50, null=True, blank=True)
     image = models.ImageField(
         upload_to='product_images/',
         null=True,
@@ -82,4 +82,4 @@ class Product(models.Model):
         return Product.objects.none()
 
     def related_products_by_brand(self) -> QuerySet:
-        return Product.objects.filter(brand_name=self.brand_name).exclude(id=self.id)
+        return Product.objects.filter(brand=self.brand).exclude(id=self.id)
