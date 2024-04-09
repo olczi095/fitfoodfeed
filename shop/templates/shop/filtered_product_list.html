@@ -1,14 +1,30 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 
-{% block title %}{{ category.name }} | {{ block.super }}{% endblock title %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} | 
+    {% endif %}
+    {% if brand %}
+        {{ brand.name }} | 
+    {% endif %}
+    {{ block.super }}
+{% endblock title %}
 
 {% block scripts %}{{ block.super }}{% endblock scripts %}
 
 {% block header %}
     <div class="header">
         <header class="py-5">
-            <div class="header-text-main header-category-main">{{ category.name|upper }}<br /></div>
+            <div class="header-text-main header-category-main">
+                {% if category %}
+                    {{ category.name|upper }}
+                {% endif %}
+                {% if brand %}
+                    {{ brand.name|upper }}
+                {% endif %}
+                <br />
+            </div>
         </header>
     </div>
 {% endblock header %}
