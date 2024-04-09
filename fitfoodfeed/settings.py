@@ -63,6 +63,7 @@ TEMPLATES = [
                 'blog.context_processors.navbar_tags',
                 'shop.context_processors.product_categories',
                 'shop.context_processors.main_categories',
+                'shop.context_processors.product_brands',
             ],
         },
     },

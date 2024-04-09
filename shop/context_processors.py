@@ -1,7 +1,7 @@
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
-from .models import Category
+from .models import Category, Brand
 
 
 def product_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
@@ -12,6 +12,14 @@ def product_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
     """
     categories = Category.objects.all()
     return {'product_categories': categories}
+
+def product_brands(request: HttpRequest) -> dict[str, QuerySet[Brand]]:
+    """
+    Returns a dict contained a QuerySet of product brands from database
+    that can be added to the template context.
+    """
+    brands = Brand.objects.all()
+    return {'product_brands': brands}
 
 def main_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
     """
