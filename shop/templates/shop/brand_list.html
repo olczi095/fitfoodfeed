@@ -1,0 +1,36 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}All Brands | {{ block.super }}{% endblock title %}
+
+{% block scripts %}{{ block.super }}{% endblock scripts %}
+
+{% block header %}
+    <div class="header">
+        <header class="py-5">
+            <div class="header-text-main header-category-main">Mocne Żarcie Shop<br /></div>
+            <div class="header-text-main header-details">all brands</div>
+        </header>
+    </div>
+{% endblock header %}
+
+{% block body %}
+    <!-- Loop through the brands -->
+    {% for brand in brands %}
+        <ol class="list-group">
+            <div class="px-5 py-1">
+                <li class="px-5 py-3 list-group-item d-flex justify-content-between align-items-start all-categories-list">
+                <div class="ms-2 me-auto">
+                    <a href="{% url 'shop:brand_product_list' brand.slug %}" class="fw-bold">{{ brand.name }}</a>
+                    <div class="mx-5 my-1">{{ brand.description }}</div>
+                </div>
+                <span class="badge text-bg-primary rounded-pill">{{ brand.number_of_products }}</span>
+                </li>
+            </div>
+        </ol>
+    {% endfor %}
+{% endblock body %}
+
+{% block footer %}
+    {{ block.super }}
+{% endblock footer %}

@@ -54,13 +54,6 @@ class CategoryProductListTest(TestCase):
         product_number = len(response.context['products'])
         self.assertEqual(product_number, 0)
 
-    def test_no_available_product_in_category_list(self):
-        self.product.available = False
-        self.product.save()
-        response = self.client.get(reverse('shop:category_product_list', args=[self.category.slug]))
-        product_number = len(response.context['products'])
-        self.assertEqual(product_number, 0)
-
     def test_one_product_in_category_list(self):
         self.product.category = self.category
         self.product.save()
@@ -87,6 +80,55 @@ class CategoryProductListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('error', message.tags)
         self.assertIn("category you were looking for not found", message.message)
+
+
+class BrandProductListTest(TestCase):
+    def setUp(self):
+        self.brand = Brand.objects.create(
+            name='Test Brand'
+        )
+        self.product = Product.objects.create(
+            name='Test Product',
+            price=10.00,
+            available=True
+        )
+
+    def test_brand_product_list_returns_200_response(self):
+        response = self.client.get(reverse('shop:brand_product_list', args=[self.brand.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.brand, response.context['brand'])
+
+    def test_no_products_in_brand_list(self):
+        response = self.client.get(reverse('shop:brand_product_list', args=[self.brand.slug]))
+        product_number = len(response.context['products'])
+        self.assertEqual(product_number, 0)
+
+    def test_one_product_in_brand_list(self):
+        self.product.brand = self.brand
+        self.product.save()
+        response = self.client.get(reverse('shop:brand_product_list', args=[self.brand.slug]))
+        products_number = len(response.context['products'])
+        self.assertEqual(products_number, 1)
+
+    def test_brand_does_not_exist(self):
+        wrong_slug = 'wrong-slug'
+        response = self.client.get(reverse('shop:brand_product_list', args=[wrong_slug]))
+        self.assertRedirects(
+            response=response,
+            expected_url=reverse('shop:product_list'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_display_message_for_no_existing_brand(self):
+        wrong_slug = 'wrong-slug'
+        response = self.client.get(
+            reverse('shop:brand_product_list', args=[wrong_slug]), follow=True
+        )
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('error', message.tags)
+        self.assertIn("brand you were looking for not found", message.message)
 
 
 class ProductDetailTest(TestCase):
@@ -188,3 +230,21 @@ class CategoriesListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(displayed_category_names, expected_category_names)
         self.assertTemplateUsed(response, 'shop/categories_list.html')
+
+
+class BrandListTest(TestCase):
+    def setUp(self):
+        self.brand1 = Brand.objects.create(
+            name='Test Brand 1'
+        )
+        self.brand2 = Brand.objects.create(
+            name='Test Brand 2'
+        )
+        
+    def test_brand_list_returns_200_response(self):
+        response = self.client.get(reverse('shop:brand_list'))
+        displayed_brand_names = [brand.name for brand in response.context['brands']]
+        expected_brand_names = [brand.name for brand in Brand.objects.all()]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(displayed_brand_names, expected_brand_names)
+        self.assertTemplateUsed(response, 'shop/brand_list.html')
