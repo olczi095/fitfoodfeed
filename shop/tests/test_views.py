@@ -224,12 +224,12 @@ class CategoriesListTest(TestCase):
         )
 
     def test_categories_list_returns_200_response(self):
-        response = self.client.get(reverse('shop:categories_list'))
+        response = self.client.get(reverse('shop:category_list'))
         displayed_category_names = [category.name for category in response.context['categories']]
         expected_category_names = [category.name for category in Category.objects.all()]
         self.assertEqual(response.status_code, 200)
         self.assertEqual(displayed_category_names, expected_category_names)
-        self.assertTemplateUsed(response, 'shop/categories_list.html')
+        self.assertTemplateUsed(response, 'shop/category_list.html')
 
 
 class BrandListTest(TestCase):

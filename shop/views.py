@@ -46,9 +46,9 @@ def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
         return redirect('shop:product_list')
 
 # Views related to categories
-def categories_list(request: HttpRequest) -> HttpResponse:
+def category_list(request: HttpRequest) -> HttpResponse:
     categories = Category.objects.all()
-    return render(request, 'shop/categories_list.html', {'categories': categories})
+    return render(request, 'shop/category_list.html', {'categories': categories})
 
 def category_product_list(request: HttpRequest, category_slug: str) -> HttpResponse:
     try:
