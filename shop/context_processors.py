@@ -21,7 +21,7 @@ def product_brands(request: HttpRequest) -> dict[str, QuerySet[Brand]]:
     brands = Brand.objects.all()
     return {'product_brands': brands}
 
-def main_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
+def main_categories_shop(request: HttpRequest) -> dict[str, QuerySet[Category]]:
     """
     Returns a list contains six main categories that can be added to the template context.
     """
@@ -32,6 +32,6 @@ def main_categories(request: HttpRequest) -> dict[str, QuerySet[Category]]:
         reverse=True
     )
     return {
-        'main_categories': 
+        'main_categories_shop': 
             all_categories.filter(pk__in=[category.pk for category in sorted_categories[:6]])
     }

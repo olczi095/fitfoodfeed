@@ -1,17 +1,17 @@
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="lowerNavbarShop" style="height: 2rem;">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" id="upperNavbar" style="height: 2rem;">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#lowerNavbar" aria-controls="lowerNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-center" id="lowerNavbar">
+        <div class="collapse navbar-collapse justify-content-end" id="upperNavbar">
             <span class="navbar-brand" style="margin-right:auto;">
                 <a class="home-image" href="{% url 'blog:home' %}">
                     🏠
                 </a>
             </span>
-            <ul class="navbar-nav mx-auto">
+            <ul class="navbar-nav">
                 <!-- Loop through six main categories -->
-                {% for category in main_categories %}
+                {% for category in main_categories_shop %}
                     <li class="nav-item">
                         <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' category.slug %}">
                             {{ category|upper }}

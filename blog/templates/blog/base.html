@@ -49,7 +49,7 @@
             </span>
             <ul class="navbar-nav">
                 <!-- Category links -->
-                {% for category in main_categories %}
+                {% for category in main_categories_blog %}
                     <li class="nav-item">
                         <a class="nav-link nav-item-light" href="{% url 'blog:category' category.slug %}">
                             {{ category.name|upper }}
