@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from shop.models import Brand, Category, Product
 
@@ -275,5 +278,38 @@ class ProductOnSaleListTest(TestCase):
             sale_price=0.99
         )
         response = self.client.get(reverse('shop:product_on_sale_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shop/filtered_product_list.html')
+
+
+class ProductNewListTest(TestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            name='old_product',
+            price=19.99,
+        )
+
+    def test_product_new_list_no_new_products(self):
+        self.product.created_at = timezone.now() - timedelta(days=40)
+        self.product.save()
+        response = self.client.get(reverse('shop:product_new_list'))
+        self.assertRedirects(
+            response=response,
+            expected_url=reverse('shop:product_list'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_display_message_no_new_products(self):
+        self.product.created_at = timezone.now() - timedelta(days=40)
+        self.product.save()
+        response = self.client.get(reverse('shop:product_new_list'), follow=True)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('error', message.tags)
+        self.assertIn('no new products', message.message)
+
+    def test_product_new_list_with_new_product(self):
+        response = self.client.get(reverse('shop:product_new_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'shop/filtered_product_list.html')

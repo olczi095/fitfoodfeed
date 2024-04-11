@@ -27,6 +27,20 @@ def product_on_sale_list(request: HttpRequest) -> HttpResponse:
     )
     return redirect('shop:product_list')
 
+def product_new_list(request: HttpRequest) -> HttpResponse:
+    products = Product.objects.all()
+    new_products = [product for product in products if product.is_new()]
+    if new_products:
+        return render(
+            request,
+            'shop/filtered_product_list.html',
+            {'new': True, 'products': new_products}
+        )
+    messages.error(
+        request, "Unforutnatelly, there are no new products in store at this moment."
+    )
+    return redirect('shop:product_list')
+
 def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
     try:
         product = Product.objects.get(slug=product_slug)

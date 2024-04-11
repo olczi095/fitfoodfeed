@@ -33,7 +33,7 @@
                         </ul>                        
                     </li>
                     <li><a class="dropdown-item text-primary" href="{% url 'shop:product_on_sale_list' %}"><strong>On sale</strong></a></li>
-                    <li><a class="dropdown-item" href="#">New</a></li>
+                    <li><a class="dropdown-item" href="{% url 'shop:product_new_list' %}">New</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <!-- User Account -->
                     {% if request.user.is_authenticated %}

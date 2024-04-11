@@ -3,6 +3,7 @@ from typing import Any
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
+from django.utils import timezone
 
 from utils.polish_slug_utils import convert_to_slug
 
@@ -113,3 +114,12 @@ class Product(models.Model):
 
     def related_products_by_brand(self) -> QuerySet:
         return Product.objects.filter(brand=self.brand).exclude(id=self.id)
+
+    def is_new(self, number_of_days: int = 30) -> bool:
+        """
+        Check if product is new according to the passing number_of_days value.
+        """
+        current_date = timezone.now()
+        created_date = self.created_at
+        time_difference = current_date - created_date
+        return time_difference.days <= number_of_days

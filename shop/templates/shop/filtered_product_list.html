@@ -11,6 +11,9 @@
     {% if sale %}
         Special Offers | 
     {% endif %}
+    {% if new %}
+        New Products | 
+    {% endif %}
     {{ block.super }}
 {% endblock title %}
 
@@ -27,8 +30,11 @@
                     {{ brand.name|upper }}
                 {% endif %}
                 {% if sale %}
-                    ON SALE
+                    on sale
                 {% endif %}
+                {% if new %}
+                    new products
+                {% endif %} 
                 <br />
             </div>
         </header>

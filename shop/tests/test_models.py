@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.utils import timezone
 
 from shop.models import Brand, Category, Product
 
@@ -136,3 +139,11 @@ class ProductModelTest(TestCase):
     def test_no_related_products_by_brand(self):
         related_products = self.product.related_products_by_brand()
         self.assertEqual(related_products.count(), 0)
+
+    def test_is_new_true(self):
+        self.assertTrue(self.product.is_new())
+
+    def test_is_new_false(self):
+        self.product.created_at = timezone.now() - timedelta(days=40)
+        self.product.save()
+        self.assertFalse(self.product.is_new())
