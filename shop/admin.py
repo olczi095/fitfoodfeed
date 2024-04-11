@@ -50,9 +50,10 @@ class ProductAdmin(admin.ModelAdmin):
         'quantity',
         'category_model',
         'available',
+        'is_on_sale',
     ]
     list_display_links = ['name']
-    list_filter = ['category', 'available']
+    list_filter = ['category', 'available', 'is_on_sale']
     search_fields = ['name', 'brief_description', 'full_description', 'price']
     prepopulated_fields = {'slug': ('name', )}
     fieldsets: list[Any] = [

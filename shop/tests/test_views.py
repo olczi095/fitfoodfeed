@@ -248,3 +248,32 @@ class BrandListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(displayed_brand_names, expected_brand_names)
         self.assertTemplateUsed(response, 'shop/brand_list.html')
+
+
+class ProductOnSaleListTest(TestCase):
+    def test_product_on_sale_list_no_products_on_sale(self):
+        response = self.client.get(reverse('shop:product_on_sale_list'))
+        self.assertRedirects(
+            response=response,
+            expected_url=reverse('shop:product_list'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_display_message_no_products_on_sale(self):
+        response = self.client.get(reverse('shop:product_on_sale_list'), follow=True)
+        message = list(response.context.get('messages'))[0]
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('error', message.tags)
+        self.assertIn('no products on sale', message.message)
+
+    def test_product_on_sale_list_with_product_on_sale(self):
+        Product.objects.create(
+            name='Product',
+            price=99.99,
+            is_on_sale=True,
+            sale_price=0.99
+        )
+        response = self.client.get(reverse('shop:product_on_sale_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shop/filtered_product_list.html')

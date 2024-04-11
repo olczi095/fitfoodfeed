@@ -14,6 +14,19 @@ def product_list(request: HttpRequest) -> HttpResponse:
     products = Product.objects.order_by('-available')
     return render(request, 'shop/product_list.html', {'products': products})
 
+def product_on_sale_list(request: HttpRequest) -> HttpResponse:
+    products = Product.objects.filter(is_on_sale=True).order_by('sale_price')
+    if products:
+        return render(
+            request,
+            'shop/filtered_product_list.html',
+            {'sale': True, 'products': products}
+        )
+    messages.error(
+        request, "Unfortunatelly, there are no products on sale."
+    )
+    return redirect('shop:product_list')
+
 def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
     try:
         product = Product.objects.get(slug=product_slug)
