@@ -100,6 +100,12 @@ def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
     try:
         brand = Brand.objects.get(slug=brand_slug)
         products = brand.products.order_by('-available')
+        
+        if not products:
+            messages.error(
+                request, "At this moment, we do not have any available products from this brand in our store. "
+                "Come back soon!"
+            )
         return render(
             request, 'shop/filtered_product_list.html', {'brand': brand, 'products': products}
         )
