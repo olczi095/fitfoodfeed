@@ -49,7 +49,7 @@ function setStoredStyleMode() {
 
 setStoredStyleMode();
 
-const styleModeToggle = document.getElementById('style-mode-toggle');
+const styleModeToggle = document.getElementById('styleModeToggle');
 
 if (styleModeToggle) {
     styleModeToggle.addEventListener('click', function () {
