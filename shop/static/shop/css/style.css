@@ -226,3 +226,27 @@
 .dropdown-menu>li:hover>.dropdown-submenu {
     display: block;
 }
+
+.brand-card {
+    margin: 2rem 2rem 0 2rem;
+    border: 1px solid var(--color-medium-grey);
+    border-radius: 0.7rem;
+    color: var(--color-dark-grey);
+    background-color: var(--color-whitegrey);
+}
+
+.brand-card-header {
+    font-weight: bolder;
+    border-bottom: 1px solid var(--color-medium-grey);
+    padding: 1rem;
+    color: var(--color-dark-grey);
+}
+
+.brand-card-header .brand-name {
+    color: var(--color-orange);
+}
+
+.brand-card-body {
+    padding: 1.5rem;
+    background-color: var(--color-white);
+}
