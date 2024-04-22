@@ -279,14 +279,46 @@
     margin: 2rem 18rem 3rem 18rem;
 }
 
+.form-submit-product-container {
+    margin: 2rem 25rem 3rem 25rem;
+}
+
+.form-submit-product-container {
+    color: var(--color-black);
+}
+
+.form-submit-product-container .border {
+    border: 0.5rem solid var(--color-dark-grey);
+    padding: 2rem;
+}
+
+.form-error-message {
+    color: var(--color-red-alert);
+    font-weight: 500;
+}
+
+.optional-field {
+    font-style: italic;
+    font-weight: 200;
+    color: var(--color-dark-grey);
+}
+
+.main-field {
+    font-weight: bolder;
+}
+
 @media screen and (min-width: 600px) and (max-width: 1200px) {
-    .form-add-container {
-        margin: 1rem 5rem;
+
+    .form-add-container,
+    .form-submit-product-container {
+        margin: 1rem 8rem;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .form-add-container {
+
+    .form-add-container,
+    .form-submit-product-container {
         margin: 0;
     }
 }

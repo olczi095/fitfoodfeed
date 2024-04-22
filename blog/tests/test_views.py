@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from taggit.models import Tag
 
-from blog.forms import CommentForm
+from blog.forms import CommentForm, ProductSubmissionForm
 from blog.models import Category, Comment, Post
 from blog.views import PostDetailView
 
@@ -931,3 +931,35 @@ class CategoryViewsTestCase(TestCase):
             response.context['posts'],
             expected_posts
         )
+
+
+class ProductSubmissionFormViewTestCase(TestCase):
+    def setUp(self):
+        self.mail_data = {
+            'name': 'Test Product for review',
+            'brand': 'Test Brand',
+            'user_email': 'test_user@mail.com',
+        }
+
+    def test_product_submit_returns_200_response(self):
+        response = self.client.get(reverse('blog:submit_product'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'blog/product_submit.html')
+
+    def test_send_email_successfully(self):
+        response = self.client.post(
+            reverse('blog:submit_product'), self.mail_data, follow=True
+        )
+        self.assertRedirects(
+            response,
+            expected_url=reverse('blog:home'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_get_success_message(self):
+        response = self.client.post(
+            reverse('blog:submit_product'), self.mail_data, follow=True
+        )
+        message = list(response.context.get('messages'))[0]
+        self.assertIn('email has been sent successfully', message.message)

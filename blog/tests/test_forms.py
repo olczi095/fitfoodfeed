@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from blog.forms import PostForm
+from blog.forms import PostForm, ProductSubmissionForm
 
 
 class PostFormTestCase(TestCase):
@@ -49,3 +49,38 @@ class PostFormTestCase(TestCase):
         }
         for field_name, expected_label in expected_labels.items():
             self.assertEqual(post_form.fields.get(field_name).label, expected_label)
+
+
+class ProductSubmissionFormTestCase(TestCase):
+    def test_form_valid(self):
+        valid_data = {
+            'name': 'Test Product for review',
+            'brand': 'Test Brand',
+            'user_email': 'test_user@mail.com',
+        }
+        product_submission_form = ProductSubmissionForm(valid_data)
+        self.assertTrue(product_submission_form.is_valid())
+
+    def test_form_invalid_without_name(self):
+        invalid_data = {
+            'brand': 'Test Brand',
+            'user_email': 'test_user@mail.com',
+        }
+        product_submission_form = ProductSubmissionForm(invalid_data)
+        self.assertFalse(product_submission_form.is_valid())
+
+    def test_form_invalid_without_brand(self):
+        invalid_data = {
+            'name': 'Test Product for review',
+            'user_email': 'test_user@mail.com',
+        }
+        product_submission_form = ProductSubmissionForm(invalid_data)
+        self.assertFalse(product_submission_form.is_valid())
+
+    def test_form_invalid_without_email(self):
+        invalid_data = {
+            'name': 'Test Product for review',
+            'brand': 'Test Brand',
+        }
+        product_submission_form = ProductSubmissionForm(invalid_data)
+        self.assertFalse(product_submission_form.is_valid())

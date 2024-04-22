@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin,
                                         UserPassesTestMixin)
@@ -10,16 +11,17 @@ from django.forms import BaseForm, BaseModelForm, ModelForm
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView, View)
+from django.views.generic import (CreateView, DeleteView, DetailView, FormView,
+                                  ListView, UpdateView, View)
 from django.views.generic.edit import FormMixin
 from taggit.models import Tag
 
 from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
 
-from .forms import CommentForm, PostForm
+from .forms import CommentForm, PostForm, ProductSubmissionForm
 from .models import Category, Comment, Post
+from .utils import prepare_product_review_email, send_email_with_product_for_review
 
 User = get_user_model()
 
@@ -262,3 +264,20 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         comment = get_object_or_404(Comment, pk=pk)
         comment.delete()
         return HttpResponse(status=303)
+
+
+class ProductSubmissionFormView(FormView, SuccessMessageMixin):
+    template_name = 'blog/product_submit.html'
+    form_class = ProductSubmissionForm
+    success_url = reverse_lazy('blog:home')
+    success_message = "Your email has been sent successfully."
+
+    def form_valid(self, form: ProductSubmissionForm) -> HttpResponse:
+        response = super().form_valid(form)
+        success_message = self.get_success_message(form.cleaned_data)
+        mail_data = prepare_product_review_email(form)
+        send_email_with_product_for_review(mail_data)
+
+        if success_message:
+            messages.success(self.request, success_message)
+        return response

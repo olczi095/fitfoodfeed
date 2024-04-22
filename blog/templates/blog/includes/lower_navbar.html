@@ -29,7 +29,9 @@
                             <li><a class="dropdown-item" href="{% url 'blog:create_review' %}">🖋️ create a review</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog:submit_product' %}">
+                            🔝 SUBMIT YOUR PRODUCT FOR REVIEW 🔝
+                        </a></li>
                     </li>
                 </ul>
                 <li class="nav-item">
