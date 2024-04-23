@@ -30,7 +30,7 @@ class PrepareProductReviewEmailTest(TestCase):
         self.assertEqual(mail_data['subject'], self.expected_subject)
         self.assertEqual(mail_data['message'], self.expected_message)
         self.assertEqual(mail_data['user_email'], self.valid_data['user_email'])
-        self.assertEqual(mail_data['image'], None)
+        self.assertIsNone(mail_data['image'])
 
 
 class SendEmailWithProductTest(TestCase):
@@ -68,5 +68,10 @@ class SendEmailWithProductTest(TestCase):
             'product_image': product_image
         }
         send_email_with_product_for_review(mail_data)
+        
+        sent_mail = mail.outbox[0]
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(len(mail.outbox[0].attachments), 1)
+        self.assertEqual(len(sent_mail.attachments), 1)
+        self.assertEqual(sent_mail.attachments[0][0], "image.jpg")
+        self.assertEqual(sent_mail.attachments[0][1], b"file_content")
+        self.assertEqual(sent_mail.attachments[0][2], "image/jpeg")
