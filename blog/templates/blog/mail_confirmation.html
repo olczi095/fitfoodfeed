@@ -1,0 +1,13 @@
+{% autoescape off %}
+    Please click the followink link to verify and confirm your email adress, 
+    if you still want to sent a message with a proposal product for the next review.
+
+    Click the link:
+
+    {{ protocol }}://{{ domain }}{% url 'blog:confirm_email' %}?code={{ confirmation_code }}
+
+    If you did not request this, please ignore this message.
+
+    Sincerely,
+    Mocne Żarcie from {{ protocol }}://{{ domain }}
+{% endautoescape %}

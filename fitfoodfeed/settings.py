@@ -16,6 +16,7 @@ DEBUG = os.getenv('DEBUG') or False
 ADMIN_URL = 'adminpanel/'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+BASE_URL = 'http://localhost:8000/'
 
 
 # Application definition

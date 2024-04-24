@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views import (CategoryListView, CommentDeleteView, PostCreateView, PostDeleteView,
-                    PostDetailView, PostLikeView, PostListView, PostUpdateView,
-                    ProductSubmissionFormView, TaggedPostsListView, TagsListView)
+from .views import (CategoryListView, CommentDeleteView, ConfirmEmailView,
+                    PostCreateView, PostDeleteView, PostDetailView, PostLikeView,
+                    PostListView, PostUpdateView, ProductSubmissionFormView,
+                    TaggedPostsListView, TagsListView)
 
 app_name = 'blog'
 
@@ -13,6 +14,7 @@ urlpatterns = [
     path('update-review/<int:pk>/', PostUpdateView.as_view(), name='update_review'),
     path('delete-review/<int:pk>/', PostDeleteView.as_view(), name='delete_review'),
     path('submit-product/', ProductSubmissionFormView.as_view(), name='submit_product'),
+    path('confirm-email/', ConfirmEmailView.as_view(), name='confirm_email'),
     path('category/<str:category_name>/', CategoryListView.as_view(), name='category'),
     path('tag/<slug:slug>/', TaggedPostsListView.as_view(), name='tag'),
     path('<slug:slug>/', PostDetailView.as_view(), name='detail_review'),

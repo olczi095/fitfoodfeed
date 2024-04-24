@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict
 
 from django.contrib import messages
@@ -6,11 +7,16 @@ from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMi
                                         UserPassesTestMixin)
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import send_mail
 from django.db.models import Model, QuerySet
 from django.forms import BaseForm, BaseModelForm, ModelForm
-from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
+from django.http import (Http404, HttpRequest, HttpResponse, HttpResponseRedirect,
+                         JsonResponse)
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.utils.html import strip_tags
 from django.views.generic import (CreateView, DeleteView, DetailView, FormView,
                                   ListView, UpdateView, View)
 from django.views.generic.edit import FormMixin
@@ -18,10 +24,12 @@ from taggit.models import Tag
 
 from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
+from fitfoodfeed.settings import EMAIL_HOST_USER
 
 from .forms import CommentForm, PostForm, ProductSubmissionForm
 from .models import Category, Comment, Post
-from .utils import prepare_product_review_email, send_email_with_product_for_review
+from .utils import (generate_confirmation_data, prepare_product_review_email,
+                    send_email_with_product_for_review)
 
 User = get_user_model()
 
@@ -273,11 +281,87 @@ class ProductSubmissionFormView(FormView, SuccessMessageMixin):
     success_message = "Your email has been sent successfully."
 
     def form_valid(self, form: ProductSubmissionForm) -> HttpResponse:
-        response = super().form_valid(form)
-        success_message = self.get_success_message(form.cleaned_data)
+        # response = super().form_valid(form)
+
+        if not self.request.user.is_authenticated:
+            email = form.cleaned_data.get('user_email')
+            if email:
+                # Generate confirmation data
+                confirmation_data = generate_confirmation_data()
+                self.request.session['confirmation_data'] = confirmation_data
+                self.request.session['completed_form'] = form.cleaned_data
+
+                # Send confirmation mail
+                subject = 'Please confirm your email address'
+                context = {
+                    'protocol': 'http',
+                    'domain': self.request.get_host(),
+                    'confirmation_code': confirmation_data['confirmation_code']
+                }
+                html_message = render_to_string('blog/mail_confirmation.html', context=context)
+                plain_message = strip_tags(html_message)
+                from_email = EMAIL_HOST_USER
+                to_email = [email]
+
+                send_mail(subject, plain_message, from_email, to_email)
+                messages.success(
+                    self.request,
+                    'Email confirmation link has been sent. Please check your inbox.'
+                )
+                return super().form_valid(form)
+
         mail_data = prepare_product_review_email(form)
         send_email_with_product_for_review(mail_data)
+        messages.success(self.request, self.success_message)
+        return super().form_valid(form)
 
-        if success_message:
-            messages.success(self.request, success_message)
-        return response
+
+class ConfirmEmailView(View, SuccessMessageMixin):
+    success_message = "Your email has been sent successfully."
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        confirmation_data = request.session.get('confirmation_data')
+        completed_form_data = request.session.get('completed_form')
+
+        if not confirmation_data or not completed_form_data:
+            return HttpResponse('Invalid confirmation request')
+
+        confirmation_date = confirmation_data['confirmation_date']
+
+        if confirmation_date:
+            confirmation_date = datetime.fromisoformat(confirmation_date)
+            current_date = timezone.now()
+
+        if confirmation_date >= current_date:
+            # Get cleaned data from the form
+            product_name = completed_form_data.get('name')
+            product_brand = completed_form_data.get('brand')
+            product_category = completed_form_data.get('category', '')
+            product_description = completed_form_data.get('description', '')
+            user_email = completed_form_data.get('user_email')
+            product_image = completed_form_data.get('image', None)
+
+            subject = f"New proposed product for review: {product_name}"
+            message = (
+                f"Name: {product_name}\n"
+                f"Brand: {product_brand}\n"
+                f"Category: {product_category}\n"
+                f"Description: {product_description}\n\n"
+                f"From user with e-mail: {user_email}"
+            )
+            mail_data = {
+                'subject': subject, 
+                'message': message,
+                'user_email': user_email, 
+                'image': product_image
+            }
+            # Send an e-mail
+            send_email_with_product_for_review(mail_data)
+            messages.success(self.request, self.success_message)
+        else:
+            return HttpResponse('Confirmation code has expired')
+
+        del request.session['confirmation_data']
+        del request.session['completed_form']
+
+        return HttpResponseRedirect(reverse('blog:home'))

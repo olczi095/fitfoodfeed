@@ -1,6 +1,9 @@
+import secrets
+from datetime import timedelta
 from typing import Any
 
 from django.core.mail import EmailMessage
+from django.utils import timezone
 
 from blog.forms import ProductSubmissionForm
 from fitfoodfeed.settings import EMAIL_HOST_USER
@@ -53,3 +56,16 @@ def send_email_with_product_for_review(mail_data: dict[str, Any]) -> None:
         email.attach(product_image.name, product_image.read(), product_image.content_type)
 
     email.send(fail_silently=False)
+
+def generate_confirmation_data() -> str:
+    """
+    Generate confirmation data:
+    a random confirmation code and confirmation date for e-mail verification.
+    """
+    confirmation_code = secrets.token_urlsafe(16)
+    confirmation_date = timezone.now() + timedelta(hours=24)
+    confirmation_data = {
+        'confirmation_code': confirmation_code,
+        'confirmation_date': confirmation_date.isoformat()
+    }
+    return confirmation_data
