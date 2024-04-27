@@ -1,10 +1,14 @@
+from datetime import timedelta
+
+from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from taggit.models import Tag
 
-from blog.forms import CommentForm, ProductSubmissionForm
+from blog.forms import CommentForm
 from blog.models import Category, Comment, Post
 from blog.views import PostDetailView
 
@@ -301,9 +305,9 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         expected_success_message_excerpt = 'comment successfully' \
             ' <strong>submitted</strong>'
-        messages = [str(message).lower() for message in response.context['messages']]
+        response_messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(
-            any(expected_success_message_excerpt in message for message in messages)
+            any(expected_success_message_excerpt in message for message in response_messages)
         )
 
     def test_comment_success_message_for_superuser(self):
@@ -319,9 +323,9 @@ class PostDetailViewCommentTestCase(TestCase):
             follow=True
         )
         expected_success_message_excerpt = 'comment successfully <strong>added</strong>'
-        messages = [str(message).lower() for message in response.context['messages']]
+        response_messages = [str(message).lower() for message in response.context['messages']]
         self.assertTrue(
-            any(expected_success_message_excerpt in message for message in messages)
+            any(expected_success_message_excerpt in message for message in response_messages)
         )
 
     def test_comment_without_parent_response_to_field(self):
@@ -935,6 +939,11 @@ class CategoryViewsTestCase(TestCase):
 
 class ProductSubmissionFormViewTestCase(TestCase):
     def setUp(self):
+        self.test_user = User.objects.create_user(
+            username='test_user',
+            password='test_password',
+            email='test@mail.com'
+        )
         self.mail_data = {
             'name': 'Test Product for review',
             'brand': 'Test Brand',
@@ -957,9 +966,72 @@ class ProductSubmissionFormViewTestCase(TestCase):
             target_status_code=200
         )
 
-    def test_get_success_message(self):
+    def test_get_success_message_for_authenticated_user(self):
+        self.client.force_login(self.test_user)
         response = self.client.post(
             reverse('blog:submit_product'), self.mail_data, follow=True
         )
         message = list(response.context.get('messages'))[0]
         self.assertIn('email has been sent successfully', message.message)
+
+
+class ConfirmEmailViewTestCase(TestCase):
+    def setUp(self):
+        self.completed_form = {
+            'name': 'Test Product',
+            'brand': 'Test Brand',
+            'user_email': 'test_user@gmail.com'
+        }
+        self.confirmation_data = {
+            'confirmation_code': 'test_confirmation_code',
+            'confirmation_date': (timezone.now() + timedelta(days=1)).isoformat()
+        }
+
+    def test_response_without_confirmation_data_in_session(self):
+        s = self.client.session
+        s['completed_form'] = self.completed_form
+        s.save()
+        response = self.client.get(reverse('blog:confirm_email'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.content.decode(), 'Invalid confirmation request')
+
+    def test_response_without_completed_form_in_session(self):
+        s = self.client.session
+        s['confirmation_data'] = self.confirmation_data
+        s.save()
+        response = self.client.get(reverse('blog:confirm_email'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.content.decode(), 'Invalid confirmation request')
+
+    def test_response_with_valid_data_in_session(self):
+        s = self.client.session
+        s['completed_form'] = self.completed_form
+        s['confirmation_data'] = self.confirmation_data
+        s.save()
+        response = self.client.get(reverse('blog:confirm_email'))
+        self.assertRedirects(
+            response=response,
+            expected_url=reverse('blog:home'),
+            status_code=302,
+            target_status_code=200
+        )
+        storage = messages.get_messages(response.wsgi_request)
+        messages_list = list(storage)
+
+        self.assertEqual(len(messages_list), 1)
+        self.assertIn('email has been sent', str(messages_list[0]).lower())
+
+    def test_response_with_expired_confirmation_code(self):
+        self.confirmation_data['confirmation_date'] = (
+            timezone.now() - timedelta(days=2)
+            ).isoformat()
+        s = self.client.session
+        s['completed_form'] = self.completed_form
+        s['confirmation_data'] = self.confirmation_data
+        s.save()
+        response = self.client.get(reverse('blog:confirm_email'))
+        self.assertIsInstance(response, HttpResponse)
+        self.assertEqual(response.content.decode().lower(), 'confirmation code has expired')
+        self.assertIsInstance(response, HttpResponse)
