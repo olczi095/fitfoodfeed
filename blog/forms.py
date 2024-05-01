@@ -1,10 +1,9 @@
 from django import forms
-from django.db.models import Model
 
 from blog.models import Category, Comment, Post
 
 
-class PostForm(forms.ModelForm[Model]):
+class PostForm(forms.ModelForm):
 
     class Meta:
         model: type[Post] = Post
@@ -28,13 +27,20 @@ class PostForm(forms.ModelForm[Model]):
         }
         widgets: dict[str, forms.Widget] = {
             'author': forms.HiddenInput(),
-            'title': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'meta_description': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'tags': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'body': forms.Textarea(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'image': forms.FileInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
-            'status': forms.Select(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'title': 
+                forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'meta_description': 
+                forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'tags': 
+                forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'body': 
+                forms.Textarea(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'image': 
+                forms.FileInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'slug': 
+                forms.TextInput(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
+            'status': 
+                forms.Select(attrs={'class': 'form-control', 'style': 'margin-bottom: 0.7rem'}),
         }
         help_texts: dict[str, str] = {
             'slug': 'You can leave this field empty. \
@@ -42,7 +48,7 @@ class PostForm(forms.ModelForm[Model]):
         }
 
 
-class CommentForm(forms.ModelForm[Model]):
+class CommentForm(forms.ModelForm):
 
     class Meta:
         model: type[Comment] = Comment

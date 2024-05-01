@@ -8,8 +8,8 @@ from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMi
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
-from django.db.models import Model, QuerySet
-from django.forms import BaseForm, BaseModelForm, ModelForm
+from django.db.models import QuerySet
+from django.forms import BaseForm
 from django.http import (Http404, HttpRequest, HttpResponse, HttpResponseRedirect,
                          JsonResponse)
 from django.shortcuts import get_object_or_404
@@ -28,83 +28,23 @@ from fitfoodfeed.settings import EMAIL_HOST_USER
 
 from .forms import CommentForm, PostForm, ProductSubmissionForm
 from .models import Category, Comment, Post
-from .utils import (generate_confirmation_data, prepare_product_review_email,
-                    send_email_with_product_for_review)
+from .utils import (generate_confirmation_data, generate_mail_data,
+                    prepare_mail_message, send_email_with_product_for_review)
 
 User = get_user_model()
 
 
-class PostListView(ListView[Model]):
-    model = Post
-    template_name = 'blog/home.html'
-    context_object_name = 'posts'
-    paginate_by = 3
-    queryset = Post.objects.filter(status='PUB').order_by('-pub_date')
+class SuccessMessageCommentMixin(SuccessMessageMixin):
+    """
+    Mixin to add a success message on form submission for comments.
+    """
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['popular_posts'] = Post.get_popular_posts(5)
-        context['recent_comments'] = Comment.get_recent_comments(3)
-        return context
+    success_message = ""
 
+    def form_valid(self, form: CommentForm) -> HttpResponse:
+        self.success_message = ""
 
-class TaggedPostsListView(ListView[Post]):
-    model = Post
-    template_name = 'blog/home.html'
-    context_object_name = 'posts'
-    paginate_by = 3
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['popular_posts'] = Post.get_popular_posts(5)
-        context['recent_comments'] = Comment.get_recent_comments(3)
-        return context
-
-    def get_queryset(self) -> QuerySet[Post]:
-        tag_slug = self.kwargs['slug']
-        return Post.get_tagged_posts(tag_slug)
-
-
-class TagsListView(ListView[Model]):
-    model = Tag
-    template_name = 'blog/tags.html'
-    context_object_name = 'tags'
-
-
-class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]):
-    form_class = CommentForm
-    model = Post
-    queryset = Post.objects.filter(status="PUB")
-    template_name = 'blog/review_detail.html'
-
-    def get_success_url(self) -> str:
-        if not isinstance(self.object, Post):
-            raise Http404("Post not found.")
-        return self.object.get_absolute_url()
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-
-        if isinstance(self.object, Post):
-            context['comments'] = self.object.get_top_level_comments()
-            context['post_likes'] = self.object.display_likes_stats()
-
-        context['form'] = CommentForm(initial={'post': self.object})
-        context['user'] = self.request.user
-        context['related_posts'] = self.object.get_related_posts(3)
-        return context
-
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any
-             ) -> HttpResponse:
-        self.object = self.get_object()
-        form = self.get_form()
-        editing_comment_id: str | None = request.POST.get('editing_comment_id')
-
-        if form.is_valid():
-            return self.form_valid(form, editing_comment_id)
-        return self.form_invalid(form)
-
-    def form_valid(self, form: BaseForm, editing_comment_id: str) -> HttpResponse:
+        editing_comment_id = self.request.POST.get('editing_comment_id')
         comment_parent_id = self.request.POST.get('comment_parent_id')
         comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
 
@@ -132,7 +72,7 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
             self.success_message = (
                 "Comment successfully <strong>added</strong>."
                 if self.request.user.is_staff
-                else "Comment successfully <strong>submitted</strong>."
+                else "Comment successfully <strong>submitted</strong>. "
                 "It will be published after moderation and validation."
             )
 
@@ -141,6 +81,83 @@ class PostDetailView(SuccessMessageMixin, FormMixin[BaseForm], DetailView[Model]
                 new_comment.save()
 
         return super().form_valid(form)
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+    paginate_by = 3
+    queryset = Post.objects.filter(status='PUB').order_by('-pub_date')
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['popular_posts'] = Post.get_popular_posts(5)
+        context['recent_comments'] = Comment.get_recent_comments(3)
+        return context
+
+
+class TaggedPostsListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+    paginate_by = 3
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['popular_posts'] = Post.get_popular_posts(5)
+        context['recent_comments'] = Comment.get_recent_comments(3)
+        return context
+
+    def get_queryset(self) -> QuerySet[Post]:
+        tag_slug = self.kwargs['slug']
+        return Post.get_tagged_posts(tag_slug)
+
+
+class TagsListView(ListView):
+    model = Tag
+    template_name = 'blog/tags.html'
+    context_object_name = 'tags'
+
+
+class PostDetailView(SuccessMessageCommentMixin, FormMixin, DetailView):
+    form_class = CommentForm
+    model = Post
+    queryset = Post.objects.filter(status="PUB")
+    template_name = 'blog/review_detail.html'
+
+    def __init__(self, **kwargs: Any) -> None:
+        self.object = None
+        super().__init__(**kwargs)
+
+    def get_success_url(self) -> str:
+        if not isinstance(self.object, Post):
+            raise Http404("Post not found.")
+        return self.object.get_absolute_url()
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        if isinstance(self.object, Post):
+            context['comments'] = self.object.get_top_level_comments()
+            context['post_likes'] = self.object.display_likes_stats()
+
+        context['form'] = CommentForm(initial={'post': self.object})
+        context['user'] = self.request.user
+        context['related_posts'] = self.object.get_related_posts(3)
+        return context
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any
+             ) -> HttpResponse:
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
 
 
 class PostLikeView(View):
@@ -164,7 +181,7 @@ class PostCreateView(
     SuccessMessageMixin,
     LoginRequiredMixin,
     PermissionRequiredMixin,
-    CreateView[Model, BaseModelForm[Any]]
+    CreateView
 ):
     model = Post
     form_class = PostForm
@@ -193,7 +210,7 @@ class PostUpdateView(
     SuccessMessageMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,
-    UpdateView[Post, ModelForm[Post]]
+    UpdateView
 ):
     model = Post
     fields = [
@@ -226,7 +243,7 @@ class PostDeleteView(
     SuccessMessageMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,
-    DeleteView[Post, ModelForm[Post]]
+    DeleteView
 ):
     model = Post
     permission_denied_message = "You don't have permission to access this page. \
@@ -246,7 +263,7 @@ class PostDeleteView(
         return f"Post <strong>{self.object.title}</strong> deleted successfully."
 
 
-class CategoryListView(ListView[Model]):
+class CategoryListView(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
@@ -281,8 +298,6 @@ class ProductSubmissionFormView(FormView, SuccessMessageMixin):
     success_message = "Your email has been sent successfully."
 
     def form_valid(self, form: ProductSubmissionForm) -> HttpResponse:
-        # response = super().form_valid(form)
-
         if not self.request.user.is_authenticated:
             email = form.cleaned_data.get('user_email')
             if email:
@@ -310,7 +325,19 @@ class ProductSubmissionFormView(FormView, SuccessMessageMixin):
                 )
                 return super().form_valid(form)
 
-        mail_data = prepare_product_review_email(form)
+        mail_message = prepare_mail_message(
+            product_name=form.cleaned_data['name'],
+            product_brand=form.cleaned_data['brand'],
+            product_category=form.cleaned_data.get('category', ''),
+            product_description=form.cleaned_data.get('description', ''),
+            user_email=form.cleaned_data['user_email']
+        )
+        mail_data = generate_mail_data(
+            product_name=form.cleaned_data['name'],
+            message=mail_message,
+            user_email=form.cleaned_data['user_email'],
+            product_image=form.cleaned_data.get('image', None)
+        )
         send_email_with_product_for_review(mail_data)
         messages.success(self.request, self.success_message)
         return super().form_valid(form)
@@ -341,20 +368,11 @@ class ConfirmEmailView(View, SuccessMessageMixin):
             user_email = completed_form_data.get('user_email')
             product_image = completed_form_data.get('image', None)
 
-            subject = f"New proposed product for review: {product_name}"
-            message = (
-                f"Name: {product_name}\n"
-                f"Brand: {product_brand}\n"
-                f"Category: {product_category}\n"
-                f"Description: {product_description}\n\n"
-                f"From user with e-mail: {user_email}"
-            )
-            mail_data = {
-                'subject': subject, 
-                'message': message,
-                'user_email': user_email, 
-                'image': product_image
-            }
+            mail_message = prepare_mail_message(product_name, product_brand,
+                                                product_category, product_description,
+                                                user_email)
+            mail_data = generate_mail_data(product_name, mail_message, user_email,
+                                           product_image)
             # Send an e-mail
             send_email_with_product_for_review(mail_data)
             messages.success(self.request, self.success_message)

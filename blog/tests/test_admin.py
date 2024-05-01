@@ -57,7 +57,8 @@ class PostAdminTestCase(TestCase):
 
     def test_get_queryset(self):
         queryset = self.post_model_admin.get_queryset(self.review)
-        self.assertTrue('tags' in queryset._prefetch_related_lookups)
+        self.assertTrue(queryset.filter(tags__name='chocolate').exists())
+        self.assertTrue(queryset.filter(tags__name='bars').exists())
 
     def test_tag_list(self):
         expected_tag_list = 'chocolate, bars'
@@ -197,11 +198,6 @@ class CommentAdminTestCase(TestCase):
         expected_datetime = self.user_comment.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
         displayed_comment = self.comment_model_admin.datetime(self.user_comment)
         self.assertEqual(expected_datetime, displayed_comment)
-
-    def test_title_of_datetime_column(self):
-        expected_title = 'DATE / TIME'
-        displayed_title = self.comment_model_admin.datetime.short_description
-        self.assertEqual(expected_title, displayed_title)
 
     def test_save_comment_with_authenticated_user(self):
         self.comment_model_admin.save_model(

@@ -2,8 +2,7 @@ from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from blog.forms import ProductSubmissionForm
-from blog.utils import prepare_product_review_email, send_email_with_product_for_review
+from blog.utils import send_email_with_product_for_review
 
 
 class PrepareProductReviewEmailTest(TestCase):
@@ -21,16 +20,6 @@ class PrepareProductReviewEmailTest(TestCase):
             f"Description: \n\n"
             f"From user with e-mail: {self.valid_data['user_email']}"
         )
-
-    def test_prepare_product_review_email(self):
-        form = ProductSubmissionForm(self.valid_data)
-        self.assertTrue(form.is_valid())
-
-        mail_data = prepare_product_review_email(form)
-        self.assertEqual(mail_data['subject'], self.expected_subject)
-        self.assertEqual(mail_data['message'], self.expected_message)
-        self.assertEqual(mail_data['user_email'], self.valid_data['user_email'])
-        self.assertIsNone(mail_data['image'])
 
 
 class SendEmailWithProductTest(TestCase):
@@ -68,7 +57,7 @@ class SendEmailWithProductTest(TestCase):
             'product_image': product_image
         }
         send_email_with_product_for_review(mail_data)
-        
+
         sent_mail = mail.outbox[0]
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(len(sent_mail.attachments), 1)

@@ -4,24 +4,17 @@ from typing import Any
 
 from django.core.mail import EmailMessage
 from django.utils import timezone
+from PIL import Image
 
-from blog.forms import ProductSubmissionForm
 from fitfoodfeed.settings import EMAIL_HOST_USER
 
 
-def prepare_product_review_email(form: ProductSubmissionForm) -> dict[str, Any]:
+def prepare_mail_message(product_name: str, product_brand: str,
+                         product_category: str, product_description: str,
+                         user_email: str) -> str:
     """
-    Prepare an email message with details of a proposed product for review.
-    Getting from user by submitting form.
+    Prepare the message content for the proposed product review email, sending by user.
     """
-    product_name = form.cleaned_data['name']
-    product_brand = form.cleaned_data['brand']
-    product_category = form.cleaned_data.get('category', '')
-    product_description = form.cleaned_data.get('description', '')
-    user_email = form.cleaned_data['user_email']
-    product_image = form.cleaned_data.get('image', None)
-
-    subject = f"New proposed product for review: {product_name}"
     message = (
         f"Name: {product_name}\n"
         f"Brand: {product_brand}\n"
@@ -29,15 +22,21 @@ def prepare_product_review_email(form: ProductSubmissionForm) -> dict[str, Any]:
         f"Description: {product_description}\n\n"
         f"From user with e-mail: {user_email}"
     )
+    return message
+
+def generate_mail_data(product_name: str, message: str,
+                       user_email: str, product_image: Image) -> dict:
+    """
+    Generate the mail data for the proposed product review email, sending by user.
+    """
+    subject = f"New proposed product for review: {product_name}"
     mail_data = {
         'subject': subject, 
         'message': message,
         'user_email': user_email, 
         'image': product_image
     }
-
     return mail_data
-
 
 def send_email_with_product_for_review(mail_data: dict[str, Any]) -> None:
     subject = mail_data['subject']

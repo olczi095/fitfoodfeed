@@ -14,7 +14,7 @@ User = get_user_model()
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin[Model]):
+class PostAdmin(admin.ModelAdmin):
     list_display = [
         'pk',
         'title',
@@ -45,7 +45,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
         return obj.likes_stats
 
     @admin.display(description="category")
-    def category_model(self, obj: Post) -> str:
+    def category_model(self, obj: Post) -> str | None:
         """Allows to redirect to the "category change" admin panel. """
         if obj.category:
             category_change_url = reverse(
@@ -53,6 +53,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
                 args=[obj.category.pk]
             )
             return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
+        return None
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Model]:
         """Optimizes query performance by prefetching related 'tags' data."""
@@ -74,7 +75,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
             self,
             request: HttpRequest,
             obj: Model,
-            form: ModelForm[Model],
+            form: ModelForm,
             change: bool) -> None:
 
         if (
@@ -87,7 +88,7 @@ class PostAdmin(admin.ModelAdmin[Model]):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin[Model]):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'post_amount']
     list_filter = ['name']
     search_fields = ['name']
@@ -97,7 +98,7 @@ class CategoryAdmin(admin.ModelAdmin[Model]):
 
 
 @admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin[Model]):
+class CommentAdmin(admin.ModelAdmin):
     list_display = [
         'author',
         'comment',
@@ -116,17 +117,17 @@ class CommentAdmin(admin.ModelAdmin[Model]):
             return [
                 'logged_user', 'response_to', 'email', 'post', 'body', 'active', 'level'
                 ]
-        elif obj and isinstance(obj, Comment) and \
+        if obj and isinstance(obj, Comment) and \
                 obj.unlogged_user:
             return [
                 'unlogged_user', 'response_to', 'email',
                 'post', 'body', 'active', 'level'
             ]
-        else:
-            return [
-                'unlogged_user', 'logged_user', 'response_to',
-                'email', 'post', 'body', 'active', 'level'
-            ]
+
+        return [
+            'unlogged_user', 'logged_user', 'response_to',
+            'email', 'post', 'body', 'active', 'level'
+        ]
 
     def get_readonly_fields(
         self, request: HttpRequest, obj: Model | None = None
@@ -172,7 +173,7 @@ class CommentAdmin(admin.ModelAdmin[Model]):
         return obj.pub_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     def save_model(
-        self, request: HttpRequest, obj: Model, form: ModelForm[Comment], change: bool
+        self, request: HttpRequest, obj: Model, form: ModelForm, change: bool
     ) -> None:
         if isinstance(obj, Comment) and obj.logged_user:
             obj.unlogged_user = None

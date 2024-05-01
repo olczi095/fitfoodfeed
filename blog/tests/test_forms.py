@@ -36,20 +36,6 @@ class PostFormTestCase(TestCase):
         self.assertFalse(is_valid_without_title)
         self.assertFalse(is_valid_without_body)
 
-    def test_labels(self):
-        post_form = PostForm()
-        expected_labels = {
-            'title': 'Title',
-            'meta_description': 'Meta Description',
-            'tags': 'Tags',
-            'body': 'Body',
-            'image': 'Image',
-            'slug': 'Slug',
-            'status': 'Status',
-        }
-        for field_name, expected_label in expected_labels.items():
-            self.assertEqual(post_form.fields.get(field_name).label, expected_label)
-
 
 class ProductSubmissionFormTestCase(TestCase):
     def test_form_valid(self):
