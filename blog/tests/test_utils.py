@@ -5,23 +5,6 @@ from django.test import TestCase
 from blog.utils import send_email_with_product_for_review
 
 
-class PrepareProductReviewEmailTest(TestCase):
-    def setUp(self):
-        self.valid_data = {
-            'name': 'Test Product for review',
-            'brand': 'Test Brand',
-            'user_email': 'test_user@mail.com',
-        }
-        self.expected_subject = f"New proposed product for review: {self.valid_data['name']}"
-        self.expected_message = (
-            f"Name: {self.valid_data['name']}\n"
-            f"Brand: {self.valid_data['brand']}\n"
-            f"Category: {None}\n"
-            f"Description: \n\n"
-            f"From user with e-mail: {self.valid_data['user_email']}"
-        )
-
-
 class SendEmailWithProductTest(TestCase):
     def setUp(self):
         self.valid_data = {
