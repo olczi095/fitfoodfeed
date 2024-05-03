@@ -52,8 +52,7 @@ class PostAdmin(admin.ModelAdmin):
                 'admin:blog_category_change',
                 args=[obj.category.pk]
             )
-            return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
-        return None
+        return format_html(f'<a href="{category_change_url}">{obj.category}</a>')
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Model]:
         """Optimizes query performance by prefetching related 'tags' data."""
