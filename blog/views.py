@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import (LoginRequiredMixin, PermissionRequiredMixin,
                                         UserPassesTestMixin)
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.db.models import QuerySet
@@ -38,15 +37,23 @@ class SuccessMessageCommentMixin(SuccessMessageMixin):
     """
     Mixin to add a success message on form submission for comments.
     """
-
+    request: HttpRequest
     success_message = ""
+    object: Any
 
     def form_valid(self, form: CommentForm) -> HttpResponse:
         self.success_message = ""
 
         editing_comment_id = self.request.POST.get('editing_comment_id')
         comment_parent_id = self.request.POST.get('comment_parent_id')
-        comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
+        comment_parent = None
+
+        if comment_parent_id is not None and isinstance(comment_parent_id, str):
+            try:
+                comment_parent_id = str(comment_parent_id)
+                comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
+            except ValueError:
+                pass
 
         if editing_comment_id:
             # Edit the existing comment if editing_comment_id field exists
@@ -69,13 +76,15 @@ class SuccessMessageCommentMixin(SuccessMessageMixin):
                 new_comment.logged_user = self.request.user
                 new_comment.unlogged_user = None
 
-            self.success_message = (
-                "Comment successfully <strong>added</strong>."
-                if self.request.user.is_staff
-                else "Comment successfully <strong>submitted</strong>. "
-                "It will be published after moderation and validation."
-            )
-
+            if self.request.user.is_staff:
+                self.success_message = (
+                    "Comment successfully <strong>added</strong>."
+                )
+            else:
+                self.success_message = (
+                    "Comment successfully <strong>submitted</strong>. "
+                    "It will be published after moderation and validation."
+                )
             if isinstance(new_comment, Comment) and isinstance(self.object, Post):
                 new_comment.post = self.object
                 new_comment.save()
@@ -166,8 +175,12 @@ class PostLikeView(View):
     ) -> JsonResponse:
         pk: int | None = kwargs.get('pk')
         post: Post = get_object_or_404(Post, pk=pk)
-        user: AccountsUser | AnonymousUser = self.request.user
-        liked: bool = post.toggle_like(user)
+        user: AccountsUser
+        liked: bool
+
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            liked = post.toggle_like(user)
 
         data = {
             'url': post.get_absolute_url(),
@@ -239,7 +252,7 @@ class PostUpdateView(
         )
 
 
-class PostDeleteView(
+class PostDeleteView(  # type: ignore
     SuccessMessageMixin,
     LoginRequiredMixin,
     UserPassesTestMixin,

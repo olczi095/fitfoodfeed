@@ -1,7 +1,6 @@
 from typing import Any
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -96,7 +95,9 @@ class Post(models.Model):
         blank=True,
         help_text="A comma-separated list of tags (case-insensitive)."
     )
-    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    likes: models.ManyToManyField[AccountsUser, AccountsUser] = models.ManyToManyField(
+        User, related_name='post_likes', blank=True
+    )
     objects = models.Manager()
     tagged_posts = TaggedPostsManager()
 
@@ -172,11 +173,10 @@ class Post(models.Model):
         """
         return self.comments.filter(active=True).filter(response_to=None)
 
-    def toggle_like(self, user: AccountsUser | AnonymousUser) -> None:
+    def toggle_like(self, user: AccountsUser) -> bool:
         """
         Toggle like for the given user.
         """
-
         if self.likes.filter(pk=user.pk).exists():
             self.likes.remove(user)
             return False

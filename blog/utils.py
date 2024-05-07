@@ -48,7 +48,7 @@ def send_email_with_product_for_review(mail_data: dict[str, Any]) -> None:
         subject,
         message,
         user_email,
-        [EMAIL_HOST_USER],
+        [EMAIL_HOST_USER] if EMAIL_HOST_USER else '',
     )
 
     if product_image:
@@ -56,7 +56,7 @@ def send_email_with_product_for_review(mail_data: dict[str, Any]) -> None:
 
     email.send(fail_silently=False)
 
-def generate_confirmation_data() -> str:
+def generate_confirmation_data() -> dict[str, str]:
     """
     Generate confirmation data:
     a random confirmation code and confirmation date for e-mail verification.
