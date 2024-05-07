@@ -153,7 +153,8 @@ class ProductDetailTest(TestCase):
                 content=content,
                 content_type='image/jpeg'
             ),
-            available=True
+            available=True,
+            quantity=10
         )
 
     def test_product_detail_returns_200_response(self):

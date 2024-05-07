@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from .models import Brand, Category, Product
-from .utils import get_related_products
+from .utils import get_related_products, sort_products_to_display
 
 
 def shop_redirect(request: HttpRequest) -> HttpResponseRedirect:
@@ -11,16 +11,18 @@ def shop_redirect(request: HttpRequest) -> HttpResponseRedirect:
 
 # Views related to products
 def product_list(request: HttpRequest) -> HttpResponse:
-    products = Product.objects.order_by('-available')
-    return render(request, 'shop/product_list.html', {'products': products})
+    products = Product.objects.all()
+    products_sorted = sort_products_to_display(products)
+    return render(request, 'shop/product_list.html', {'products': products_sorted})
 
 def product_on_sale_list(request: HttpRequest) -> HttpResponse:
     products = Product.objects.filter(is_on_sale=True).order_by('sale_price')
     if products:
+        products_sorted = sort_products_to_display(products)
         return render(
             request,
             'shop/filtered_product_list.html',
-            {'sale': True, 'products': products}
+            {'sale': True, 'products': products_sorted}
         )
     messages.error(
         request, "Unfortunatelly, there are no products on sale."
@@ -29,12 +31,13 @@ def product_on_sale_list(request: HttpRequest) -> HttpResponse:
 
 def product_new_list(request: HttpRequest) -> HttpResponse:
     products = Product.objects.all()
-    new_products = [product for product in products if product.is_new()]
-    if new_products:
+    products_sorted = sort_products_to_display(products)
+    new_products_sorted = [product for product in products_sorted if product.is_new()]
+    if new_products_sorted:
         return render(
             request,
             'shop/filtered_product_list.html',
-            {'new': True, 'products': new_products}
+            {'new': True, 'products': new_products_sorted}
         )
     messages.error(
         request, "Unforutnatelly, there are no new products in store at this moment."
@@ -45,7 +48,7 @@ def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
     try:
         product = Product.objects.get(slug=product_slug)
 
-        if product.available is True:
+        if product.available is True and product.quantity > 0:
             related_products = get_related_products(product=product, num_products=4)
             return render(
                 request,
@@ -100,14 +103,19 @@ def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
     try:
         brand = Brand.objects.get(slug=brand_slug)
         products = brand.products.order_by('-available')
-        
+
         if not products:
             messages.error(
-                request, "At this moment, we do not have any available products from this brand in our store. "
+                request,
+                "At this moment, "
+                "we do not have any available products from this brand in our store. "
                 "Come back soon!"
             )
+        products_sorted = sort_products_to_display(products)
         return render(
-            request, 'shop/filtered_product_list.html', {'brand': brand, 'products': products}
+            request,
+            'shop/filtered_product_list.html',
+            {'brand': brand, 'products': products_sorted}
         )
 
     except Brand.DoesNotExist:

@@ -55,7 +55,7 @@
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="row align-items-center justify-content-center pe-3 ps-3">
                                 <!-- Add to cart section -->
-                                {% if product.quantity %}
+                                {% if product.quantity and product.available %}
                                     <div class="col-md-4 text-end pe-md-2">
                                         <input class="form-control mb-2 mb-md-0" type="num" min="0" max="{{ product.quantity }}" value="1">
                                     </div>
