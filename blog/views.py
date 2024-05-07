@@ -49,11 +49,8 @@ class SuccessMessageCommentMixin(SuccessMessageMixin):
         comment_parent = None
 
         if comment_parent_id is not None and isinstance(comment_parent_id, str):
-            try:
-                comment_parent_id = str(comment_parent_id)
-                comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
-            except ValueError:
-                pass
+            comment_parent_id = str(comment_parent_id)
+            comment_parent = Comment.objects.filter(pk=comment_parent_id).first()
 
         if editing_comment_id:
             # Edit the existing comment if editing_comment_id field exists
