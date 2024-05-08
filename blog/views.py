@@ -286,8 +286,8 @@ class CategoryListView(ListView):
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
-        category_name = self.kwargs['category_name']
-        category = get_object_or_404(Category, slug=category_name)
+        category_slug = self.kwargs['category_slug']
+        category = get_object_or_404(Category, slug=category_slug)
         return category.get_posts()
 
 

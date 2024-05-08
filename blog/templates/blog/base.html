@@ -51,7 +51,7 @@
                 <!-- Category links -->
                 {% for category in main_categories_blog %}
                     <li class="nav-item">
-                        <a class="nav-link nav-item-light" href="{% url 'blog:category' category.slug %}">
+                        <a class="nav-link nav-item-light" href="{{ category.get_absolute_url }}">
                             {{ category.name|upper }}
                         </a>
                     </li>

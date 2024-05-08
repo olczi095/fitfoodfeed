@@ -876,7 +876,7 @@ class CategoryViewsTestCase(TestCase):
         response = self.client.get(
             reverse(
                 'blog:category',
-                kwargs={'category_name': self.category.slug}
+                kwargs={'category_slug': self.category.slug}
             ))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'blog/home.html')
@@ -886,7 +886,7 @@ class CategoryViewsTestCase(TestCase):
         response = self.client.get(
             reverse(
                 'blog:category',
-                kwargs={'category_name': category_peanut_butter}
+                kwargs={'category_slug': category_peanut_butter}
             ))
 
         expected_posts = [self.post2]

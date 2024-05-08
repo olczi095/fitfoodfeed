@@ -41,7 +41,7 @@
             <!-- Submit button -->
             <button type="submit" class="btn btn-outline-success" value="Confirm">Yes, delete</button>
             <!-- Cancel button -->
-            <a href="{% url 'blog:detail_review' post.slug %}" class="btn btn-outline-danger">Cancel</a>
+            <a href="{{ post.get_absolute_url }}" class="btn btn-outline-danger">Cancel</a>
         </form>
     </section>
 </body>

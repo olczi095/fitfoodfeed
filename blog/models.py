@@ -36,7 +36,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("blog:category", kwargs={"category_name": self.slug})
+        return reverse("blog:category", kwargs={"category_slug": self.slug})
 
     def get_posts(self) -> QuerySet['Post']:
         return self.posts.filter(status='PUB')
