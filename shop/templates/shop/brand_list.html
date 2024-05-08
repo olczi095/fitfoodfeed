@@ -21,7 +21,7 @@
             <div class="px-5 py-1">
                 <li class="px-5 py-3 list-group-item d-flex justify-content-between align-items-start all-categories-list">
                 <div class="ms-2 me-auto">
-                    <a href="{% url 'shop:brand_product_list' brand.slug %}" class="fw-bold">{{ brand.name }}</a>
+                    <a href="{{ brand.get_absolute_url }}" class="fw-bold">{{ brand.name }}</a>
                     <div class="mx-5 my-1">{{ brand.description }}</div>
                 </div>
                 <span class="badge text-bg-primary rounded-pill">{{ brand.number_of_products }}</span>

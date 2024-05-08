@@ -24,6 +24,10 @@ class CategoryModelTest(TestCase):
             name='Masła Orzechowe'
         )
         self.assertEqual(polish_category.slug, 'masla-orzechowe')
+  
+    def test_get_absolute_url(self):
+        category_absolute_url = '/shop/categories/' + self.category.slug + '/'
+        self.assertEqual(self.category.get_absolute_url(), category_absolute_url)
 
     def test_number_of_products_method(self):
         expected_number_of_products = 0
@@ -44,6 +48,10 @@ class BrandModelTest(TestCase):
             name='Kiełbasy Polskie'
         )
         self.assertEqual(polish_brand.slug, 'kielbasy-polskie')
+
+    def test_get_absolute_url(self):
+        brand_absolute_url = '/shop/brands/' + self.brand.slug + '/'
+        self.assertEqual(self.brand.get_absolute_url(), brand_absolute_url)
 
     def test_number_of_products_method(self):
         expected_number_of_products = 0

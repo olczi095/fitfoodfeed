@@ -13,7 +13,7 @@
                 <!-- Loop through six main categories -->
                 {% for category in main_categories_shop %}
                     <li class="nav-item">
-                        <a class="nav-link nav-item-light" href="{% url 'shop:category_product_list' category.slug %}">
+                        <a class="nav-link nav-item-light" href="{{ category.get_absolute_url }}">
                             {{ category|upper }}
                         </a>
                     </li>

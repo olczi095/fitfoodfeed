@@ -28,6 +28,9 @@ class Category(models.Model):
             self.slug = convert_to_slug(self.name)
         return super().save(*args, **kwargs)
 
+    def get_absolute_url(self) -> str:
+        return reverse("shop:category_product_list", kwargs={"category_slug": self.slug})
+
     @property
     def number_of_products(self) -> int:
         return self.products.count()
@@ -51,6 +54,9 @@ class Brand(models.Model):
         if not self.slug:
             self.slug = convert_to_slug(self.name)
         return super().save(*args, **kwargs)
+
+    def get_absolute_url(self) -> str:
+        return reverse("shop:brand_product_list", kwargs={"brand_slug": self.slug})
 
     @property
     def number_of_products(self):
