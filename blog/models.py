@@ -116,7 +116,7 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
-        return reverse("blog:detail_review", args=[str(self.slug)])
+        return reverse("blog:detail_review", kwargs={"post_slug": self.slug})
 
     @property
     def comment_stats(self) -> int:

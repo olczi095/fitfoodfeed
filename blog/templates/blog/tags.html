@@ -19,7 +19,7 @@
     <h4><div class="tags-content">
         <!-- Loop through the tags -->
         {% for tag in tags %}
-        <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge text-bg-secondary">
+        <a href="{% url 'blog:tag' tag_slug=tag.slug %}" class="badge text-bg-secondary">
             {{ tag|upper }}
         </a>
         {% endfor %}

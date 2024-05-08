@@ -11,9 +11,9 @@ urlpatterns = [
     path('products/', product_list, name='product_list'),
     path('products/on_sale/', product_on_sale_list, name='product_on_sale_list'),
     path('products/new/', product_new_list, name='product_new_list'),
-    path('products/<str:product_slug>/', product_detail, name='product_detail'),
+    path('products/<slug:product_slug>/', product_detail, name='product_detail'),
     path('brands/', brand_list, name='brand_list'),
-    path('brands/<str:brand_slug>/', brand_product_list, name='brand_product_list'),
+    path('brands/<slug:brand_slug>/', brand_product_list, name='brand_product_list'),
     path('categories/', category_list, name='category_list'),
-    path('categories/<str:category_slug>/', category_product_list, name='category_product_list'),
+    path('categories/<slug:category_slug>/', category_product_list, name='category_product_list'),
 ]

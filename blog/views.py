@@ -119,7 +119,7 @@ class TaggedPostsListView(ListView):
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
-        tag_slug = self.kwargs['slug']
+        tag_slug = self.kwargs['tag_slug']
         return Post.get_tagged_posts(tag_slug)
 
 
@@ -132,6 +132,7 @@ class TagsListView(ListView):
 class PostDetailView(SuccessMessageCommentMixin, FormMixin, DetailView):
     form_class = CommentForm
     model = Post
+    slug_url_kwarg = 'post_slug'
     queryset = Post.objects.filter(status="PUB")
     template_name = 'blog/review_detail.html'
 

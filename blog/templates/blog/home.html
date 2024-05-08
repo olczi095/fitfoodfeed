@@ -65,7 +65,7 @@
                         
                         <!-- Post tags -->
                         {% for tag in post.tags.all %}
-                            <a href="{% url 'blog:tag' slug=tag.slug %}" class="badge text-bg-secondary">
+                            <a href="{% url 'blog:tag' tag_slug=tag.slug %}" class="badge text-bg-secondary">
                                 {{ tag|upper }}
                             </a>
                                 {% if not forloop.last %}|{% endif %}

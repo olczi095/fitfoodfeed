@@ -680,7 +680,7 @@ class PostStatusTestCase(TestCase):
         )
         self.assertRedirects(response, '/blog/')
         response = self.client.get(
-            reverse('blog:detail_review', kwargs={'slug': slug})
+            reverse('blog:detail_review', kwargs={'post_slug': slug})
         )
         self.assertEqual(response.status_code, 404)
 
@@ -731,7 +731,7 @@ class PostStatusTestCase(TestCase):
         response = self.client.post(reverse('blog:create_review'), post_data)
         self.assertRedirects(
             response,
-            reverse('blog:detail_review', kwargs={'slug': post_data['slug']})
+            reverse('blog:detail_review', kwargs={'post_slug': post_data['slug']})
         )
 
     def test_post_published_create_and_save(self):
@@ -827,21 +827,21 @@ class TaggedPostsListTestCase(TestCase):
     def test_tag_page_success(self):
         tag_slug = self.tag_bars.slug
         response = self.client.get(
-            reverse('blog:tag', kwargs={'slug': tag_slug})
+            reverse('blog:tag', kwargs={'tag_slug': tag_slug})
         )
         self.assertEqual(response.status_code, 200)
 
     def test_tag_page_uses_home_template(self):
         tag_slug = self.tag_bars.slug
         self.client.get(
-            reverse('blog:tag', kwargs={'slug': tag_slug})
+            reverse('blog:tag', kwargs={'tag_slug': tag_slug})
         )
         self.assertTemplateUsed('blog/home.html')
 
     def test_filtering_tagged_posts(self):
         tag_slug = self.tag_bars.slug
         response = self.client.get(
-            reverse('blog:tag', kwargs={'slug': tag_slug})
+            reverse('blog:tag', kwargs={'tag_slug': tag_slug})
         )
         filtered_tagged_posts = [self.post1, self.post5]
         self.assertQuerysetEqual(
