@@ -34,13 +34,14 @@
 </head>
 
 <body class="body-background">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark" id="upper-navbar" style="height:2rem;">
+
+    <!-- Upper navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark" id="upperNavbar" style="height:2rem;">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bstarget="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#upperNavbar" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-end" id="upperNavbar">
             <!-- Home link -->
             <span class="navbar-brand" style="margin-right:auto;">
                 <a class="home-image" href="{% url 'blog:home' %}">
