@@ -1,6 +1,6 @@
 from django import forms
 
-from blog.models import Category, Comment, Post
+from blog.models import Category, Post
 
 
 class PostForm(forms.ModelForm):
@@ -45,27 +45,6 @@ class PostForm(forms.ModelForm):
         help_texts: dict[str, str] = {
             'slug': 'You can leave this field empty. \
                 The slug will be created based on the title automatically.',
-        }
-
-
-class CommentForm(forms.ModelForm):
-
-    class Meta:
-        model: type[Comment] = Comment
-        fields: list[str] = [
-            'logged_user',
-            'unlogged_user',
-            'email',
-            'body'
-        ]
-        labels: dict[str, str] = {
-            'logged_user': 'User',
-            'unlogged_user': 'Name',
-            'body': '',
-            'email': 'Email'
-        }
-        widgets: dict[str, forms.Widget] = {
-            'logged_user': forms.TextInput(attrs={'readonly': True})
         }
 
 

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'blog',
     'accounts',
     'shop',
+    'comments',
     'crispy_forms',
     'crispy_bootstrap4',
     'taggit'
