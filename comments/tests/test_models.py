@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.forms import ValidationError
 from django.test import TestCase
+from model_bakery import baker
 
 from blog.models import Post
 from comments.models import Comment
@@ -17,7 +18,7 @@ class CommentModelExistenceTestCase(TestCase):
 class CommentModelTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='user', password='xyz')
-        self.review = Post.objects.create(title='New review', body='The body.')
+        self.review = baker.make(Post)
         self.comment = Comment.objects.create(
             logged_user=self.user,
             post=self.review,
@@ -65,7 +66,7 @@ class CommentModelTestCase(TestCase):
         self.assertTrue(comment.active)
 
     def test_comment_with_different_post_response_to_and_post_not_added(self):
-        second_review = Post.objects.create(title='Second review', body='The body.')
+        second_review = baker.make(Post)
 
         with self.assertRaises(ValidationError) as context:
             Comment.objects.create(

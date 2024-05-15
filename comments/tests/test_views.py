@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from model_bakery import baker
 
 from blog.models import Post
 from comments.models import Comment
@@ -13,12 +14,7 @@ class CommentDeleteViewTestCase(TestCase):
         self.admin = User.objects.create_superuser(
             username='admin', password='admin_password',
         )
-        self.post = Post.objects.create(
-            title='Sample Post Review',
-            author=self.admin,
-            body='The body of the Sample Post Review.',
-            status='PUB',
-        )
+        self.post = baker.make(Post)
         self.comment_to_delete = Comment.objects.create(
             post=self.post,
             body='Body comment',

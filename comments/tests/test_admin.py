@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.html import strip_tags
+from model_bakery import baker
 
 from blog.models import Post
 from comments.admin import CommentAdmin
@@ -18,7 +19,7 @@ class CommentAdminTestCase(TestCase):
             password='xyz',
             email='user@mail.com'
         )
-        self.review = Post.objects.create(title='New review', body='The body.')
+        self.review = baker.make(Post)
         self.user_comment = Comment.objects.create(
             logged_user=self.user,
             post=self.review,
