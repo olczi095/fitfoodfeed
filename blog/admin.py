@@ -25,6 +25,7 @@ class PostAdmin(admin.ModelAdmin):
         'pub_date',
         'status'
     ]
+    readonly_fields = ['publication']
     list_display_links = ['title']
     list_filter = ['author', 'category', 'status']
     search_fields = ['title', 'meta_description', 'body']

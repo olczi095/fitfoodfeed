@@ -7,8 +7,6 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
-from blog.models import Post
-
 from .forms import CommentForm
 from .models import Comment
 
@@ -64,8 +62,8 @@ class SuccessMessageCommentMixin(SuccessMessageMixin):
                     "Comment successfully <strong>submitted</strong>. "
                     "It will be published after moderation and validation."
                 )
-            if isinstance(new_comment, Comment) and isinstance(self.object, Post):
-                new_comment.post = self.object
+            if isinstance(new_comment, Comment) and self.object.publication:
+                new_comment.publication = self.object.publication
                 new_comment.save()
 
         return super().form_valid(form)

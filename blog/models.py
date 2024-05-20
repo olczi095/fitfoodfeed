@@ -2,7 +2,7 @@ from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Model, Q, QuerySet
+from django.db.models import Q, QuerySet
 from django.urls import reverse
 from django.utils import timezone
 from django_resized import ResizedImageField
@@ -11,6 +11,7 @@ from taggit.managers import TaggableManager
 from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
 from accounts.validators import validate_avatar_type
+from comments.models import Publication
 from utils.polish_slug_utils import convert_to_slug
 
 User = get_user_model()
@@ -55,6 +56,12 @@ class Post(models.Model):
         PREPARED_TO_PUBLISH = 'TO_PUB', 'Prepared to publish'
         PUBLISHED = 'PUB', 'Published'
 
+    publication = models.OneToOneField(
+        Publication,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     title = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     pub_date = models.DateField(default=timezone.now)
@@ -106,6 +113,9 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args: Any, **kwargs: Any) -> None:
+        if not self.publication:
+            publication = Publication.objects.create()
+            self.publication = publication
         if not self.slug:
             self.slug = convert_to_slug(self.title)
         if not self.category:
@@ -115,10 +125,6 @@ class Post(models.Model):
 
     def get_absolute_url(self) -> str:
         return reverse("blog:detail_review", kwargs={"post_slug": self.slug})
-
-    @property
-    def comment_stats(self) -> int:
-        return self.comments.filter(active=True).count()
 
     @property
     def likes_stats(self) -> int:
@@ -138,7 +144,8 @@ class Post(models.Model):
         posts_with_comment_counters = {}
 
         for post in cls.objects.filter(status='PUB'):
-            posts_with_comment_counters[post] = post.comment_stats
+            if post.publication:
+                posts_with_comment_counters[post] = post.publication.comment_stats
 
         popular_posts_with_comment_counters = sorted(
             posts_with_comment_counters.items(),
@@ -164,12 +171,6 @@ class Post(models.Model):
             Post.objects.filter(tags__in=post_tags).exclude(pk=self.pk).distinct()
         )
         return all_related_posts[:amount]
-
-    def get_top_level_comments(self) -> QuerySet['Model']:
-        """
-        Gets top level comments for the current post.
-        """
-        return self.comments.filter(active=True).filter(response_to=None)
 
     def toggle_like(self, user: AccountsUser) -> bool:
         """

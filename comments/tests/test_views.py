@@ -16,8 +16,8 @@ class CommentDeleteViewTestCase(TestCase):
         )
         self.post = baker.make(Post)
         self.comment_to_delete = Comment.objects.create(
-            post=self.post,
             body='Body comment',
+            publication=self.post.publication,
             active=True
         )
 

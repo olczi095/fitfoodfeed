@@ -130,14 +130,14 @@
                             <span class="icon"><ion-icon name='person'></ion-icon></span>
                             {% if comment.logged_user %}
                                 <span class="author"><strong>{{ comment.logged_user }}</strong> on </span>
-                                <a href="{{ comment.post.get_absolute_url }}" class="link">
-                                    {{ comment.post }}
+                                <a href="{{ comment.publication.post.get_absolute_url }}" class="link">
+                                    {{ comment.publication.post }}
                                 </a>
                             {% endif %}
                             {% if comment.unlogged_user %}
                                 <span class="author"><strong>{{ comment.unlogged_user }}</strong> on </span>
-                                <a href="{{ comment.post.get_absolute_url }}" class="link">
-                                    {{ comment.post }}
+                                <a href="{{ comment.publication.post.get_absolute_url }}" class="link">
+                                    {{ comment.publication.post }}
                                 </a>
                             {% endif %}
                             <div class="body">

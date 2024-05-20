@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from blog.models import Category, Post
-from comments.models import Comment
 
 User = get_user_model()
 
@@ -121,20 +120,6 @@ class PostFunctionalityTestCase(TestCase):
             body='test_body',
             category=self.category
         )
-
-    def test_comment_counter(self):
-        amount_of_no_comments = self.post.comment_stats
-        self.assertEqual(amount_of_no_comments, 0)
-
-        comment = Comment.objects.create(
-            post=self.post,
-            body='Test comment.',
-            active=True
-        )
-        comment.save()
-        self.post.save()
-        amount_of_comments = self.post.comment_stats
-        self.assertEqual(amount_of_comments, 1)
 
     def test_likes_counter_with_no_likes(self):
         calculated_post_likes = self.post.likes_stats

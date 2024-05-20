@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
@@ -255,7 +256,7 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         new_comment = Comment.objects.last()
 
-        self.assertEqual(new_comment.post, self.post)
+        self.assertEqual(new_comment.publication.post, self.post)
         self.assertFalse(new_comment.active)
         self.assertIsNone(new_comment.unlogged_user)
         self.assertEqual(new_comment.logged_user, self.author)
@@ -275,7 +276,7 @@ class PostDetailViewCommentTestCase(TestCase):
         )
         new_comment = Comment.objects.last()
 
-        self.assertEqual(new_comment.post, self.post)
+        self.assertEqual(new_comment.publication.post, self.post)
         self.assertFalse(new_comment.active)
         self.assertIsNone(new_comment.logged_user)
         self.assertEqual(new_comment.unlogged_user, 'guest')
@@ -313,7 +314,7 @@ class PostDetailViewCommentTestCase(TestCase):
 
     def test_comment_without_parent_response_to_field(self):
         comment_without_parent = Comment.objects.create(
-            post=self.post,
+            publication=self.post.publication,
             body=self.comment_data_authenticated_user
         )
         self.assertIsNone(comment_without_parent.response_to)
@@ -321,7 +322,7 @@ class PostDetailViewCommentTestCase(TestCase):
     def test_comment_with_parent_response_to_field(self):
         self.client.force_login(self.author)
         parent_comment = Comment.objects.create(
-            post=self.post,
+            publication=self.post.publication,
             body="Parent comment body",
             logged_user=self.author,
             active=True
@@ -359,7 +360,7 @@ class PostDetailViewCommentTestCase(TestCase):
         self.client.force_login(superuser)
         comment = Comment.objects.create(
             logged_user=superuser,
-            post=self.post,
+            publication=self.post.publication,
             body=self.comment_data_authenticated_user,
             active=True
         )
@@ -744,7 +745,7 @@ class PostStatusTestCase(TestCase):
     def test_recent_comments_in_context(self):
         response = self.client.get(reverse('blog:home'))
         self.assertIn('recent_comments', response.context)
-        self.assertIsInstance(response.context['recent_comments'], list)
+        self.assertIsInstance(response.context['recent_comments'], QuerySet)
         self.assertLessEqual(len(response.context['recent_comments']), 3)
         self.assertGreaterEqual(len(response.context['recent_comments']), 0)
 

@@ -24,7 +24,7 @@ from taggit.models import Tag
 from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
 from comments.forms import CommentForm
-from comments.models import Comment
+from comments.models import Publication
 from comments.views import SuccessMessageCommentMixin
 from fitfoodfeed.settings import EMAIL_HOST_USER
 
@@ -46,7 +46,7 @@ class PostListView(ListView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['popular_posts'] = Post.get_popular_posts(5)
-        context['recent_comments'] = Comment.get_recent_comments(3)
+        context['recent_comments'] = Publication.get_recent_comments(3, 'post')
         return context
 
 
@@ -59,7 +59,7 @@ class TaggedPostsListView(ListView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['popular_posts'] = Post.get_popular_posts(5)
-        context['recent_comments'] = Comment.get_recent_comments(3)
+        context['recent_comments'] = Publication.get_recent_comments(3, 'post')
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
@@ -93,8 +93,10 @@ class PostDetailView(SuccessMessageCommentMixin, FormMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         if isinstance(self.object, Post):
-            context['comments'] = self.object.get_top_level_comments()
             context['post_likes'] = self.object.display_likes_stats()
+        if self.object.publication:
+            context['comments'] = self.object.publication.get_top_level_comments()
+
 
         context['form'] = CommentForm(initial={'post': self.object})
         context['user'] = self.request.user
@@ -227,7 +229,7 @@ class CategoryListView(ListView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['popular_posts'] = Post.get_popular_posts(5)
-        context['recent_comments'] = Comment.get_recent_comments(3)
+        context['recent_comments'] = Publication.get_recent_comments(3, 'post')
         return context
 
     def get_queryset(self) -> QuerySet[Post]:
