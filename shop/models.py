@@ -5,9 +5,9 @@ from django.db.models import QuerySet
 from django.urls import reverse
 from django.utils import timezone
 
+from comments.models import Publication
 from utils.polish_slug_utils import convert_to_slug
 
-# Catalog with products
 
 class Category(models.Model):
     """Model representing the base category for various products."""
@@ -68,6 +68,12 @@ class Product(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
+    publication = models.OneToOneField(
+        Publication,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     brief_description = models.CharField(max_length=255, null=True, blank=True)
     full_description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -106,6 +112,9 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args: Any, **kwargs: Any) -> None:
+        if not self.publication:
+            publication = Publication.objects.create()
+            self.publication = publication
         if not self.slug:
             self.slug = convert_to_slug(self.name)
         return super().save(*args, **kwargs)

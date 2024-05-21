@@ -86,7 +86,8 @@ def category_product_list(request: HttpRequest, category_slug: str) -> HttpRespo
         products = category.products.all()
         products_sorted = sort_products_to_display(products)
         return render(
-            request, 'shop/filtered_product_list.html', {'category': category, 'products': products_sorted}
+            request, 'shop/filtered_product_list.html',
+            {'category': category, 'products': products_sorted}
         )
 
     except Category.DoesNotExist:

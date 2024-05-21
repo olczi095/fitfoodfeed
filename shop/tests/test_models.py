@@ -24,7 +24,7 @@ class CategoryModelTest(TestCase):
             name='Masła Orzechowe'
         )
         self.assertEqual(polish_category.slug, 'masla-orzechowe')
-  
+
     def test_get_absolute_url(self):
         category_absolute_url = '/shop/categories/' + self.category.slug + '/'
         self.assertEqual(self.category.get_absolute_url(), category_absolute_url)

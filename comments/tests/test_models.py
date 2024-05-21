@@ -5,6 +5,7 @@ from model_bakery import baker
 
 from blog.models import Post
 from comments.models import Comment, Publication
+from shop.models import Brand, Product
 
 User = get_user_model()
 
@@ -19,7 +20,12 @@ class PublicationModelTestCase(TestCase):
             author=self.superuser,
             status='PUB'
         )
-        self.review = baker.make(Post)
+        self.brand = baker.make(Brand)
+        self.product = Product.objects.create(
+            name='Test Product',
+            brand=self.brand,
+            price=9.99,
+        )
 
     def test_string_representation_for_no_object(self):
         expected_representation = "None"
@@ -30,14 +36,77 @@ class PublicationModelTestCase(TestCase):
         expected_representation = f'Post: "{self.post}"'
         self.assertEqual(str(self.publication), expected_representation)
 
+    def test_string_representation_for_product(self):
+        self.product.publication = self.publication
+        expected_representation = f'Product: "{self.product}"'
+        self.assertEqual(str(self.publication), expected_representation)
+
     def test_comment_stats_with_no_comments(self):
         comment_stats = self.publication.comment_stats
         self.assertEqual(comment_stats, 0)
 
+
+class GetRecentCommentsTestCase(TestCase):
+    def setUp(self):
+        self.superuser = User.objects.create_superuser(
+            username='superuser',
+            password='superpassword'
+        )
+        self.publication_post = Publication.objects.create()
+        self.publication_product = Publication.objects.create()
+        self.post = Post.objects.create(
+            title='Test Post',
+            publication=self.publication_post,
+            body='This is a test post.',
+            author=self.superuser,
+            status='PUB'
+        )
+        self.brand = baker.make(Brand)
+        self.product = Product.objects.create(
+            name='Test Product',
+            publication=self.publication_product,
+            brand=self.brand,
+            price=9.99,
+        )
+
     def test_get_recent_comments_for_other_publication_type_returns_none(self):
-        recent_comments = self.publication.get_recent_comments(5, 'review')
+        publication = Publication.objects.create()
+        recent_comments = publication.get_recent_comments(5, 'review')
         self.assertEqual(recent_comments, None)
 
+    def test_get_recent_comments_for_post_with_no_comments(self):
+        recent_comments = self.publication_post.get_recent_comments(5, 'post')
+        self.assertEqual(len(recent_comments), 0)
+
+    def test_get_recent_comments_for_post_with_two_comments(self):
+        comment1 = Comment.objects.create(
+            body='First comment',
+            publication=self.publication_post,
+            active=True
+        )
+        comment2 = Comment.objects.create(
+            body='Second comment',
+            publication=self.publication_post,
+            active=True
+        )
+        recent_comments = self.publication_post.get_recent_comments(5, 'post')
+        self.assertIn(comment1, recent_comments)
+        self.assertIn(comment2, recent_comments)
+        self.assertEqual(len(recent_comments), 2)
+
+    def test_get_recent_comments_for_product_with_no_comments(self):
+        recent_comments = self.publication_product.get_recent_comments(5, 'product')
+        self.assertEqual(len(recent_comments), 0)
+
+    def test_get_recent_comments_for_product_with_one_comment(self):
+        comment = Comment.objects.create(
+            body='First comment',
+            publication=self.publication_product,
+            active=True
+        )
+        recent_comments = self.publication_product.get_recent_comments(5, 'product')
+        self.assertIn(comment, recent_comments)
+        self.assertEqual(len(recent_comments), 1)
 
 class CommentModelExistenceTestCase(TestCase):
     def test_comment_model_exists(self):

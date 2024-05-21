@@ -17,6 +17,8 @@ class Publication(models.Model):
     def publication_type(self):
         if getattr(self, 'post', None):
             return f"Post: \"{self.post}\""
+        if getattr(self, 'product', None):
+            return f"Product: \"{self.product}\""
         return None
 
     @property
@@ -31,6 +33,12 @@ class Publication(models.Model):
                 publication__post__isnull=False
             ).order_by('-pub_datetime')[:amount]
             return post_active_comments
+        if publication_type == 'product':
+            product_active_comments = Comment.objects.filter(
+                active=True,
+                publication__product__isnull=False
+            ).order_by('-pub_datetime')[:amount]
+            return product_active_comments
         return None
 
     def get_top_level_comments(self) -> QuerySet['Model']:
