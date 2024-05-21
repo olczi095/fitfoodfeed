@@ -82,7 +82,7 @@
 
             <!-- Form for editing a comment -->
             <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
-                {% include 'blog/includes/comment_form_edit.html' %}
+                {% include 'comments/comment_form_edit.html' %}
             </div>
 
         {% elif request.user.is_staff %}
@@ -112,7 +112,7 @@
                 
                 <!-- Form for editing a comment -->
                 <div class="comment-edit-form" id="commentFormEdit{{ comment.id }}" style="display:none;">
-                    {% include 'blog/includes/comment_form_edit.html' %}
+                    {% include 'comments/comment_form_edit.html' %}
                 </div>
                 
             {% endif %}
@@ -124,12 +124,12 @@
 
     <!-- Reply button -->
     <div class="comment-reply-form" id="commentFormReply" style="display: none;">
-        {% include 'blog/includes/comment_form_reply.html'%}
+        {% include 'comments/comment_form_reply.html'%}
     </div>
 
     <!-- Displaying replies -->
     {% for reply in comment.active_replies %}
-        {% include 'blog/includes/comment_detail.html' with comment=reply %}
+        {% include 'comments/comment_detail.html' with comment=reply %}
     {% endfor %}
 
     {% if comment.level == 1 and not forloop.last %}
