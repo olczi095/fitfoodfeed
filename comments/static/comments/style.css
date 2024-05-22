@@ -1,0 +1,163 @@
+/* Basic comment styles */
+.comment {
+    margin-top: 1.2rem;
+    margin-left: calc(4.0rem - (0.4rem * var(--level)));
+}
+
+.comment .author,
+.comment .author-admin {
+    display: flex;
+    align-items: center;
+    color: var(--color-blue);
+    font-weight: bolder;
+}
+
+.comment .author img,
+.comment .author-admin img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin-right: 0.625rem;
+}
+
+.comment .datetime {
+    color: var(--color-lightgrey);
+}
+
+.comment-divider {
+    border: 0.01rem solid var(--color-lightgrey);
+}
+
+/* Comment form styles */
+.comment-form {
+    margin: -1rem auto 1.5rem 1.5rem;
+    padding: 2rem;
+}
+
+.comment-form-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-middleorange);
+}
+
+.modify-comment-buttons {
+    display: flex;
+    gap: 0.1rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Button styles */
+.modify-comment-button {
+    display: block;
+    /* border: 0.1rem solid var(--color-lightgrey); */
+    background-color: var(--color-white);
+    padding: 0.1rem 0.4rem;
+    text-decoration: none;
+}
+
+.modify-comment-button:hover {
+    text-decoration: none;
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.edit-comment-button {
+    color: var(--color-green-alert);
+    border: 0.1rem solid var(--color-lightgrey);
+}
+
+.edit-comment-button:hover {
+    background-color: var(--color-green-alert);
+    border-color: var(--color-green-alert);
+}
+
+.edit-comment-button:focus {
+    outline: none;
+}
+
+.edit-comment-button.active {
+    background-color: var(--color-green-alert);
+    color: white;
+    border-color: var(--color-green-alert);
+}
+
+.comment-edit-form {
+    display: none;
+    margin: 0.5rem auto;
+    padding: 1rem;
+}
+
+.comment-edit-form .btn-orange {
+    background-color: var(--color-orange);
+    border: none;
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: smaller;
+}
+
+.comment-edit-form .btn-orange:hover {
+    background-color: var(--color-darkorange);
+}
+
+.delete-comment-button {
+    color: var(--color-red-alert);
+    border: 0.1rem solid var(--color-lightgrey);
+}
+
+.delete-comment-button:hover {
+    background-color: var(--color-red-alert);
+    border-color: var(--color-red-alert);
+}
+
+.delete-comment-button:focus {
+    outline: none;
+}
+
+.comment-reply-button {
+    background: none;
+    border: none;
+    color: var(--color-orange);
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.comment-reply-button:hover {
+    color: var(--color-blue);
+}
+
+.comment-reply-button:focus {
+    outline: none;
+}
+
+.comment-reply-button:active {
+    color: var(--color-blue);
+}
+
+.comment-reply-button-blue {
+    color: var(--color-blue);
+}
+
+.comment-reply-form {
+    margin: 1rem auto 0.5rem 1rem;
+    padding: 1rem;
+    border-top: 0.1rem dashed var(--color-lightgrey);
+    border-bottom: 0.1rem dashed var(--color-lightgrey);
+}
+
+.comment-reply-form .btn-orange {
+    background-color: var(--color-orange);
+    border: none;
+    margin-left: auto;
+    padding: 0.3rem 0.6rem;
+    font-size: smaller;
+}
+
+.comment-reply-form .btn-orange:hover {
+    background-color: var(--color-darkorange);
+}
+
+.comments .info {
+    color: var(--color-lightgrey);
+}

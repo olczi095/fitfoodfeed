@@ -5,6 +5,10 @@
     {{ post.title }} | {{ block.super}}
 {% endblock title %}
 
+{% block extra_styles_head %}
+    <link rel="stylesheet" href="{% static 'comments/style.css' %}">
+{% endblock extra_styles_head %}
+
 <!-- Scripts -->
 {% block scripts %}
     {{ block.super }}
