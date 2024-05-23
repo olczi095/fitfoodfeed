@@ -14,10 +14,10 @@
     {{ block.super }}
     <!-- Additional scripts for specific subtemplate -->
     <script defer src="{% static 'blog/js/like_review.js' %}"></script>
-    <script defer src="{% static 'blog/js/comment_reply.js' %}"></script>
-    <script defer src="{% static 'blog/js/comment_edit.js' %}"></script>
-    <script defer src="{% static 'blog/js/comment_delete.js' %}"></script>
-    <script defer src="{% static 'blog/js/comment_counter_update.js' %}"></script>
+    <script defer src="{% static 'comments/comment_reply.js' %}"></script>
+    <script defer src="{% static 'comments/comment_edit.js' %}"></script>
+    <script defer src="{% static 'comments/comment_delete.js' %}"></script>
+    <script defer src="{% static 'comments/comment_counter_update.js' %}"></script>
 {% endblock scripts %}
 
 <!-- Header -->
