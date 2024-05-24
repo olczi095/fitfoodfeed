@@ -26,7 +26,7 @@ def product_on_sale_list(request: HttpRequest) -> HttpResponse:
             {'sale': True, 'products': products_sorted}
         )
     messages.error(
-        request, "Unfortunatelly, there are no products on sale."
+        request, "Unfortunately, there are no products on sale."
     )
     return redirect('shop:product_list')
 
@@ -41,7 +41,7 @@ def product_new_list(request: HttpRequest) -> HttpResponse:
             {'new': True, 'products': new_products_sorted}
         )
     messages.error(
-        request, "Unforutnatelly, there are no new products in store at this moment."
+        request, "Unfortunately, there are no new products in store at this moment."
     )
     return redirect('shop:product_list')
 
@@ -93,7 +93,7 @@ def category_product_list(request: HttpRequest, category_slug: str) -> HttpRespo
 
     except Category.DoesNotExist:
         messages.error(
-            request, "Unfortunatelly, the category you were looking for not found."
+            request, "Unfortunately, the category you were looking for not found."
         )
         return redirect('shop:product_list')
 
@@ -123,6 +123,6 @@ def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
 
     except Brand.DoesNotExist:
         messages.error(
-            request, "Unfortunatelly, the brand you were looking for not found."
+            request, "Unfortunately, the brand you were looking for not found."
         )
         return redirect('shop:product_list')
