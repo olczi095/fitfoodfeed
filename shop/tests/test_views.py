@@ -97,14 +97,41 @@ class BrandProductListTest(TestCase):
         )
 
     def test_brand_product_list_returns_200_response(self):
+        self.product.brand = self.brand
+        self.product.save()
         response = self.client.get(reverse('shop:brand_product_list', args=[self.brand.slug]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.brand, response.context['brand'])
 
-    def test_no_products_in_brand_list(self):
-        response = self.client.get(reverse('shop:brand_product_list', args=[self.brand.slug]))
-        product_number = len(response.context['products'])
-        self.assertEqual(product_number, 0)
+    def test_no_products_in_brand_list_redirect(self):
+        response = self.client.get(
+            reverse('shop:brand_product_list', args=[self.brand.slug])
+        )
+        self.assertRedirects(
+            response,
+            expected_url=reverse('shop:product_list'),
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_no_products_in_brand_list_display_message(self):
+        response = self.client.get(
+            reverse('shop:brand_product_list', args=[self.brand.slug]), follow=True
+        )
+        messages = list(response.context.get('messages'))
+        self.assertEqual(len(messages), 1)
+        self.assertIn('we do not have any products from this brand', messages[0].message)
+
+    def test_no_available_products_in_brand_list_display_message(self):
+        self.product.available = False
+        self.product.brand = self.brand
+        self.product.save()
+        response = self.client.get(
+            reverse('shop:brand_product_list', args=[self.brand.slug]), follow=True
+        )
+        messages = list(response.context.get('messages'))
+        self.assertEqual(len(messages), 1)
+        self.assertIn('we do not have any available products from this brand', messages[0].message)
 
     def test_one_product_in_brand_list(self):
         self.product.brand = self.brand

@@ -105,16 +105,27 @@ def brand_list(request: HttpRequest) -> HttpResponse:
 def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
     try:
         brand = Brand.objects.get(slug=brand_slug)
-        products = brand.products.order_by('-available')
+        brand_products = brand.products.all()
+        products_sorted = sort_products_to_display(brand_products)
+        available_products = brand_products.filter(available=True)
 
-        if not products:
+        if not brand_products:
+            messages.error(
+                request,
+                "At this moment, "
+                "we do not have any products from this brand in our store. "
+                "Come back soon!"
+            )
+            return redirect('shop:product_list')
+
+        if not available_products:
             messages.error(
                 request,
                 "At this moment, "
                 "we do not have any available products from this brand in our store. "
                 "Come back soon!"
             )
-        products_sorted = sort_products_to_display(products)
+
         return render(
             request,
             'shop/filtered_product_list.html',

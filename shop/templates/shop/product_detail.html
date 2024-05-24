@@ -5,9 +5,19 @@
     {{ product.name }} | {{ block.super }}
 {% endblock title %}
 
+{% block extra_styles_head %}
+    <link rel="stylesheet" href="{% static 'comments/style.css' %}">
+{% endblock extra_styles_head %}
+
+<!-- Scripts -->
 {% block scripts %}
     {{ block.super }}
+    <!-- Additional scripts for specific subtemplate -->
     <script defer src="{% static 'shop/js/readmore_toggle.js' %}"></script>
+    <script defer src="{% static 'comments/comment_reply.js' %}"></script>
+    <script defer src="{% static 'comments/comment_edit.js' %}"></script>
+    <script defer src="{% static 'comments/comment_delete.js' %}"></script>
+    <script defer src="{% static 'comments/comment_counter_update.js' %}"></script>
 {% endblock scripts %}
 
 {% block header %}
@@ -45,13 +55,23 @@
                     <br /><br/>
                     <p class="product-description" id="fullDescription" style="display:none;">{{ product.full_description }}</p>
                     <br />
+                    <!-- Add to cart section -->
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" min="0" max="{{ product.quantity }}" value="1" style="max-width: 3rem" />
-                        <button class="btn btn-outline-dark flex-shrink-0 btn-add-product" type="button">
-                            <i class="bi-cart-fill me-1"></i>
-                            Add to cart
-                        </button>
+                        {% if product.quantity and product.available %}
+                            <input class="form-control text-center me-3" id="inputQuantity" type="num" min="0" max="{{ product.quantity }}" value="1" style="max-width: 3rem; cursor: not-allowed;" />
+                            <button class="btn btn-outline-dark flex-shrink-0 btn-add-product" type="button">
+                                <i class="bi-cart-fill me-1"></i>
+                                Add to cart
+                            </button>
+                        {% else %}
+                            <input class="btn-secondary form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" disabled/>
+                            <button class="btn btn-secondary flex-shrink-0" style="cursor: not-allowed" type="button">
+                                <i class="bi-cart-fill me-1"></i>
+                                Add to cart
+                            </button>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
         </div>
@@ -109,6 +129,11 @@
             </div>
         </div>
     </section>
+    <!-- Comment section -->
+    <div class="comments">
+        {% include 'comments/comment_form.html' %}
+        {% include 'comments/comment_list.html' %}
+    </div>
 {% endblock body %}
 
 {% block footer %}
