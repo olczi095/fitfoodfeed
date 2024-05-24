@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.utils.html import format_html
 
 from .models import Brand, Category, Product
 from .utils import get_related_products, sort_products_to_display
@@ -47,31 +48,31 @@ def product_new_list(request: HttpRequest) -> HttpResponse:
 def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
     try:
         product = Product.objects.get(slug=product_slug)
+        related_products = get_related_products(product=product, num_products=4)
+        context = {
+            'product': product,
+            'related_products': related_products
+        }
 
-        if product.available is True and product.quantity > 0:
-            related_products = get_related_products(product=product, num_products=4)
-            return render(
-                request,
-                'shop/product_detail.html', 
-                {'product': product, 'related_products': related_products}
-            )
-
-        if product.category:
+        if not product.available or product.quantity == 0:
             messages.error(
                 request,
-                "Unfortunatelly, the product you were looking for is not available at this moment."
+                format_html(
+                    "Unfortunately, the product you were looking for"
+                    " is <strong>currently unavailable in the store</strong>. "
+                    "You can view it, but you can't buy it at this moment."
+                )
             )
-            return redirect('shop:category_product_list', category_slug=product.category.slug)
 
-        messages.error(
+        return render(
             request,
-            "Unfortunatelly, the product you were looking for is not available at this moment."
+            'shop/product_detail.html',
+            context=context
         )
-        return redirect('shop:product_list')
 
     except Product.DoesNotExist:
         messages.error(
-            request, "Unfortunatelly, the product you were looking for not found."
+            request, "Unfortunately, the product you were looking for was not found."
         )
         return redirect('shop:product_list')
 

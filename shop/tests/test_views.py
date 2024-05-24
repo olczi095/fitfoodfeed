@@ -167,23 +167,15 @@ class ProductDetailTest(TestCase):
         self.product.category = self.category
         self.product.save()
         response = self.client.get(reverse('shop:product_detail', args=[self.product.slug]))
-        self.assertRedirects(
-            response=response,
-            expected_url=reverse('shop:category_product_list', args=[self.category.slug]),
-            status_code=302,
-            target_status_code=200
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.product, response.context['product'])
 
     def test_unavailable_product_without_category_in_product_detail(self):
         self.product.available = False
         self.product.save()
         response = self.client.get(reverse('shop:product_detail', args=[self.product.slug]))
-        self.assertRedirects(
-            response=response,
-            expected_url=reverse('shop:product_list'),
-            status_code=302,
-            target_status_code=200
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.product, response.context['product'])
 
     def test_display_message_for_unavailable_product_without_category_in_product_detail(self):
         self.product.available = False
@@ -194,7 +186,7 @@ class ProductDetailTest(TestCase):
         message = list(response.context.get('messages'))[0]
         self.assertEqual('error', message.tags)
         self.assertIn(
-            "product you were looking for is not available at this moment", message.message
+            "currently unavailable", message.message
         )
 
     def test_not_existing_product_in_product_detail(self):
@@ -215,7 +207,7 @@ class ProductDetailTest(TestCase):
         message = list(response.context.get('messages'))[0]
         self.assertEqual(response.status_code, 200)
         self.assertEqual('error', message.tags)
-        self.assertIn("product you were looking for not found", message.message)
+        self.assertIn("product you were looking for was not found", message.message)
 
 
 class CategoriesListTest(TestCase):
