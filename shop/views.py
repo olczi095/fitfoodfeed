@@ -1,7 +1,10 @@
+from typing import Any, Dict
+
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.utils.html import format_html
+from django.views.generic import DetailView
 
 from .models import Brand, Category, Product
 from .utils import get_related_products, sort_products_to_display
@@ -45,36 +48,36 @@ def product_new_list(request: HttpRequest) -> HttpResponse:
     )
     return redirect('shop:product_list')
 
-def product_detail(request: HttpRequest, product_slug: str) -> HttpResponse:
-    try:
-        product = Product.objects.get(slug=product_slug)
-        related_products = get_related_products(product=product, num_products=4)
-        context = {
-            'product': product,
-            'related_products': related_products
-        }
 
-        if not product.available or product.quantity == 0:
-            messages.error(
-                request,
-                format_html(
-                    "Unfortunately, the product you were looking for"
-                    " is <strong>currently unavailable in the store</strong>. "
-                    "You can view it, but you can't buy it at this moment."
+class ProductDetailView(DetailView):
+    model = Product
+    slug_url_kwarg = 'product_slug'
+    template_name = 'shop/product_detail.html'
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        try:
+            product = self.get_object()
+            if not product.available or product.quantity == 0:
+                messages.error(
+                        self.request,
+                        format_html(
+                            "Unfortunately, the product you were looking for"
+                            " is <strong>currently unavailable in the store</strong>. "
+                            "You can view it, but you can't buy it at this moment."
+                        )
                 )
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            messages.error(
+                self.request,
+                "Unfortunately, the product you were looking for was not found."
             )
+            return redirect('shop:product_list')
 
-        return render(
-            request,
-            'shop/product_detail.html',
-            context=context
-        )
-
-    except Product.DoesNotExist:
-        messages.error(
-            request, "Unfortunately, the product you were looking for was not found."
-        )
-        return redirect('shop:product_list')
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['related_products'] = get_related_products(product=self.object, num_products=4)
+        return context
 
 # Views related to categories
 def category_list(request: HttpRequest) -> HttpResponse:
