@@ -9,8 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.db.models import QuerySet
 from django.forms import BaseForm
-from django.http import (HttpRequest, HttpResponse, HttpResponseRedirect,
-                         JsonResponse)
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -25,7 +24,7 @@ from accounts.models import \
     User as AccountsUser  # Importing User directly for type hints
 from comments.forms import CommentForm
 from comments.models import Publication
-from comments.views import SuccessMessageCommentMixin
+from comments.views import CommentSubmissionMixin
 from fitfoodfeed.settings import EMAIL_HOST_USER
 
 from .forms import PostForm, ProductSubmissionForm
@@ -73,7 +72,7 @@ class TagsListView(ListView):
     context_object_name = 'tags'
 
 
-class PostDetailView(SuccessMessageCommentMixin, FormMixin, DetailView):
+class PostDetailView(CommentSubmissionMixin, FormMixin, DetailView):
     form_class = CommentForm
     model = Post
     slug_url_kwarg = 'post_slug'
