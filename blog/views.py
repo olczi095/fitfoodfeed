@@ -9,7 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.db.models import QuerySet
 from django.forms import BaseForm
-from django.http import (Http404, HttpRequest, HttpResponse, HttpResponseRedirect,
+from django.http import (HttpRequest, HttpResponse, HttpResponseRedirect,
                          JsonResponse)
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -80,33 +80,25 @@ class PostDetailView(SuccessMessageCommentMixin, FormMixin, DetailView):
     queryset = Post.objects.filter(status="PUB")
     template_name = 'blog/review_detail.html'
 
-    def __init__(self, **kwargs: Any) -> None:
-        self.object = None
-        super().__init__(**kwargs)
-
     def get_success_url(self) -> str:
-        if not isinstance(self.object, Post):
-            raise Http404("Post not found.")
         return self.object.get_absolute_url()
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-
-        if isinstance(self.object, Post):
-            context['post_likes'] = self.object.display_likes_stats()
-        if self.object.publication:
-            context['comments'] = self.object.publication.get_top_level_comments()
-
-
-        context['form'] = CommentForm(initial={'post': self.object})
+        context['form'] = self.get_form()
         context['user'] = self.request.user
         context['related_posts'] = self.object.get_related_posts(3)
+        context['post_likes'] = (
+            self.object.display_likes_stats() if isinstance(self.object, Post) else None
+        )
+        context['comments'] = (
+            self.object.publication.get_top_level_comments() if self.object.publication else None
+        )
         return context
 
-    def post(self, request: HttpRequest, *args: Any, **kwargs: Any
-             ) -> HttpResponse:
-        self.object = self.get_object()
-        form = self.get_form()
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()  # Get the post object
+        form = self.get_form()  # Get the form instance with POST data
 
         if form.is_valid():
             return self.form_valid(form)

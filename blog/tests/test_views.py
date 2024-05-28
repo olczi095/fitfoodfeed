@@ -132,14 +132,6 @@ class PostDetailViewTestCase(TestCase):
         self.post1.tags.add(self.tag1)
         self.post1.tags.add(self.tag2)
 
-    def test_get_success_url_with_invalid_object(self):
-        view = PostDetailView()
-        view.object = None  # Simulating the absence of the Post instance
-        with self.assertRaises(Http404) as context:
-            view.get_success_url()
-
-        self.assertEqual(str(context.exception), "Post not found.")
-
     def test_post_detail_returns_correct_response(self):
         url = self.post1.get_absolute_url()
         response = self.client.get(url)
