@@ -10,7 +10,7 @@
             {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
-                <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
+                <img src="{% static 'comments/default-avatar.png' %}" alt="Avatar">
             {% endif %}
             <!-- Author name -->
             {{ comment.logged_user}}
@@ -27,7 +27,7 @@
             {% if comment.logged_user.avatar and comment.logged_user.avatar.url|file_exists %}
                 <img src="{{ comment.logged_user.avatar.url }}" alt="Avatar">
             {% else %}
-                <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
+                <img src="{% static 'comments/default-avatar.png' %}" alt="Avatar">
             {% endif %}
             <!-- Author name -->
             {{ comment.logged_user}}
@@ -41,7 +41,7 @@
     {% else %}
         <div class="author">
             <!-- Default avatar -->
-            <img src="{% static 'blog/images/default-avatar.png' %}" alt="Avatar">
+            <img src="{% static 'comments/default-avatar.png' %}" alt="Avatar">
             <!-- Author name -->
             {{ comment.unlogged_user }}
         </div> 
