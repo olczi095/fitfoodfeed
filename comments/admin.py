@@ -5,8 +5,6 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.html import format_html
 
-from blog.models import Post
-
 from .models import Comment, Publication
 
 
@@ -20,15 +18,20 @@ class PublicationAdmin(admin.ModelAdmin):
     list_display_links = ['publication_object']
     readonly_fields = ['publication_type', 'publication_object']
 
-    def publication_type(self, obj: Post):
+    def publication_type(self, obj: Publication):
         if hasattr(obj, 'post'):
             return "post"
+        if hasattr(obj, 'product'):
+            return "product"
         return None
 
-    def publication_object(self, obj: Post):
+    def publication_object(self, obj: Publication):
         if hasattr(obj, 'post'):
             link = reverse('admin:blog_post_change', args=[obj.post.pk])
             return format_html(f'<a href="{link}">{obj.post}</a>')
+        if hasattr(obj, 'product'):
+            link = reverse('admin:shop_product_change', args=[obj.product.pk])
+            return format_html(f'<a href="{link}">{obj.product}</a>')
         return None
 
 
@@ -94,17 +97,18 @@ class CommentAdmin(admin.ModelAdmin):
         """
         Return the type of publication object (model type).
         """
-        try:
+        if hasattr(obj.publication, "post"):
             return obj.publication.post.__class__.__name__.lower()
-        except AttributeError:
-            return None
+        if hasattr(obj.publication, "product"):
+            return obj.publication.product.__class__.__name__.lower()
+        return None
 
     def publication_object(self, obj: Comment) -> str | None:
         """
         Allows to redirect to the proper publication change admin panel.
         Publication can be a Post model.
         """
-        try:
+        if hasattr(obj.publication, "post"):
             post = obj.publication.post
             link = reverse(
                 'admin:blog_post_change',
@@ -113,8 +117,16 @@ class CommentAdmin(admin.ModelAdmin):
             return format_html(
                 f'<a href="{link}">{post}</a>'
             )
-        except AttributeError:
-            return None
+        if hasattr(obj.publication, "product"):
+            product = obj.publication.product
+            link = reverse(
+                'admin:shop_product_change',
+                args=[product.pk]
+            )
+            return format_html(
+                f'<a href="{link}">{product}</a>'
+            )
+        return None
 
     def comment(self, obj: Comment) -> str:
         return obj.body[:75]

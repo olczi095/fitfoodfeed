@@ -1,11 +1,15 @@
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+from comments.models import Comment
 from shop.models import Brand, Category, Product
+
+User = get_user_model()
 
 
 class ShopRedirectTest(TestCase):
@@ -235,6 +239,48 @@ class ProductDetailTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual('error', message.tags)
         self.assertIn("product you were looking for was not found", message.message)
+
+
+class ProductDetailViewCommentTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='user', password='pass',
+        )
+        self.product = Product.objects.create(
+            name='Test Product',
+            price=9.99
+        )
+        self.comment_data_authenticated_user = {
+            'body': 'This is a comment from an authenticated user.'
+        }
+        self.comment_data_unauthenticated_user = {
+            'body': 'This is another comment from an unauthenticated random user.'
+        }
+
+    def test_authenticated_user_adds_comment(self):
+        response = self.client.post(
+            self.product.get_absolute_url(), data=self.comment_data_authenticated_user
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_unauthenticated_user_can_add_comment(self):
+        self.client.logout()
+        response = self.client.post(
+            self.product.get_absolute_url(), data=self.comment_data_unauthenticated_user
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comment.objects.count(), 1)
+
+    def test_invalid_comment_form(self):
+        invalid_comment_data = {'body': ''}
+        response = self.client.post(
+            self.product.get_absolute_url(),
+            data=invalid_comment_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Comment.objects.count(), 0)
 
 
 class CategoriesListTest(TestCase):

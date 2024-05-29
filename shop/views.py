@@ -5,6 +5,10 @@ from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.utils.html import format_html
 from django.views.generic import DetailView
+from django.views.generic.edit import FormMixin
+
+from comments.forms import CommentForm
+from comments.views import CommentSubmissionMixin
 
 from .models import Brand, Category, Product
 from .utils import get_related_products, sort_products_to_display
@@ -49,7 +53,8 @@ def product_new_list(request: HttpRequest) -> HttpResponse:
     return redirect('shop:product_list')
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(CommentSubmissionMixin, FormMixin, DetailView):
+    form_class = CommentForm
     model = Product
     slug_url_kwarg = 'product_slug'
     template_name = 'shop/product_detail.html'
@@ -74,10 +79,27 @@ class ProductDetailView(DetailView):
             )
             return redirect('shop:product_list')
 
+    def get_success_url(self) -> str:
+        return self.object.get_absolute_url()
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
+
+        if self.object.publication:
+            context['comments'] = self.object.publication.get_top_level_comments()
+
+        context['form'] = CommentForm(initial={'publication': self.object.publication})
+        context['user'] = self.request.user
         context['related_products'] = get_related_products(product=self.object, num_products=4)
         return context
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
 
 # Views related to categories
 def category_list(request: HttpRequest) -> HttpResponse:

@@ -250,3 +250,18 @@
     padding: 1.5rem;
     background-color: var(--color-white);
 }
+
+.comments {
+    margin: 2rem 5rem;
+}
+
+.comments .title {
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0 0rem 0.2rem;
+    border-top: 0.1rem solid var(--color-lightgrey);
+    color: var(--color-black);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: -0.5rem;
+}

@@ -9,6 +9,7 @@ from model_bakery import baker
 from blog.models import Post
 from comments.admin import CommentAdmin, PublicationAdmin
 from comments.models import Comment, Publication
+from shop.models import Product
 
 User = get_user_model()
 
@@ -28,26 +29,38 @@ class PublicationAdminTestCase(TestCase):
             body='test_body',
             status='PUB'
         )
+        self.product = Product.objects.create(
+            name='Test Product',
+            price=999.99,
+        )
 
     def test_publication_type_expected_none(self):
         pub_type = self.admin.publication_type(self.publication)
         self.assertEqual(pub_type, None)
 
     def test_publication_type_for_post(self):
-        self.post.publication = self.publication
-        pub_type = self.admin.publication_type(self.publication)
+        pub_type = self.admin.publication_type(self.post.publication)
         self.assertEqual(pub_type, 'post')
+
+    def test_publication_type_for_product(self):
+        pub_type = self.admin.publication_type(self.product.publication)
+        self.assertEqual(pub_type, 'product')
 
     def test_publication_object_expected_none(self):
         pub_obj = self.admin.publication_object(self.publication)
         self.assertEqual(pub_obj, None)
 
     def test_publication_object_for_post(self):
-        self.post.publication = self.publication
-        pub_obj = self.admin.publication_object(self.publication)
+        pub_obj = self.admin.publication_object(self.post.publication)
         expected_link = reverse('admin:blog_post_change', args=[self.post.pk])
         self.assertIn(expected_link, pub_obj)
         self.assertIn(str(self.post), pub_obj)
+
+    def test_publication_object_for_product(self):
+        pub_obj = self.admin.publication_object(self.product.publication)
+        expected_link = reverse('admin:shop_product_change', args=[self.product.pk])
+        self.assertIn(expected_link, pub_obj)
+        self.assertIn(str(self.product), pub_obj)
 
 
 class CommentAdminAuthorTestCase(TestCase):
@@ -217,35 +230,57 @@ class CommentAdminPublicationTestCase(TestCase):
             email='user@mail.com'
         )
         self.review = baker.make(Post)
-        self.publication = Publication.objects.create()
-        self.random_comment = Comment.objects.create(
+        self.product = baker.make(Product)
+        self.review_comment = Comment.objects.create(
             publication=self.review.publication,
             pub_datetime=timezone.now(),
             body='Comment written by unlogged user.'
         )
-        self.comment_without_post = Comment.objects.create(
-            logged_user=self.user,
-            publication=self.publication,
-            body='Comment without post'
+        self.product_comment = Comment.objects.create(
+            publication=self.product.publication,
+            pub_datetime=timezone.now(),
+            body='Comment written by unlogged user.'
         )
         self.admin = CommentAdmin(model=Comment, admin_site=AdminSite())
 
     def test_publication_type_for_post_comment(self):
-        pub_type = self.admin.publication_type(self.random_comment)
+        pub_type = self.admin.publication_type(self.review_comment)
         self.assertEqual(pub_type, 'post')
 
     def test_publication_object_for_post_comment(self):
-        pub_obj = self.admin.publication_object(self.random_comment)
+        pub_obj = self.admin.publication_object(self.review_comment)
         expected_link = reverse('admin:blog_post_change', args=[self.review.pk])
         self.assertIn(expected_link, pub_obj)
         self.assertIn(str(self.review), pub_obj)
 
-    def test_publication_type_for_comment_without_post(self):
-        pub_type = self.admin.publication_type(self.comment_without_post)
+    def test_publication_type_for_product_comment(self):
+        pub_type = self.admin.publication_type(self.product_comment)
+        self.assertEqual(pub_type, 'product')
+
+    def test_publication_object_for_product_comment(self):
+        pub_obj = self.admin.publication_object(self.product_comment)
+        expected_link = reverse('admin:shop_product_change', args=[self.product.pk])
+        self.assertIn(expected_link, pub_obj)
+        self.assertIn(str(self.product), pub_obj)
+
+    def test_publication_type_for_comment_expects_none(self):
+        publication = Publication.objects.create()
+        comment = Comment.objects.create(
+            logged_user=self.user,
+            publication=publication,
+            body='Comment without post'
+        )
+        pub_type = self.admin.publication_type(comment)
         self.assertIsNone(pub_type)
 
-    def test_publication_object_for_comment_without_post(self):
-        pub_obj = self.admin.publication_object(self.comment_without_post)
+    def test_publication_object_for_comment_expects_none(self):
+        publication = Publication.objects.create()
+        comment = Comment.objects.create(
+            logged_user=self.user,
+            publication=publication,
+            body='Comment without post'
+        )
+        pub_obj = self.admin.publication_object(comment)
         self.assertIsNone(pub_obj)
 
 

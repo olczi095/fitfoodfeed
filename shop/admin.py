@@ -66,7 +66,7 @@ class ProductAdmin(admin.ModelAdmin):
         (
             'Additional Information',
             {
-                'fields': ['category', 'brand', 'image']
+                'fields': ['category', 'brand', 'image', 'publication']
             }
         ),
         (
@@ -82,7 +82,7 @@ class ProductAdmin(admin.ModelAdmin):
             }
         )
     ]
-    readonly_fields = ['id', 'created_at', 'updated_at']
+    readonly_fields = ['id', 'created_at', 'updated_at', 'publication']
 
     @admin.display(description='category')
     def category_model(self, obj: Product) -> str | None:

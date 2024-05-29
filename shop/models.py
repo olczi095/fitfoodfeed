@@ -117,7 +117,7 @@ class Product(models.Model):
             self.publication = publication
         if not self.slug:
             self.slug = convert_to_slug(self.name)
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
         return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
