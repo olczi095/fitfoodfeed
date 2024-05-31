@@ -54,7 +54,7 @@
     <!-- Messages section -->
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-{{ message.tags }}" role="alert">
                 {{ message|safe }}
             </div>
         {% endfor %}
