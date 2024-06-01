@@ -33,3 +33,7 @@ class CustomLoginView(LoginView):
 
 class BlogLogoutView(LogoutView):
     next_page = reverse_lazy('blog:home')
+
+
+class ShopLogoutView(LogoutView):
+    next_page = reverse_lazy('shop:product_list')
