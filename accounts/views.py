@@ -3,7 +3,7 @@ from typing import Type
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import BaseForm
 from django.http import HttpResponse
@@ -29,3 +29,7 @@ class CustomLoginView(LoginView):
     def form_invalid(self, form: BaseForm) -> HttpResponse:
         messages.error(self.request, 'Invalid username or password.')
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class BlogLogoutView(LogoutView):
+    next_page = reverse_lazy('blog:home')
