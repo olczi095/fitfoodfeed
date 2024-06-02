@@ -49,7 +49,7 @@
                     <a href="{% url 'accounts:blog_logout' %}" class="btn btn-secondary me-2 text-nowrap">Log Out</a>
                 {% else %}
                     <a href="{% url 'accounts:register' %}" class="btn btn-success me-2 text-nowrap">Sign Up</a>
-                    <a href="{% url 'accounts:login' %}" class="btn btn-primary me-2 text-nowrap">🙋‍♂️Log In</a>
+                    <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-primary me-2 text-nowrap">🙋‍♂️Log In</a>
                 {% endif %}
                 <input class="form-control" type="search" placeholder="🔎" aria-label="Search">
                 <!-- Dark/light mode toggle -->

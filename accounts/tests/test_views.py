@@ -100,6 +100,56 @@ class LoginTestCase(TestCase):
         self.assertContains(response, error_message)
 
 
+class CustomLoginViewRedirectTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username='admin',
+            password='asdf1234',
+            email='admin@test.pl'
+        )
+
+    def test_return_next_url(self):
+        next_url = '/shop/products/' # Random but valid url path for testing
+
+        session = self.client.session
+        session['next'] = next_url
+        session.save()
+
+        response = self.client.post(
+            reverse('accounts:login'),
+            {'username': 'admin', 'password': 'asdf1234'}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, next_url)
+
+    def test_delete_next_from_session(self):
+        next_url = '/shop/products/' # Random but valid url path for testing
+        session = self.client.session
+        session['next'] = next_url
+        session.save()
+
+        self.assertIn('next', session)
+
+        response = self.client.post(
+            reverse('accounts:login'),
+            {'username': 'admin', 'password': 'asdf1234'},
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        session = self.client.session
+        self.assertNotIn('next', session)
+
+    def test_login_without_next(self):
+        response = self.client.post(
+            reverse('accounts:login'),
+            {'username': 'admin', 'password': 'asdf1234'},
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/blog/')
+
+
 class PasswordResetViewTestCase(TestCase):
     def setUp(self):
         self.user_email = 'test_email@mail.com'
