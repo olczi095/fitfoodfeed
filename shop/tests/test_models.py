@@ -117,14 +117,14 @@ class ProductModelTest(TestCase):
             name='Test Product 4', price=9.99, brand=self.brand_x
         )
 
-        related_products = self.product.related_products_by_category()
+        related_products = self.product.get_related_products_by_category()
         self.assertEqual(related_products.count(), 2)
         self.assertIn(product2, related_products)
         self.assertIn(product3, related_products)
         self.assertNotIn(product4, related_products)
 
     def test_no_related_products_by_category(self):
-        related_products = self.product.related_products_by_category()
+        related_products = self.product.get_related_products_by_category()
         self.assertEqual(related_products.count(), 0)
 
     def test_related_products_by_brand(self):
@@ -138,14 +138,14 @@ class ProductModelTest(TestCase):
             name='Test Product 4', price=9.99, brand=self.brand_z
         )
 
-        related_products = self.product.related_products_by_brand()
+        related_products = self.product.get_related_products_by_brand()
         self.assertEqual(related_products.count(), 1)
         self.assertIn(product2, related_products)
         self.assertNotIn(product3, related_products)
         self.assertNotIn(product4, related_products)
 
     def test_no_related_products_by_brand(self):
-        related_products = self.product.related_products_by_brand()
+        related_products = self.product.get_related_products_by_brand()
         self.assertEqual(related_products.count(), 0)
 
     def test_is_new_true(self):

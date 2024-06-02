@@ -122,12 +122,12 @@ class Product(models.Model):
     def get_absolute_url(self) -> str:
         return reverse("shop:product_detail", kwargs={"product_slug": self.slug})
 
-    def related_products_by_category(self) -> QuerySet:
+    def get_related_products_by_category(self) -> QuerySet:
         if self.category:
             return Product.objects.filter(category=self.category).exclude(id=self.id)
         return Product.objects.none()
 
-    def related_products_by_brand(self) -> QuerySet:
+    def get_related_products_by_brand(self) -> QuerySet:
         return Product.objects.filter(brand=self.brand).exclude(id=self.id)
 
     def is_new(self, number_of_days: int = 30) -> bool:
