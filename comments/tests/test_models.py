@@ -10,7 +10,7 @@ from shop.models import Brand, Product
 User = get_user_model()
 
 
-class PublicationModelTestCase(TestCase):
+class PublicationModelTests(TestCase):
     def setUp(self):
         self.publication = Publication.objects.create()
         self.superuser = User.objects.create_superuser(username='superuser', password='xyz')
@@ -46,7 +46,7 @@ class PublicationModelTestCase(TestCase):
         self.assertEqual(comment_stats, 0)
 
 
-class GetRecentCommentsTestCase(TestCase):
+class PublicationClassMethodTests(TestCase):
     def setUp(self):
         self.superuser = User.objects.create_superuser(
             username='superuser',
@@ -108,13 +108,13 @@ class GetRecentCommentsTestCase(TestCase):
         self.assertIn(comment, recent_comments)
         self.assertEqual(len(recent_comments), 1)
 
-class CommentModelExistenceTestCase(TestCase):
+class CommentModelExistenceTests(TestCase):
     def test_comment_model_exists(self):
         comments = Comment.objects.all()
         self.assertEqual(comments.count(), 0)
 
 
-class CommentModelTestCase(TestCase):
+class CommentModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='user', password='xyz')
         self.review = baker.make(Post)

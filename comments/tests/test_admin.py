@@ -14,7 +14,7 @@ from shop.models import Product
 User = get_user_model()
 
 
-class PublicationAdminTestCase(TestCase):
+class PublicationAdminInterfaceTests(TestCase):
     def setUp(self):
         self.site = AdminSite()
         self.admin = PublicationAdmin(Publication, self.site)
@@ -63,7 +63,7 @@ class PublicationAdminTestCase(TestCase):
         self.assertIn(str(self.product), pub_obj)
 
 
-class CommentAdminAuthorTestCase(TestCase):
+class CommentAdminInterfaceAuthorTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='user',
@@ -121,7 +121,7 @@ class CommentAdminAuthorTestCase(TestCase):
         self.assertEqual(expected_email, displayed_email_from_comment_with_email)
 
 
-class CommentAdminFieldsTestCase(TestCase):
+class CommentAdminInterfaceFieldsTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='user',
@@ -222,7 +222,7 @@ class CommentAdminFieldsTestCase(TestCase):
         self.assertEqual(expected_fields, actual_readonly_fields)
 
 
-class CommentAdminPublicationTestCase(TestCase):
+class CommentAdminInterfacePublicationTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='user',
@@ -284,7 +284,7 @@ class CommentAdminPublicationTestCase(TestCase):
         self.assertIsNone(pub_obj)
 
 
-class CommentAdminOtherTestCase(TestCase):
+class CommentAdminInterfaceOtherTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='user',

@@ -9,7 +9,7 @@ from comments.models import Comment
 User = get_user_model()
 
 
-class CommentDeleteViewTestCase(TestCase):
+class CommentDeleteViewTests(TestCase):
     def setUp(self):
         self.admin = User.objects.create_superuser(
             username='admin', password='admin_password',
