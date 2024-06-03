@@ -9,7 +9,7 @@ from shop.models import Brand, Category, Product
 User = get_user_model()
 
 
-class CategoryAdminTest(TestCase):
+class CategoryAdminInterfaceTests(TestCase):
     def setUp(self):
         self.category_model_admin = CategoryAdmin(model=Category, admin_site=AdminSite())
 
@@ -46,7 +46,7 @@ class CategoryAdminTest(TestCase):
         self.assertEqual(self.category_model_admin.short_description(test_category), '')
 
 
-class BrandAdminTest(TestCase):
+class BrandAdminInterfaceTests(TestCase):
     def setUp(self):
         self.brand_model_admin = BrandAdmin(model=Brand, admin_site=AdminSite())
 
@@ -82,7 +82,7 @@ class BrandAdminTest(TestCase):
         )
         self.assertEqual(self.brand_model_admin.short_description(brand), '')
 
-class ProductAdminTest(TestCase):
+class ProductAdminInterfaceTests(TestCase):
     def setUp(self):
         self.product_model_admin = ProductAdmin(model=Product, admin_site=AdminSite())
         self.category = Category.objects.create(name='Test Category')

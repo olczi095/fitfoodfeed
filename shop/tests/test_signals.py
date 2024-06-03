@@ -4,7 +4,7 @@ from comments.models import Publication
 from shop.models import Product
 
 
-class SignalsTestCase(TestCase):
+class SignalsTests(TestCase):
     def setUp(self):
         self.publication = Publication.objects.create()
         self.product = Product.objects.create(

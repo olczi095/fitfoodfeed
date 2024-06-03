@@ -7,7 +7,7 @@ from django.utils import timezone
 from shop.models import Brand, Category, Product
 
 
-class CategoryModelTest(TestCase):
+class CategoryModelTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='Test Category'
@@ -34,7 +34,7 @@ class CategoryModelTest(TestCase):
         self.assertEqual(self.category.number_of_products, expected_number_of_products)
 
 
-class BrandModelTest(TestCase):
+class BrandModelTests(TestCase):
     def setUp(self):
         self.brand = Brand.objects.create(
             name='Test Brand'
@@ -58,7 +58,7 @@ class BrandModelTest(TestCase):
         self.assertEqual(self.brand.number_of_products, expected_number_of_products)
 
 
-class ProductModelTest(TestCase):
+class ProductModelTests(TestCase):
     def setUp(self):
         with open('shop/tests/files/test_image.jpg', 'rb') as f:
             content = f.read(0

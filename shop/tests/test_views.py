@@ -29,7 +29,7 @@ class ProductListTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class CategoryProductListTest(TestCase):
+class CategoryProductListTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='Test Category'
@@ -89,7 +89,7 @@ class CategoryProductListTest(TestCase):
         self.assertIn("category you were looking for not found", message.message)
 
 
-class BrandProductListTest(TestCase):
+class BrandProductListTests(TestCase):
     def setUp(self):
         self.brand = Brand.objects.create(
             name='Test Brand'
@@ -165,7 +165,7 @@ class BrandProductListTest(TestCase):
         self.assertIn("brand you were looking for not found", message.message)
 
 
-class ProductDetailTest(TestCase):
+class ProductDetailTests(TestCase):
     def setUp(self):
         with open('shop/tests/files/test_image.jpg', 'rb') as f:
             content = f.read(0)
@@ -241,7 +241,7 @@ class ProductDetailTest(TestCase):
         self.assertIn("product you were looking for was not found", message.message)
 
 
-class ProductDetailViewCommentTestCase(TestCase):
+class ProductDetailViewCommentTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username='user', password='pass',
@@ -283,7 +283,7 @@ class ProductDetailViewCommentTestCase(TestCase):
         self.assertEqual(Comment.objects.count(), 0)
 
 
-class CategoriesListTest(TestCase):
+class CategoriesListTests(TestCase):
     def setUp(self):
         self.category1 = Category.objects.create(
             name='Test Category 1'
@@ -301,7 +301,7 @@ class CategoriesListTest(TestCase):
         self.assertTemplateUsed(response, 'shop/category_list.html')
 
 
-class BrandListTest(TestCase):
+class BrandListTests(TestCase):
     def setUp(self):
         self.brand1 = Brand.objects.create(
             name='Test Brand 1'
@@ -319,7 +319,7 @@ class BrandListTest(TestCase):
         self.assertTemplateUsed(response, 'shop/brand_list.html')
 
 
-class ProductOnSaleListTest(TestCase):
+class ProductOnSaleListTests(TestCase):
     def test_product_on_sale_list_no_products_on_sale(self):
         response = self.client.get(reverse('shop:product_on_sale_list'))
         self.assertRedirects(
@@ -348,7 +348,7 @@ class ProductOnSaleListTest(TestCase):
         self.assertTemplateUsed(response, 'shop/filtered_product_list.html')
 
 
-class ProductNewListTest(TestCase):
+class ProductNewListTests(TestCase):
     def setUp(self):
         self.product = Product.objects.create(
             name='old_product',

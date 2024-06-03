@@ -4,7 +4,7 @@ from shop.models import Brand, Category, Product
 from shop.utils import get_related_products
 
 
-class GetRelatedProductsTest(TestCase):
+class GetRelatedProductsTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(name='Test Category')
         self.brand_x = Brand.objects.create(name='Brand X')
