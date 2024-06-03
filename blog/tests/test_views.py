@@ -3,21 +3,20 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from taggit.models import Tag
 
 from blog.models import Category, Post
-from blog.views import PostDetailView
 from comments.forms import CommentForm
 from comments.models import Comment
 
 User = get_user_model()
 
 
-class LikePostTestCase(TestCase):
+class PostLikeViewTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -56,7 +55,7 @@ class LikePostTestCase(TestCase):
         self.assertNotIn(self.user, self.review.likes.all())
 
 
-class ReviewsPageTestCase(TestCase):
+class HomePageTests(TestCase):
     def setUp(self):
         self.author1 = User.objects.create(
             username='random',
@@ -111,7 +110,7 @@ class ReviewsPageTestCase(TestCase):
         self.assertIn('paginator', response.context)
 
 
-class PostDetailViewTestCase(TestCase):
+class PostDetailViewTests(TestCase):
     def setUp(self):
         self.author1 = User.objects.create(
             username='random',
@@ -208,7 +207,7 @@ class PostDetailViewTestCase(TestCase):
         )
 
 
-class PostDetailViewCommentTestCase(TestCase):
+class PostDetailViewCommentTests(TestCase):
     def setUp(self):
         self.author = User.objects.create(
             username='author', password='test_password',
@@ -373,7 +372,7 @@ class PostDetailViewCommentTestCase(TestCase):
         self.assertEqual(edited_comment.body, comment_form_data['body'])
 
 
-class PostCreateTestCase(TestCase):
+class PostCreateViewTests(TestCase):
     def setUp(self):
         self.test_user = User.objects.create_user(
             username='random',
@@ -397,7 +396,7 @@ class PostCreateTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class PostCreateWithPermissionTestCase(TestCase):
+class PostCreateWithPermissionTests(TestCase):
     def setUp(self):
         self.adminuser = User.objects.create_superuser(
             username='admin', password='admin-password'
@@ -445,7 +444,7 @@ class PostCreateWithPermissionTestCase(TestCase):
         self.assertEqual(author_of_first_post, self.adminuser)
 
 
-class PostUpdateTestCase(TestCase):
+class PostUpdateViewTests(TestCase):
     def setUp(self):
         self.author = User.objects.create_user(
             username='author',
@@ -540,7 +539,7 @@ class PostUpdateTestCase(TestCase):
         self.assertTemplateUsed(response, 'registration/login.html')
 
 
-class PostDeleteTestCase(TestCase):
+class PostDeleteViewTests(TestCase):
     def setUp(self):
         self.author = User.objects.create_user(
             username='author', password='xyz', is_author=True
@@ -620,7 +619,7 @@ class PostDeleteTestCase(TestCase):
         self.assertEqual(success_messages[0], expected_message)
 
 
-class PostStatusTestCase(TestCase):
+class PostStatusTests(TestCase):
     def setUp(self):
         self.adminuser = User.objects.create_superuser(
             username='author', password='author-password'
@@ -742,14 +741,14 @@ class PostStatusTestCase(TestCase):
         self.assertGreaterEqual(len(response.context['recent_comments']), 0)
 
 
-class TagsListTestCase(TestCase):
+class TagsListViewTest(TestCase):
     def test_successful_tags_list_displaying(self):
         response = self.client.get(reverse('blog:tags'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'blog/tags.html')
 
 
-class TaggedPostsListTestCase(TestCase):
+class TaggedPostsListTests(TestCase):
     def setUp(self):
         self.tag_bars = Tag.objects.create(
             name='bars'
@@ -812,7 +811,7 @@ class TaggedPostsListTestCase(TestCase):
         )
 
 
-class CategoryViewsTestCase(TestCase):
+class CategoryListViewTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='masła orzechowe'
@@ -858,7 +857,7 @@ class CategoryViewsTestCase(TestCase):
         )
 
 
-class ProductSubmissionFormViewTestCase(TestCase):
+class ProductSubmissionFormViewTests(TestCase):
     def setUp(self):
         self.test_user = User.objects.create_user(
             username='test_user',
@@ -894,7 +893,7 @@ class ProductSubmissionFormViewTestCase(TestCase):
         self.assertIn('email has been sent successfully', message.message)
 
 
-class ConfirmEmailViewTestCase(TestCase):
+class ConfirmEmailViewTests(TestCase):
     def setUp(self):
         self.completed_form = {
             'name': 'Test Product',

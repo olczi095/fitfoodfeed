@@ -3,7 +3,7 @@ from django.test import TestCase
 from blog.forms import PostForm, ProductSubmissionForm
 
 
-class PostFormTestCase(TestCase):
+class PostFormTests(TestCase):
     def test_post_form_valid(self):
         valid_data = {
             'title': 'Lorem Ipsum',
@@ -37,7 +37,7 @@ class PostFormTestCase(TestCase):
         self.assertFalse(is_valid_without_body)
 
 
-class ProductSubmissionFormTestCase(TestCase):
+class ProductSubmissionFormTests(TestCase):
     def test_form_valid(self):
         valid_data = {
             'name': 'Test Product for review',

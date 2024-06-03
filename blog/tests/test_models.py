@@ -10,13 +10,13 @@ from blog.models import Category, Post
 User = get_user_model()
 
 
-class PostModelExistenceTestCase(TestCase):
+class PostModelExistenceTests(TestCase):
     def test_post_model_exists(self):
         posts = Post.objects.all()
         self.assertEqual(posts.count(), 0)
 
 
-class PostModelTestCase(TestCase):
+class PostModelTests(TestCase):
     def setUp(self):
         self.author = User.objects.create(
             username='test_user',
@@ -104,7 +104,7 @@ class PostModelTestCase(TestCase):
         self.assertTrue(Post._meta.get_field('image'))
 
 
-class PostFunctionalityTestCase(TestCase):
+class PostFunctionalityTests(TestCase):
     def setUp(self):
         self.author = User.objects.create(
             username='test_user',
@@ -133,13 +133,13 @@ class PostFunctionalityTestCase(TestCase):
         self.assertEqual(calculated_post_likes, expected_likes)
 
 
-class CategoryModelExistenceTestCase(TestCase):
+class CategoryModelExistenceTests(TestCase):
     def test_category_model_exists(self):
         categories = Category.objects.all()
         self.assertEqual(categories.count(), 0)
 
 
-class CategoryModelTestCase(TestCase):
+class CategoryModelTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='peanut butter'

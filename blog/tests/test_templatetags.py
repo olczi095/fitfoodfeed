@@ -5,7 +5,7 @@ from django.test import TestCase
 from blog.templatetags.file_exists import file_exists
 
 
-class TemplatetagsTestCase(TestCase):
+class TemplatetagsTests(TestCase):
     @patch('blog.templatetags.file_exists.os.path.isfile')
     def test_file_exists_filter_success(self, mock_isfile):
         mock_isfile.return_value = True

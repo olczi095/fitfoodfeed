@@ -5,7 +5,7 @@ from django.test import TestCase
 from blog.utils import send_email_with_product_for_review
 
 
-class SendEmailWithProductTest(TestCase):
+class SendEmailWithProductTests(TestCase):
     def setUp(self):
         self.valid_data = {
             'name': 'Test Product for review',

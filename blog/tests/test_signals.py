@@ -2,7 +2,7 @@ from django.test import TestCase
 from taggit.models import Tag
 
 
-class TagSignalsTestCase(TestCase):
+class TagSignalsTests(TestCase):
     def setUp(self):
         self.tag1 = Tag.objects.create(
             name='masła orzechowe'

@@ -12,7 +12,7 @@ from blog.models import Category, Post
 User = get_user_model()
 
 
-class PostAdminTestCase(TestCase):
+class PostAdminInterfaceTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='Peanut Butter'
@@ -88,7 +88,7 @@ class PostAdminTestCase(TestCase):
         self.assertEqual(expected_category, displayed_category_without_url)
 
 
-class CategoryAdminTestCase(TestCase):
+class CategoryAdminInterfaceTests(TestCase):
     def setUp(self):
         self.category = Category.objects.create(
             name='Peanut Butter'
