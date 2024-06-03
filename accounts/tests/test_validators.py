@@ -8,7 +8,7 @@ from PIL import Image
 from accounts.validators import validate_avatar_dimensions, validate_avatar_type
 
 
-class AvatarTypeValidatorTestCase(TestCase):
+class AvatarTypeValidatorTests(TestCase):
     def setUp(self):
         self.image = Image.new("RGB", (350, 350), (255, 255, 255))
         self.image_buffer = io.BytesIO()
@@ -55,7 +55,7 @@ class AvatarTypeValidatorTestCase(TestCase):
             validate_avatar_type(image_with_invalid_type)
 
 
-class AvatarDimensionsValidatorTestCase(TestCase):
+class AvatarDimensionsValidatorTests(TestCase):
     def setUp(self):
         self.image = Image.new("RGB", (350, 350), (255, 255, 255))
         self.image_buffer = io.BytesIO()

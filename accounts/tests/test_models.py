@@ -4,13 +4,13 @@ from django.test import TestCase
 User = get_user_model()
 
 
-class UserModelExistenceTestCase(TestCase):
+class UserModelExistenceTests(TestCase):
     def test_user_model_exists(self):
         users = User.objects.all()
         self.assertEqual(users.count(), 0)
 
 
-class UserModelTestCase(TestCase):
+class UserModelTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

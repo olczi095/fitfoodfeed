@@ -4,7 +4,7 @@ from django.test import TestCase
 User = get_user_model()
 
 
-class SignalsTestCase(TestCase):
+class SignalsTests(TestCase):
     def test_author_add_permissions(self):
         test_author = User.objects.create_user(
             username='author',

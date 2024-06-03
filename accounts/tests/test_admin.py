@@ -7,7 +7,7 @@ from accounts.admin import UserAdmin
 User = get_user_model()
 
 
-class UserAdminModelTestCase(TestCase):
+class UserAdminInterfaceTests(TestCase):
 
     @classmethod
     def setUpClass(cls):

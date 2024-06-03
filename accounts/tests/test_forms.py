@@ -3,7 +3,7 @@ from django.test import TestCase
 from accounts.forms import CustomUserCreationForm
 
 
-class CustomUserCreationFormTestCase(TestCase):
+class CustomUserCreationFormTests(TestCase):
     def test_form_valid(self):
         valid_data = {
             'username': 'user1',

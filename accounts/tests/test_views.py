@@ -11,7 +11,7 @@ from accounts.forms import CustomUserCreationForm
 User = get_user_model()
 
 
-class RegisterTestCase(TestCase):
+class RegisterViewTests(TestCase):
     def setUp(self):
         self.register_url = reverse('accounts:register')
         self.valid_data = {
@@ -39,7 +39,7 @@ class RegisterTestCase(TestCase):
         self.assertRedirects(response, reverse(settings.LOGIN_URL))
 
 
-class LoginTestCase(TestCase):
+class LoginViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user_login = User.objects.create_user(
@@ -100,7 +100,7 @@ class LoginTestCase(TestCase):
         self.assertContains(response, error_message)
 
 
-class CustomLoginViewRedirectTest(TestCase):
+class CustomLoginViewRedirectTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(
@@ -150,7 +150,7 @@ class CustomLoginViewRedirectTest(TestCase):
         self.assertRedirects(response, '/blog/')
 
 
-class PasswordResetViewTestCase(TestCase):
+class PasswordResetViewTests(TestCase):
     def setUp(self):
         self.user_email = 'test_email@mail.com'
         self.user = User.objects.create_user(
@@ -200,7 +200,7 @@ class PasswordResetViewTestCase(TestCase):
         self.assertTrue(self.user.check_password('changed_password'))
 
 
-class PasswordChangeViewTestCase(TestCase):
+class PasswordChangeViewTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             username="test_user",
