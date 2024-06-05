@@ -13,7 +13,8 @@ class PublicationAdmin(admin.ModelAdmin):
     list_display = [
         'pk',
         'publication_type',
-        'publication_object'
+        'publication_object',
+        'active_comments'
     ]
     list_display_links = ['publication_object']
     readonly_fields = ['publication_type', 'publication_object']
