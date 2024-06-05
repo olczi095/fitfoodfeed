@@ -42,8 +42,8 @@ class PublicationModelTests(TestCase):
         self.assertEqual(str(self.publication), expected_representation)
 
     def test_comment_stats_with_no_comments(self):
-        comment_stats = self.publication.comment_stats
-        self.assertEqual(comment_stats, 0)
+        active_comments = self.publication.active_comments
+        self.assertEqual(active_comments, 0)
 
 
 class PublicationClassMethodTests(TestCase):

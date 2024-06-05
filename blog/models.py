@@ -145,7 +145,7 @@ class Post(models.Model):
 
         for post in cls.objects.filter(status='PUB'):
             if post.publication:
-                posts_with_comment_counters[post] = post.publication.comment_stats
+                posts_with_comment_counters[post] = post.publication.active_comments
 
         popular_posts_with_comment_counters = sorted(
             posts_with_comment_counters.items(),

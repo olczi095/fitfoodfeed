@@ -49,10 +49,10 @@
                         <!-- Post info -->
                         <span class="post-info">{{ post.author }} / {{ post.pub_date }} 
                             <!-- Comment stats -->
-                            {% if post.comment_stats == 1 %}
-                                / {{ post.comment_stats }} comment
+                            {% if post.active_comments == 1 %}
+                                / {{ post.active_comments }} comment
                             {% else %}
-                                / {{ post.comment_stats }} comments
+                                / {{ post.active_comments }} comments
                             {% endif %}
                         </span> 
 

@@ -22,7 +22,7 @@ class Publication(models.Model):
         return None
 
     @property
-    def comment_stats(self) -> int:
+    def active_comments(self) -> int:
         return self.comments.filter(active=True).count()
 
     @classmethod

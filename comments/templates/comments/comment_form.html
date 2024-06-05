@@ -3,9 +3,9 @@
 <div class="title">
     Comments
     {% if post %}
-        (<span class="comment-counter">{{ post.publication.comment_stats }}</span>)
+        (<span class="comment-counter">{{ post.publication.active_comments }}</span>)
     {% elif product %}
-        (<span class="comment-counter">{{ product.publication.comment_stats }}</span>)
+        (<span class="comment-counter">{{ product.publication.active_comments }}</span>)
     {% endif %}
 </div>
 
