@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'accounts',
     'shop',
     'comments',
-    'cart',
+    'carts',
     'crispy_forms',
     'crispy_bootstrap4',
     'taggit'
