@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from django.db.models import Model
 from django.http import HttpRequest
 
 from shop.models import Product
@@ -16,7 +15,7 @@ class BaseCart(ABC):
         """Initializes the cart with the given request."""
         self.session = request.session
         self.cart = self._get_cart()
-    
+
     def __iter__(self):
         """Iterates over the items in the cart."""
         for item in self.cart.values():
@@ -25,6 +24,7 @@ class BaseCart(ABC):
     def __len__(self) -> int:
         """Returns the total amount of all cart items."""
         return sum(item['quantity'] for item in self.cart.values())
+
 
     @abstractmethod
     def _get_cart(self) -> dict[str, Any]:
@@ -35,19 +35,19 @@ class BaseCart(ABC):
             dict[str, Any]:
                 A dictionary containing cart items and their quantities
         """
-        pass
-    
+        raise NotImplementedError("Subclassess must implement this method.")
+
     @abstractmethod
     def reset(self) -> None:
         """Resets the cart."""
-        pass
-        
+        raise NotImplementedError("Subclasses must implement this method.")
+
     @abstractmethod
     def save(self) -> None:
         """Saves the current state of the cart."""
-        pass
-    
-    def add(self, product: Model[Product], quantity: int = 1) -> None:
+        raise NotImplementedError("Subclasses must implement this method.")
+
+    def add(self, product: Product, quantity: int = 1) -> None:
         """Adds a new product to the cart."""
         product_id = str(product.id)
         cart_item = self.cart.get(product_id)
@@ -58,20 +58,27 @@ class BaseCart(ABC):
             self.cart[product_id] = {
                 "name": product.name,
                 "quantity": quantity,
-                "price": product.price
+                "price": float(product.price)
             }
         self.save()
-        
+
     def update(self, product: Product, new_quantity: int) -> None:
         """
         Updates the quantity of a product in the cart.
         It happens when client for example select other quantity in a form.
         """
+
+        if new_quantity < 0:
+            raise ValueError("Quantity must be grater than zero.")
+
         product_id = str(product.id)
 
         if product_id in self.cart:
-            self.cart[product_id]['quantity'] = new_quantity
-            self.save()
+            if new_quantity == 0:
+                self.delete(product)
+            else:
+                self.cart[product_id]['quantity'] = new_quantity
+                self.save()
         else:
             raise KeyError("Product not found in the cart.")
 
@@ -93,7 +100,7 @@ class BaseCart(ABC):
 
 class AnonymousCart(BaseCart):
     """Cart class for anonymous users."""
-    
+
     def _get_cart(self) -> dict[str, Any]:
         """Retrieves the cart from the session."""
         if 'cart' not in self.session:
@@ -103,34 +110,32 @@ class AnonymousCart(BaseCart):
     def reset(self) -> None:
         """Resets the cart in the current session."""
         del self.session['cart']
-        self.save()
-        
+
     def save(self) -> None:
         """Saves the cart to the session."""
         self.session['cart'] = self.cart
         self.session.modified = True
 
-    
+
 class AuthenticatedCart(BaseCart):
     """Cart class for authenticated users."""
-    
+
     def __init__(self, request: HttpRequest) -> None:
-        super().__init__(request)
         self.user = request.user
-        
+        super().__init__(request)
+
     def _get_cart(self) -> dict[str, Any]:
         """Retrieves the cart from the database."""
         shopping_user, _ = ShoppingUser.objects.get_or_create(user=self.user)
         return shopping_user.cart
-    
+
     def reset(self) -> None:
         """Clear the cart."""
         self.cart.clear()
         self.save()
-    
+
     def save(self) -> None:
         """Saves the cart to the database."""
         shopping_user, _ = ShoppingUser.objects.get_or_create(user=self.user)
         shopping_user.cart = self.cart
         shopping_user.save()
-        
