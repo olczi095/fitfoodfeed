@@ -29,7 +29,7 @@ class BaseCart(ABC):
     @abstractmethod
     def _get_cart(self) -> dict[str, Any]:
         """
-        Retrieves the cart fot the current user.
+        Retrieves the cart for the current user.
         
         Returns:
             dict[str, Any]:
@@ -47,50 +47,50 @@ class BaseCart(ABC):
         """Saves the current state of the cart."""
         raise NotImplementedError("Subclasses must implement this method.")
 
-    def add(self, product: Product, quantity: int = 1) -> None:
+    def add(self, item: Product, quantity: int = 1) -> None:
         """Adds a new product to the cart."""
-        product_id = str(product.id)
-        cart_item = self.cart.get(product_id)
+        item_id = str(item.id)
+        cart_item = self.cart.get(item_id)
 
         if cart_item:
             cart_item['quantity'] += quantity
         else:
-            self.cart[product_id] = {
-                "name": product.name,
+            self.cart[item_id] = {
+                "name": item.name,
                 "quantity": quantity,
-                "price": float(product.price)
+                "price": float(item.price)
             }
         self.save()
 
-    def update(self, product: Product, new_quantity: int) -> None:
+    def update(self, item: Product, new_quantity: int) -> None:
         """
-        Updates the quantity of a product in the cart.
+        Updates the quantity of an item in the cart.
         It happens when client for example select other quantity in a form.
         """
 
         if new_quantity < 0:
             raise ValueError("Quantity must be grater than zero.")
 
-        product_id = str(product.id)
+        item_id = str(item.id)
 
-        if product_id in self.cart:
+        if item_id in self.cart:
             if new_quantity == 0:
-                self.delete(product)
+                self.delete(item)
             else:
-                self.cart[product_id]['quantity'] = new_quantity
+                self.cart[item_id]['quantity'] = new_quantity
                 self.save()
         else:
-            raise KeyError("Product not found in the cart.")
+            raise KeyError("Item not found in the cart.")
 
-    def delete(self, product: Product) -> None:
-        """Deletes a product from the cart if it is contained."""
-        product_id = str(product.id)
+    def delete(self, item: Product) -> None:
+        """Deletes an item from the cart if it is contained."""
+        item_id = str(item.id)
 
-        if product_id in self.cart:
-            del self.cart[product_id]
+        if item_id in self.cart:
+            del self.cart[item_id]
             self.save()
         else:
-            raise KeyError("Product not found in the cart.")
+            raise KeyError("Item not found in the cart.")
 
 
     def get_total_price(self) -> float:

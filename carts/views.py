@@ -12,11 +12,12 @@ def get_cart(request):
         return AuthenticatedCart(request)
     return AnonymousCart(request)
 
-def get_product_info(request):
-    """Helper function to extract product_id and quantity from request."""
-    product_id = request.POST.get('product_id')
+def get_item_info(request):
+    """Helper function to extract item id, type and quantity from request."""
+    item_type = request.POST.get('item_type')
+    item_id = request.POST.get('item_id')
     quantity = int(request.POST.get('quantity', 1))
-    return {'product_id': product_id, 'quantity': quantity}
+    return {'type': item_type, 'id': item_id, 'quantity': quantity}
 
 def cart_detail(request):
     cart = get_cart(request)
@@ -25,33 +26,39 @@ def cart_detail(request):
 @require_POST
 def cart_add(request):
     cart = get_cart(request)
-    product_info = get_product_info(request)
-    product = get_object_or_404(Product, id=product_info['product_id'])
-    cart.add(product=product, quantity=product_info['quantity'])
+    item_info = get_item_info(request)
+
+    if item_info['type'] == 'product':
+        product = get_object_or_404(Product, id=item_info['id'])
+        cart.add(item=product, quantity=item_info['quantity'])
+
     return redirect('carts:cart_detail')
+
 
 @require_POST
 def cart_update(request):
     cart = get_cart(request)
-    product_info = get_product_info(request)
-    product = get_object_or_404(Product, id=product_info['product_id'])
+    item_info = get_item_info(request)
 
-    try:
-        cart.update(product=product, new_quantity=product_info['quantity'])
-    except KeyError:
-        return HttpResponseNotFound('Product not found in the cart.')
+    if item_info['type'] == 'product':
+        product = get_object_or_404(Product, id=item_info['id'])
+        try:
+            cart.update(item=product, new_quantity=item_info['quantity'])
+        except KeyError:
+            return HttpResponseNotFound('Product not found in the cart.')
 
     return redirect('carts:cart_detail')
 
 @require_POST
 def cart_delete(request):
     cart = get_cart(request)
-    product_info = get_product_info(request)
-    product = get_object_or_404(Product, id=product_info['product_id'])
+    item_info = get_item_info(request)
 
-    try:
-        cart.delete(product)
-    except KeyError:
-        return HttpResponseNotFound('Product not found in the cart.')
+    if item_info['type'] == 'product':
+        product = get_object_or_404(Product, id=item_info['id'])
+        try:
+            cart.delete(product)
+        except KeyError:
+            return HttpResponseNotFound('Product not found in the cart.')
 
     return redirect('carts:cart_detail')

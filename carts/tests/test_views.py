@@ -46,22 +46,28 @@ class CartViewsTests(TestCase):
 
     def test_cart_add_view_default_quantity(self):
         response = self.client.post(
-            reverse('carts:cart_add'), {'product_id': self.product.id, 'quantity': 2}
+            reverse('carts:cart_add'),
+            {'item_type': 'product', 'item_id': self.product.id, 'quantity': 2}
         )
         self.assertRedirects(response, reverse('carts:cart_detail'))
 
     def test_cart_add_view_custom_quantity(self):
         response = self.client.post(
-            reverse('carts:cart_add'), {'product_id': self.product.id}, follow=True
+            reverse('carts:cart_add'),
+            {'item_type': 'product', 'item_id': self.product.id}, follow=True
         )
         quantity_of_items_in_cart = len(response.context['cart'])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(quantity_of_items_in_cart, 1)
 
     def test_cart_update_view_for_existing_item(self):
-        self.client.post(reverse('carts:cart_add'), {'product_id': self.product.id}, follow=True)
+        self.client.post(
+            reverse('carts:cart_add'),
+            {'item_type': 'product', 'item_id': self.product.id}, follow=True
+        )
         response = self.client.post(
-            reverse('carts:cart_update'), {'product_id': self.product.id, 'quantity': 5}
+            reverse('carts:cart_update'),
+            {'item_type': 'product', 'item_id': self.product.id, 'quantity': 5}
         )
         self.assertRedirects(
             response=response, expected_url='/shop/cart/', status_code=302, target_status_code=200
@@ -69,18 +75,25 @@ class CartViewsTests(TestCase):
 
     def test_cart_update_view_for_non_existing_item(self):
         response = self.client.post(
-            reverse('carts:cart_update'), {'product_id': self.product.id, 'quantity': 5}
+            reverse('carts:cart_update'),
+            {'item_type': 'product', 'item_id': self.product.id, 'quantity': 5}
         )
         self.assertEqual(response.status_code, 404)
         response = self.client.post(
-            reverse('carts:cart_update'), {'product_id': self.product.id, 'quantity': 5},
+            reverse('carts:cart_update'),
+            {'item_type': 'product', 'item_id': self.product.id, 'quantity': 5},
             follow=True
         )
 
     def test_items_amount_after_updating_cart(self):
-        self.client.post(reverse('carts:cart_add'), {'product_id': self.product.id}, follow=True)
+        self.client.post(
+            reverse('carts:cart_add'),
+            {'item_type': 'product', 'item_id': self.product.id},
+            follow=True
+         )
         response = self.client.post(
-            reverse('carts:cart_update'), {'product_id': self.product.id, 'quantity': 5},
+            reverse('carts:cart_update'),
+            {'item_type': 'product', 'item_id': self.product.id, 'quantity': 5},
             follow=True
         )
         quantity_of_items_in_cart = len(response.context['cart'])
@@ -88,14 +101,23 @@ class CartViewsTests(TestCase):
         self.assertEqual(quantity_of_items_in_cart, 5)
 
     def test_cart_delete_view_for_existing_item(self):
-        self.client.post(reverse('carts:cart_add'), {'product_id': self.product.id}, follow=True)
+        self.client.post(
+            reverse('carts:cart_add'),
+            {'item_type': 'product', 'item_id': self.product.id},
+            follow=True
+        )
         response = self.client.post(
-            reverse('carts:cart_delete'), {'product_id': self.product.id}, follow=True
+            reverse('carts:cart_delete'),
+            {'item_type': 'product', 'item_id': self.product.id},
+            follow=True
         )
         quantity_of_items_in_cart = len(response.context['cart'])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(quantity_of_items_in_cart, 0)
 
     def test_cart_delete_view_for_non_existing_item(self):
-        response = self.client.post(reverse('carts:cart_delete'), {'product_id': self.product.id})
+        response = self.client.post(
+            reverse('carts:cart_delete'),
+            {'item_type': 'product', 'item_id': self.product.id}
+        )
         self.assertEqual(response.status_code, 404)
