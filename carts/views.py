@@ -1,8 +1,6 @@
 from django.http import HttpResponseNotFound
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
-
-from shop.models import Product
 
 from .cart import AnonymousCart, AuthenticatedCart
 
@@ -17,7 +15,13 @@ def get_item_info(request):
     item_type = request.POST.get('item_type')
     item_id = request.POST.get('item_id')
     quantity = int(request.POST.get('quantity', 1))
-    return {'type': item_type, 'id': item_id, 'quantity': quantity}
+
+    if not item_type:
+        raise ValueError("Item type is required.")
+    if not item_id:
+        raise ValueError("Item ID is required.")
+
+    return {'type': item_type, 'id': str(item_id), 'quantity': quantity}
 
 def cart_detail(request):
     cart = get_cart(request)
@@ -25,15 +29,15 @@ def cart_detail(request):
 
 @require_POST
 def cart_add(request):
+    """This method can be extended with other models for other items."""
     cart = get_cart(request)
     item_info = get_item_info(request)
 
     if item_info['type'] == 'product':
-        product = get_object_or_404(Product, id=item_info['id'])
-        cart.add(item=product, quantity=item_info['quantity'])
-
+        cart.add(item_id=item_info['id'], model_name='Product', quantity=item_info['quantity'])
+    else:
+        return HttpResponseNotFound('Invalid item type.')
     return redirect('carts:cart_detail')
-
 
 @require_POST
 def cart_update(request):
@@ -41,11 +45,14 @@ def cart_update(request):
     item_info = get_item_info(request)
 
     if item_info['type'] == 'product':
-        product = get_object_or_404(Product, id=item_info['id'])
         try:
-            cart.update(item=product, new_quantity=item_info['quantity'])
+            cart.update(
+                item_id=item_info['id'], model_name='Product', new_quantity=item_info['quantity']
+            )
         except KeyError:
             return HttpResponseNotFound('Product not found in the cart.')
+    else:
+        return HttpResponseNotFound('Invalid item type.')
 
     return redirect('carts:cart_detail')
 
@@ -55,10 +62,11 @@ def cart_delete(request):
     item_info = get_item_info(request)
 
     if item_info['type'] == 'product':
-        product = get_object_or_404(Product, id=item_info['id'])
         try:
-            cart.delete(product)
+            cart.delete(item_id=item_info['id'], model_name='Product')
         except KeyError:
             return HttpResponseNotFound('Product not found in the cart.')
+    else:
+        return HttpResponseNotFound('Invalid item type.')
 
     return redirect('carts:cart_detail')

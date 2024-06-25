@@ -14,7 +14,7 @@ class BaseCart(ABC):
     def __init__(self, request: HttpRequest) -> None:
         """Initializes the cart with the given request."""
         self.session = request.session
-        self.cart = self._get_cart()
+        self.cart: dict[str, dict[str, Any]] = self._get_cart()
 
     def __iter__(self):
         """Iterates over the items in the cart."""
@@ -47,51 +47,66 @@ class BaseCart(ABC):
         """Saves the current state of the cart."""
         raise NotImplementedError("Subclasses must implement this method.")
 
-    def add(self, item: Product, quantity: int = 1) -> None:
-        """Adds a new product to the cart."""
-        item_id = str(item.id)
-        cart_item = self.cart.get(item_id)
-
-        if cart_item:
-            cart_item['quantity'] += quantity
+    def add(self, item_id: str, model_name: str, quantity: int = 1) -> None:
+        """Adds an item to the cart."""
+        if model_name == 'Product':
+            self._add_product(item_id, quantity)
         else:
-            self.cart[item_id] = {
-                "name": item.name,
+            raise ValueError(f"Unsupported model: {model_name}")
+
+    def _add_product(self, product_id: str, quantity: int) -> None:
+        """Adds a product to the cart."""
+        product = Product.objects.get(pk=product_id)
+        cart_product = self.cart.get(product_id)
+
+        if cart_product:
+            cart_product['quantity'] += quantity
+        else:
+            self.cart[product_id] = {
+                "name": product.name,
                 "quantity": quantity,
-                "price": float(item.price)
+                "price": float(product.price)
             }
         self.save()
 
-    def update(self, item: Product, new_quantity: int) -> None:
+    def update(self, item_id: str, model_name: str, new_quantity: int) -> None:
         """
         Updates the quantity of an item in the cart.
         It happens when client for example select other quantity in a form.
         """
-
         if new_quantity < 0:
             raise ValueError("Quantity must be grater than zero.")
 
-        item_id = str(item.id)
+        if model_name == 'Product':
+            self._update_product(item_id, new_quantity)
+        else:
+            raise ValueError(f"Unsupported model: {model_name}")
 
-        if item_id in self.cart:
+    def _update_product(self, product_id: str, new_quantity: int) -> None:
+        """Updates the quantity of the product in the cart."""
+        if product_id in self.cart:
             if new_quantity == 0:
-                self.delete(item)
+                self.delete(product_id, 'Product')
             else:
-                self.cart[item_id]['quantity'] = new_quantity
+                self.cart[product_id]['quantity'] = new_quantity
                 self.save()
         else:
-            raise KeyError("Item not found in the cart.")
+            raise KeyError("Product not found in the cart.")
 
-    def delete(self, item: Product) -> None:
+    def delete(self, item_id: str, model_name: str) -> None:
         """Deletes an item from the cart if it is contained."""
-        item_id = str(item.id)
+        if model_name == 'Product':
+            self._delete_product(item_id)
+        else:
+            raise ValueError(f"Unsupported model: {model_name}")
 
-        if item_id in self.cart:
-            del self.cart[item_id]
+    def _delete_product(self, product_id: str) -> None:
+        """Deletes a product from the cart."""        
+        if product_id in self.cart:
+            del self.cart[product_id]
             self.save()
         else:
-            raise KeyError("Item not found in the cart.")
-
+            raise KeyError("Product not found in the cart.")
 
     def get_total_price(self) -> float:
         """Calculates the total price of all items in the cart."""

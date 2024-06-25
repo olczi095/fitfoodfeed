@@ -24,48 +24,83 @@ class AnonymousCartTests(TestCase):
         self.cart = AnonymousCart(self.request)
 
     def test_add_item(self):
-        self.cart.add(self.product, 2)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
         self.assertEqual(len(self.cart), 2)
         self.assertEqual(self.cart.get_total_price(), 20.0)
 
     def test_add_existing_product(self):
-        self.cart.add(self.product)
+        self.cart.add(item_id=self.product.id, model_name=self.product.__class__.__name__)
         for item in self.cart:
             if item['name'] == self.product.name:
                 self.assertEqual(item['quantity'], 1)
-        self.cart.add(self.product)
+
+        self.cart.add(item_id=self.product.id, model_name=self.product.__class__.__name__)
         for item in self.cart:
             if item['name'] == self.product.name:
                 self.assertEqual(item['quantity'], 2)
 
-    def test_update_quantity_to_odd_raises_error(self):
-        self.cart.add(self.product)
+    def test_add_unsupported_model_item(self):
         with self.assertRaises(ValueError):
-            self.cart.update(self.product, -1)
+            self.cart.add(item_id=self.product.id, model_name="Unsupported Model Name")
+
+    def test_update_quantity_to_odd_raises_error(self):
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
+        with self.assertRaises(ValueError):
+            self.cart.update(
+                item_id=self.product.id, model_name=self.product.__class__.__name__, new_quantity=-1
+            )
 
     def test_update_quantity_to_zero(self):
-        self.cart.add(self.product)
-        self.cart.update(self.product, 0)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
+        self.cart.update(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, new_quantity=0
+        )
         self.assertEqual(len(self.cart), 0)
 
     def test_update_quantity_to_normal_value(self):
-        self.cart.add(self.product)
-        self.cart.update(self.product, 100)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
+        self.cart.update(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, new_quantity=100
+        )
         for item in self.cart:
             if item['name'] == self.product.name:
                 self.assertEqual(item['quantity'], 100)
 
     def test_update_quantity_for_product_not_in_cart(self):
         with self.assertRaises(KeyError):
-            self.cart.update(self.product, 10)
+            self.cart.update(
+                item_id=self.product.id, model_name=self.product.__class__.__name__, new_quantity=10
+            )
+
+    def test_update_unsupported_model_item(self):
+        with self.assertRaises(ValueError):
+            self.cart.update(
+                item_id=self.product.id, model_name="Unsupported Model Name", new_quantity=2
+            )
+
+    def test_delete_unsupported_model_item(self):
+        with self.assertRaises(ValueError):
+            self.cart.delete(item_id=self.product.id, model_name="Unsupported Model Name")
 
     def test_iter_no_items(self):
         items = list(self.cart)
         self.assertEqual(len(items), 0)
 
     def test_cart_iter_two_items(self):
-        self.cart.add(self.product, 2)
-        self.cart.add(self.second_product)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
+        self.cart.add(
+            item_id=self.second_product.id, model_name=self.second_product.__class__.__name__
+        )
         items = list(self.cart)
         self.assertEqual(len(items), 2)
         self.assertEqual(items[0]['name'], 'Test Product')
@@ -74,7 +109,9 @@ class AnonymousCartTests(TestCase):
         self.assertEqual(items[1]['price'], 20.0)
 
     def test_reset_cart(self):
-        self.cart.add(self.product, quantity=2)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
         self.assertEqual(len(self.cart), 2)
 
         self.cart.reset()
@@ -92,7 +129,9 @@ class AuthenticatedCartTests(TestCase):
         self.cart = AuthenticatedCart(self.request)
 
     def test_reset_cart(self):
-        self.cart.add(self.product, quantity=2)
+        self.cart.add(
+            item_id=self.product.id, model_name=self.product.__class__.__name__, quantity=2
+        )
         self.assertEqual(len(self.cart), 2)
 
         self.cart.reset()
