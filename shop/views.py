@@ -14,8 +14,11 @@ from .models import Brand, Category, Product
 from .utils import get_related_products, sort_products_to_display
 
 
-def shop_redirect(request: HttpRequest) -> HttpResponseRedirect:
-    return redirect('shop:product_list')
+PRODUCT_LIST_TEMPLATE = 'shop:product_list'
+FILTERED_PRODUCT_LIST_TEMPLATE = 'shop/filtered_product_list.html'
+
+def shop_redirect() -> HttpResponseRedirect:
+    return redirect(PRODUCT_LIST_TEMPLATE)
 
 # Views related to products
 def product_list(request: HttpRequest) -> HttpResponse:
@@ -29,13 +32,13 @@ def product_on_sale_list(request: HttpRequest) -> HttpResponse:
         products_sorted = sort_products_to_display(products)
         return render(
             request,
-            'shop/filtered_product_list.html',
+            FILTERED_PRODUCT_LIST_TEMPLATE,
             {'sale': True, 'products': products_sorted}
         )
     messages.error(
         request, "Unfortunately, there are no products on sale."
     )
-    return redirect('shop:product_list')
+    return redirect(PRODUCT_LIST_TEMPLATE)
 
 def product_new_list(request: HttpRequest) -> HttpResponse:
     products = Product.objects.all()
@@ -44,13 +47,13 @@ def product_new_list(request: HttpRequest) -> HttpResponse:
     if new_products_sorted:
         return render(
             request,
-            'shop/filtered_product_list.html',
+            FILTERED_PRODUCT_LIST_TEMPLATE,
             {'new': True, 'products': new_products_sorted}
         )
     messages.error(
         request, "Unfortunately, there are no new products in store at this moment."
     )
-    return redirect('shop:product_list')
+    return redirect(PRODUCT_LIST_TEMPLATE)
 
 
 class ProductDetailView(CommentSubmissionMixin, FormMixin, DetailView):
@@ -77,7 +80,7 @@ class ProductDetailView(CommentSubmissionMixin, FormMixin, DetailView):
                 self.request,
                 "Unfortunately, the product you were looking for was not found."
             )
-            return redirect('shop:product_list')
+            return redirect(PRODUCT_LIST_TEMPLATE)
 
     def get_success_url(self) -> str:
         return self.object.get_absolute_url()
@@ -112,7 +115,7 @@ def category_product_list(request: HttpRequest, category_slug: str) -> HttpRespo
         products = category.products.all()
         products_sorted = sort_products_to_display(products)
         return render(
-            request, 'shop/filtered_product_list.html',
+            request, FILTERED_PRODUCT_LIST_TEMPLATE,
             {'category': category, 'products': products_sorted}
         )
 
@@ -120,7 +123,7 @@ def category_product_list(request: HttpRequest, category_slug: str) -> HttpRespo
         messages.error(
             request, "Unfortunately, the category you were looking for not found."
         )
-        return redirect('shop:product_list')
+        return redirect(PRODUCT_LIST_TEMPLATE)
 
 # Views related to brands
 def brand_list(request: HttpRequest) -> HttpResponse:
@@ -141,7 +144,7 @@ def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
                 "we do not have any products from this brand in our store. "
                 "Come back soon!"
             )
-            return redirect('shop:product_list')
+            return redirect(PRODUCT_LIST_TEMPLATE)
 
         if not available_products:
             messages.error(
@@ -161,4 +164,4 @@ def brand_product_list(request: HttpRequest, brand_slug: str) -> HttpResponse:
         messages.error(
             request, "Unfortunately, the brand you were looking for not found."
         )
-        return redirect('shop:product_list')
+        return redirect(PRODUCT_LIST_TEMPLATE)
