@@ -18,9 +18,9 @@
                     <div class="card card-product-body h-100">
                         <!-- Product image-->
                         {% if product.image and product.image.url %}
-                            <img class="card-img-top" src="{{ product.image.url }}" alt="Main photo of the product for sale." />
+                            <img class="card-img-top" src="{{ product.image.url }}" alt="Product {{ product.name }} for sale." />
                         {% else %}
-                            <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of the product for sale." />
+                            <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Product {{ product.name }} for sale." />
                         {% endif %}
                         <!-- Product details-->
                         <div class="card-body p-4">
