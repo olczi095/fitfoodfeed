@@ -74,8 +74,8 @@ class Product(models.Model):
         null=True,
         blank=True
     )
-    brief_description = models.CharField(max_length=255, null=True, blank=True)
-    full_description = models.TextField(null=True, blank=True)
+    brief_description = models.CharField(max_length=255, blank=True)
+    full_description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
 

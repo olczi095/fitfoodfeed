@@ -31,11 +31,11 @@
                 <!-- Product image -->
                 {% if product.image and product.image.url %}
                     <div class="col-md-6">
-                        <img class="card-img-top mb-5 mb-md-0" src="{{ product.image.url }}" alt="Main photo of the product for sale." />
+                        <img class="card-img-top mb-5 mb-md-0" src="{{ product.image.url }}" alt="Product {{ product.name }} for sale." />
                     </div>
                 {% else %}
                     <div class="col-md-6">
-                        <img class="card-img-top mb-5 mb-md-0" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of the product for sale." />
+                        <img class="card-img-top mb-5 mb-md-0" src="{% static 'shop/images/default_product_image.png' %}" alt="Product {{ product.name }} for sale." />
                     </div>
                 {% endif %}
                 <!-- Product details -->
@@ -44,7 +44,7 @@
                     <h1 class="fw-bolder post-title">{{ product.name }}</h1>
                     <div class="fs-5 mb-5">
                         {% if product.is_on_sale %}
-                            <span class="old-price"><strike>{{ product.price }} PLN</strike></span>
+                            <span class="old-price"><s>{{ product.price }} PLN</s></span>
                             <span class="card-product-price">{{ product.sale_price }} PLN</span>
                         {% else %}
                             <span class="card-product-price">{{ product.price }} PLN</span>
@@ -90,9 +90,9 @@
                         <div class="card h-100">
                             <!-- Product image -->
                             {% if related_product.image and related_product.image.url %}
-                                <img class="card-img-top" src="{{ related_product.image.url }}" alt="Main photo of {{ related_product.name }}." />
+                                <img class="card-img-top" src="{{ related_product.image.url }}" alt="Product {{ related_product.name }}." />
                             {% else %}
-                                <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Main photo of {{ related_product.name }}." />
+                                <img class="card-img-top" src="{% static 'shop/images/default_product_image.png' %}" alt="Product {{ related_product.name }}." />
                             {% endif %}
                             <!-- Product details -->
                             <div class="card-body p-4">
@@ -112,7 +112,7 @@
                                     <!-- Product price -->
                                     {% if related_product.is_on_sale %}
                                         <div class="badge text-bg-warning custom-product-bg position-absolute">SALE</div>
-                                        <span class="old-price"><strike>{{ related_product.price }}</strike></span>
+                                        <span class="old-price"><s>{{ related_product.price }}</s></span>
                                         <span class="card-product-price">{{ related_product.sale_price }} PLN</span>
                                     {% else %}
                                         <span class="card-product-price">{{ related_product.price }} PLN</span>
