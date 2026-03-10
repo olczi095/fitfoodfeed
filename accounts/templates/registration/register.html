@@ -10,7 +10,7 @@
 {% block form %}
     <!-- Form container -->
     <section class="form-container form-middle-container">
-        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image form-middle-image" />    
+        <img src={% static 'accounts/images/cinamon.jpg' %} class="form-image form-middle-image" alt="cynamon" />    
         <form class="form-registration form-middle" method="post" action={% url 'accounts:register' %}>
             {% csrf_token %}
             <h2>Registration</h2>
