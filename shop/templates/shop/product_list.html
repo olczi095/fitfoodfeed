@@ -40,7 +40,7 @@
                                 <!-- Product price -->
                                 {% if product.is_on_sale %}
                                     <div class="badge text-bg-warning custom-product-bg position-absolute">SALE</div>
-                                    <span class="old-price"><strike>{{ product.price }}</strike></span>
+                                    <span class="old-price"><s>{{ product.price }}</s></span>
                                     <span class="card-product-price">{{ product.sale_price }} PLN</span>
                                 {% else %}
                                     <span class="card-product-price">{{ product.price }} PLN</span>
